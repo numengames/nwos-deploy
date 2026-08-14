@@ -1,0 +1,164 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import DeployForm from "@/components/DeployForm";
+
+export const prerender = false;
+---
+
+<Layout title="El Velo — NWOS" activeNav="velo">
+  <!-- Star field hero -->
+  <div class="velo-hero">
+    <canvas id="stardust" class="absolute inset-0 h-full w-full"></canvas>
+
+    <div class="relative z-10 flex flex-col items-center gap-8 text-center px-6">
+      <p class="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent/80">
+        NWOS · Numen Workspace OS
+      </p>
+      <p class="velo-cta">
+        Cruza el umbral donde tu organización despierta.
+      </p>
+      <p class="max-w-md text-sm text-muted-foreground leading-relaxed">
+        Despliega el workspace de documentación de tu organización en segundos.
+        Un click, sistema completo con agentes IA.
+      </p>
+      <a href="#deploy" class="velo-btn">
+        Desplegar workspace ↓
+      </a>
+    </div>
+  </div>
+
+  <!-- Deploy form section -->
+  <section id="deploy" class="py-20 border-t border-border/40">
+    <div class="mx-auto max-w-[1100px] px-6">
+      <div class="text-center mb-10">
+        <p class="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent mb-3">
+          Iteración 1
+        </p>
+        <h2 class="font-display text-3xl sm:text-4xl text-foreground mb-3">
+          Deploy Workspace
+        </h2>
+        <p class="text-sm text-muted-foreground max-w-sm mx-auto">
+          Crea un repositorio GitHub con toda la estructura documental de tu organización, listo para que los agentes lo pueblen.
+        </p>
+      </div>
+
+      <DeployForm client:visible />
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .velo-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    overflow: hidden;
+  }
+
+  .velo-cta {
+    font-family: var(--font-display, Georgia, serif);
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+    max-width: 640px;
+    text-shadow: 0 0 40px rgba(100, 220, 200, 0.15);
+  }
+
+  .velo-btn {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(100, 220, 200, 0.8);
+    border: 1px solid rgba(100, 220, 200, 0.25);
+    padding: 0.6rem 1.8rem;
+    border-radius: 999px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .velo-btn:hover {
+    color: rgba(100, 220, 200, 1);
+    border-color: rgba(100, 220, 200, 0.6);
+    box-shadow: 0 0 24px rgba(100, 220, 200, 0.12);
+    background: rgba(100, 220, 200, 0.05);
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById("stardust") as HTMLCanvasElement;
+  const ctx = canvas.getContext("2d")!;
+
+  let W = window.innerWidth;
+  let H = window.innerHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  window.addEventListener("resize", () => {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    initStars();
+  });
+
+  interface Star {
+    x: number;
+    y: number;
+    r: number;
+    alpha: number;
+    alphaDir: number;
+    speed: number;
+    vx: number;
+    vy: number;
+  }
+
+  const STAR_COUNT = 180;
+  let stars: Star[] = [];
+
+  function initStars() {
+    stars = Array.from({ length: STAR_COUNT }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      alpha: Math.random(),
+      alphaDir: Math.random() > 0.5 ? 1 : -1,
+      speed: Math.random() * 0.004 + 0.002,
+      vx: (Math.random() - 0.5) * 0.08,
+      vy: (Math.random() - 0.5) * 0.08,
+    }));
+  }
+
+  initStars();
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (const s of stars) {
+      s.x += s.vx;
+      s.y += s.vy;
+
+      if (s.x < -2) s.x = W + 2;
+      if (s.x > W + 2) s.x = -2;
+      if (s.y < -2) s.y = H + 2;
+      if (s.y > H + 2) s.y = -2;
+
+      s.alpha += s.alphaDir * s.speed;
+      if (s.alpha > 0.85) { s.alpha = 0.85; s.alphaDir = -1; }
+      if (s.alpha < 0.05) { s.alpha = 0.05; s.alphaDir = 1; }
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+</script>

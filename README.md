@@ -1,0 +1,31 @@
+# NWOS — Narrative Work OS
+
+Web de NWOS (Narrative Work OS) y del sistema operativo interno de Numinia / Numen Games. Extraída de [pablofm-web](https://github.com/PabloFMM/pablofm-web), donde vivió durante su fase de experimentación.
+
+**URL**: https://nwos.numen.games
+
+## Stack
+
+- Astro 5 (`output: "static"` + adaptador Vercel) con islas React 19
+- Tailwind 3 + shadcn/ui, dark-only, tipografía Geist
+- Sistema de diseño en `DESIGN.md`
+
+## Desarrollo
+
+Requiere Node ≥ 22.12.
+
+```bash
+npm install
+npm run dev      # http://localhost:4321
+npm run build
+```
+
+## Variables de entorno
+
+Las rutas SSR (`/velo`, `/workspace/[slug]`, `/api/*`) necesitan las variables de `.env.example` (GitHub + Anthropic). Sin ellas, el resto del sitio funciona pero esas rutas devuelven 500.
+
+## Estructura
+
+- `src/pages/` — rutas estáticas (misiones, decisiones, planos, reportes, archive…) y SSR (`velo`, `workspace/`, `api/`)
+- `src/data/` — datos hardcodeados en TS; `missions.ts` carga misiones del repo `numengames/numinia-digital-agents` en build (checkout hermano o API de GitHub)
+- El flujo de deploy NWOS: `/velo` → `POST /api/registro` → crea repo privado desde template, genera docs canon con Claude y se explora en `/workspace/[slug]`

@@ -1,0 +1,13 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import WorkspaceViewer from "@/components/WorkspaceViewer";
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+---
+
+<Layout title={`${slug} — NWOS Workspace`} activeNav="velo">
+	<WorkspaceViewer slug={slug!} client:load />
+</Layout>
+

@@ -79,11 +79,13 @@ async function generateContent(
   const prompt = promptTemplate.replace(/\{companyName\}/g, companyName);
 
   const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 4096,
+    model: "claude-sonnet-5",
+    // Sonnet 5 piensa por defecto y max_tokens cubre pensamiento + texto:
+    // hace falta margen para que la respuesta no llegue truncada.
+    max_tokens: 16000,
     tools: [
       {
-        type: "web_search_20250305",
+        type: "web_search_20260209",
         name: "web_search",
       },
     ],

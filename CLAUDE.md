@@ -12,7 +12,7 @@ No tests, lint, or CI. Node ≥ 22.12 required.
 
 ## Stack & architecture
 
-Astro 5, `output: "static"` with the Cloudflare Workers adapter (`@astrojs/cloudflare` v12, config in `wrangler.jsonc`), to be deployed at `https://numinia.org` (pending DNS/deploy). React 19 islands only where a `client:` directive is used. Tailwind 3 with tokens as CSS vars in `src/styles/global.css`, shadcn/ui in `src/components/ui/`. Path alias `@/*` → `src/*`. Dark-only design system documented in `DESIGN.md` (its layout/spacing rules apply, but it was written for pablofm.com and lists an orange accent — this repo's actual accent is teal `#2DD4BF`; trust the tokens in `src/styles/global.css`. Fonts are Geist/Geist Mono).
+Astro 5, `output: "static"` with the Cloudflare Workers adapter (`@astrojs/cloudflare` v12, config in `wrangler.jsonc`), deployed at `https://nwos.numen.games`. React 19 islands only where a `client:` directive is used. Tailwind 3 with tokens as CSS vars in `src/styles/global.css`, shadcn/ui in `src/components/ui/`. Path alias `@/*` → `src/*`. Dark-only design system documented in `DESIGN.md` (its layout/spacing rules apply, but it was written for pablofm.com and lists an orange accent — this repo's actual accent is teal `#2DD4BF`; trust the tokens in `src/styles/global.css`. Fonts are Geist/Geist Mono).
 
 This repo was extracted from `pablofm-web` (Pablo FM's personal site), which keeps redirects pointing here.
 

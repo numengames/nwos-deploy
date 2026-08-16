@@ -2,7 +2,7 @@
 
 Web de NWOS (Narrative Work OS) y del sistema operativo interno de Numinia / Numen Games. Extraída de [pablofm-web](https://github.com/PabloFMM/pablofm-web), donde vivió durante su fase de experimentación.
 
-**URL**: https://numinia.org
+**URL**: https://nwos.numen.games
 
 ## Stack
 

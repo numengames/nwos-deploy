@@ -11,11 +11,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://numinia.org",
+	site: "https://nwos.numen.games",
 	output: "static",
-	redirects: {
-		"/nwos": "/",
-	},
 	adapter: cloudflare({ platformProxy: { enabled: true } }),
 	integrations: [react(), tailwind(), sitemap()],
 	vite: {

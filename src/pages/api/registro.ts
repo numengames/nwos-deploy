@@ -233,8 +233,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const anthropicKey = env.ANTHROPIC_API_KEY;
 
     if (!org || !templateRepo || !token || !anthropicKey) {
+      const missing = [
+        !org && "GITHUB_ORG",
+        !templateRepo && "GITHUB_TEMPLATE_REPO",
+        !token && "GITHUB_TOKEN",
+        !anthropicKey && "ANTHROPIC_API_KEY",
+      ]
+        .filter(Boolean)
+        .join(", ");
+      const runtimeKeys = Object.keys(
+        (locals as any).runtime?.env ?? {}
+      ).join(",");
       console.error(
-        "Missing env vars: GITHUB_ORG, GITHUB_TEMPLATE_REPO, GITHUB_TOKEN, or ANTHROPIC_API_KEY"
+        `Missing env vars: ${missing} — runtime env keys: [${runtimeKeys || "runtime ausente o vacío"}]`
       );
       return new Response(
         JSON.stringify({ error: "Configuración del servidor incompleta" }),

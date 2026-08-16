@@ -284,9 +284,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Wait for GitHub to finish copying files
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    // Personalize files — replace placeholders with real data
+    // Personalize files — replace placeholders with real data.
+    // Solo archivos raíz del workspace: los _template/ del repo generado
+    // llevan placeholders a propósito y no deben tocarse.
     const filesToPersonalize = [
       "README.md",
+      "CHANGELOG.md",
+      "web/index.html",
       "canon/C-001-mission-vision-values.md",
       "canon/C-002-culture.md",
       "canon/C-003-org-structure.md",
@@ -305,13 +309,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
           "base64"
         ).toString("utf-8");
 
+        const deployDate = new Date().toISOString().split("T")[0];
         const updated = content
           .replace(/\{\{COMPANY_NAME\}\}/g, companyName)
           .replace(/\{\{RESPONSIBLE_EMAIL\}\}/g, email)
-          .replace(
-            /\{\{DEPLOY_DATE\}\}/g,
-            new Date().toISOString().split("T")[0]
-          );
+          .replace(/\{\{DEPLOY_DATE\}\}/g, deployDate)
+          // {{DATE}} solo aparece en CHANGELOG.md entre los archivos de esta
+          // lista; en los _template/ debe sobrevivir, pero esos no se tocan.
+          .replace(/\{\{DATE\}\}/g, deployDate);
 
         await octokit.request(
           "PUT /repos/{owner}/{repo}/contents/{path}",

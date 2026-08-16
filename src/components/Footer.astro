@@ -1,5 +1,4 @@
 ---
-import { navItems } from "@/data/navigation";
 import { socialLinks } from "@/data/social-links";
 ---
 
@@ -19,14 +18,8 @@ import { socialLinks } from "@/data/social-links";
       <!-- Nav links -->
       <div class="flex flex-col gap-2 text-center sm:text-left">
         <span class="mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Navegación</span>
-        {navItems.map((item) => (
-          <a
-            href={item.href}
-            class="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {item.label}
-          </a>
-        ))}
+        <a href="/" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Home</a>
+        <a href="/velo" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Deploy workspace</a>
       </div>
 
       <!-- Social links -->

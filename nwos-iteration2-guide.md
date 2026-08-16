@@ -299,7 +299,7 @@ This call is NOT awaited — the user gets their success response immediately, a
 
 ### Step 4: Add STATUS.md to the template repo
 
-In the `nwos-template` repo (on GitHub, in the `numen-games-nwos-orgs` org), add a file called `STATUS.md` at the root:
+In the `nwos-workspace-template` repo (renamed from `nwos-template`) (on GitHub, in the `numen-games-nwos-orgs` org), add a file called `STATUS.md` at the root:
 
 ```markdown
 # Workspace Status
@@ -338,7 +338,7 @@ Make sure these exist in `.env` AND in Vercel:
 ```
 GITHUB_TOKEN=ghp_xxxx
 GITHUB_ORG=numen-games-nwos-orgs
-GITHUB_TEMPLATE_REPO=nwos-template
+GITHUB_TEMPLATE_REPO=nwos-workspace-template
 ANTHROPIC_API_KEY=sk-ant-xxxx
 ```
 

@@ -11,6 +11,9 @@
 		"binding": "ASSETS",
 		"directory": "./dist"
 	},
+	"routes": [
+		{ "pattern": "nwos.numen.games", "custom_domain": true }
+	],
 	"observability": {
 		"enabled": true
 	}

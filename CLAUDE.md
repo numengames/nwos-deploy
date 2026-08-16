@@ -12,14 +12,14 @@ No tests, lint, or CI. Node ≥ 22.12 required.
 
 ## Stack & architecture
 
-Astro 5, `output: "static"` with the Cloudflare Workers adapter (`@astrojs/cloudflare` v12, config in `wrangler.jsonc`), deployed at `https://nwos.numen.games`. React 19 islands only where a `client:` directive is used. Tailwind 3 with tokens as CSS vars in `src/styles/global.css`, shadcn/ui in `src/components/ui/`. Path alias `@/*` → `src/*`. Dark-only design system documented in `DESIGN.md` (its layout/spacing rules apply, but it was written for pablofm.com and lists an orange accent — this repo's actual accent is teal `#2DD4BF`; trust the tokens in `src/styles/global.css`. Fonts are Geist/Geist Mono).
+Astro 5, `output: "static"` with the Cloudflare Workers adapter (`@astrojs/cloudflare` v12, config in `wrangler.jsonc`), deployed at `https://nwos.numen.games`. React 19 islands only where a `client:` directive is used. Tailwind 3 with tokens as CSS vars in `src/styles/global.css`. Path alias `@/*` → `src/*`. Dark-only design system documented in `DESIGN.md` (its layout/spacing rules apply, but it was written for pablofm.com and lists an orange accent — this repo's actual accent is teal `#2DD4BF`; trust the tokens in `src/styles/global.css`. Fonts are Geist/Geist Mono).
 
-This repo was extracted from `pablofm-web` (Pablo FM's personal site), which keeps redirects pointing here.
+This repo was extracted from `pablofm-web` (Pablo FM's personal site). The Numinia viewer that used to live here was extracted to `numengames/numinia-nwos` (branch `merge-viewer`, serving numinia.org); this repo is only the NWOS deployment service.
 
-- **Routes**: `src/pages/`, mostly static `.astro` pages in Spanish (`misiones`, `decisiones`, `planos`, `reportes`, `archive`, etc.). The index is the English NWOS product landing (`/nwos` redirects to `/`). Dynamic routes (`[id].astro`) map over hardcoded TS modules in `src/data/` with `getStaticPaths()`; `archive/[fondo].astro` keeps its data inline in the page.
+- **Routes**: exactly three pages — `/` (English product landing, static), `/velo` (deploy form, SSR), `/workspace/[slug]` (workspace browser, SSR) — plus the API routes under `src/pages/api/`.
 - **SSR opt-outs** (`export const prerender = false`): `velo.astro`, `workspace/[slug].astro`, and all `src/pages/api/*`.
 - **NWOS deploy flow**: `/velo` renders `DeployForm.tsx` → POST `/api/registro` → creates a private GitHub repo from a template, generates canon docs with the Anthropic API (+ web search tool), commits them, updates `STATUS.md`. Browsed at `/workspace/[slug]?key=<hmac>` via `WorkspaceViewer.tsx` calling `/api/workspace/[slug]/tree` and `/file` — both require the per-workspace access key (HMAC of the slug, `src/lib/token.ts`) that `/api/registro` returns once at deploy time. The original specs for this flow live in `nwos-iteration2-guide.md` and `nwos-iteration3-guide.md` at the repo root (historical — they still refer to pablofm-web).
-- **`src/data/missions.ts` is an orphan module — nothing imports it**: it has top-level await that would load mission markdown from `numengames/numinia-digital-agents` (sibling checkout, then unauthenticated GitHub API), but `/missions` actually uses client-side fetches plus a `missions-index.json` from that repo. Separate from and not synced with `misiones.ts` (hardcoded Spanish data feeding `/misiones`).
+- **`src/components/SnapshotNotice.astro` is an orphan**: it was written for the viewer pages after the extraction snapshot was taken, so it exists nowhere else; kept here until it is ported to `numinia-nwos`.
 
 ## Environment variables
 

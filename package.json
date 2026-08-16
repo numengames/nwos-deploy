@@ -1,5 +1,5 @@
 {
-  "name": "nwos-web",
+  "name": "nwos-deploy",
   "type": "module",
   "version": "0.0.1",
   "engines": {

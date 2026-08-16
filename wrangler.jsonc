@@ -1,5 +1,7 @@
+// Cloudflare Workers config — declarative and portable; never dashboard-only.
+// Deploys the Astro build (static assets + SSR worker) at https://nwos.numen.games.
 {
-	"name": "nwos-web",
+	"name": "nwos-deploy",
 	"main": "./dist/_worker.js/index.js",
 	"compatibility_date": "2026-08-14",
 	"compatibility_flags": ["nodejs_compat"],
@@ -10,4 +12,13 @@
 	"observability": {
 		"enabled": true
 	}
+	// Required secrets (set with `npx wrangler secret put <KEY>`; never commit values.
+	// For local `wrangler dev`, put them in .dev.vars):
+	//   GITHUB_TOKEN          — token with repo-creation rights in GITHUB_ORG
+	//   GITHUB_ORG            — org that owns the template and the generated workspaces
+	//   GITHUB_TEMPLATE_REPO  — workspace template repo name (nwos-workspace-template)
+	//   ANTHROPIC_API_KEY     — canon doc generation in /api/registro
+	// Optional:
+	//   WORKSPACE_KEY_SECRET  — HMAC secret for workspace access keys
+	//                           (falls back to GITHUB_TOKEN if unset)
 }

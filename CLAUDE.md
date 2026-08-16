@@ -34,17 +34,34 @@ the engine's · assets/data/metadata/design tokens → `CC0-1.0` · docs/ADRs/sp
 `CC-BY-4.0` · lore/brand/unpublished → none, all rights reserved.
 
 A monorepo may mix these: declare per directory in `REUSE.toml`. Dependencies MUST
-flow apps → packages, never the reverse.
+flow apps → packages, never the reverse. **One file, one regime:** never write an
+`AND` expression mixing an open license with reserved — that is an unsatisfiable
+permission. Split the content out into its own file instead.
+
+**Generators:** a generator never propagates its own license to what it generates. The
+template is ours (usually MIT); the generated work belongs to whoever commissioned it,
+and the template MUST emit a reserved-rights `LICENSE` in the client's name — never its
+own, never none. Reserved means a `LICENSE` that says so; silence does not declare.
 
 Every code file starts with:
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: MIT   (or the applicable ID)
 
 **Consume:** MIT · ISC · BSD · Apache-2.0 · 0BSD · CC0-1.0 · CC-BY-4.0 freely.
-MPL-2.0 · EPL-2.0 · LGPL-3.0 with isolation. GPL/AGPL only in their own repo with a
-signed decision. NEVER: BUSL, SSPL, Elastic, Commons Clause, proprietary, CC-NC,
-CC-ND, or anything without a declared `license` field. Resolve every dependency's SPDX
-from the registry BEFORE adding it — never from memory.
+MPL-2.0 · EPL-2.0 · LGPL-3.0 with isolation. **Third-party** GPL/AGPL only in a
+separate repo with a signed decision. NEVER: BUSL, SSPL, Elastic, Commons Clause,
+proprietary, CC-NC, CC-ND. Resolve every dependency's SPDX from the registry BEFORE
+adding it — never from memory.
+
+**Present is not distributed.** A forbidden transitive dependency that tree-shaking
+keeps out of the artifact does NOT block work, but MUST be logged in `LEGAL_DEBT.md`
+with an **exit threshold** (a condition, not a date, evaluated by CI on every build)
+and guarded by a check that inspects the artifact's **contents** — bundler metafile or
+module paths, never comment strings, which minifiers strip. Hard limit: **if that
+licence imposes additional restrictions and the artifact is AGPL, no exception is
+possible** — the result is unsatisfiable, not merely undesirable. A missing `license`
+field is a hygiene signal, not a breach on its own: it blocks while the terms are
+unknown and clears once you read the package's LICENSE and document them.
 
 **Floor rule:** the strongest copyleft in the distributed tree sets the minimum
 outbound license — one GPL import excludes MIT output. devDependencies and build tools
@@ -63,8 +80,18 @@ artifacts or metadata-less binaries to insert an SPDX header — declare them in
 package.json. CI runs `license-check`: error on `.com`, warning on `.store`.
 
 **Stop and ask — never proceed alone:**
-- Ownership of a piece is unclear or undocumented
+- **Turning any repository public** — that IS the grant, before any `npm publish`.
+  Gated and signed off, like Arweave. Verify the sensitive directories against a real
+  listing, never a hand-written list.
 - Publishing anything CC0 to Arweave (irreversible; gated; requires sign-off)
-- First `npm publish` of any package (locks the MIT edge forever)
-- Files containing people, voices, or personal data
+- Ownership of a piece is unclear or undocumented
+- Files containing people, voices, or personal data — CC0 waives our rights, never
+  someone else's
 - Any license outside the lists above
+
+**CI severity defaults to error.** Warning is the listed exception, for surfaces that
+neither deploy to production nor publish. Severity follows exposure, not directory or
+domain names; if exposure can't be determined, error.
+
+Full canon: `C-005 · Canon de Licencias`. This block is authoritative for day-to-day
+work; when it is silent, ask rather than infer.

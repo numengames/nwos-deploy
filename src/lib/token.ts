@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
 // Clave de acceso por workspace: HMAC-SHA256(slug) con un secreto del
 // servidor. Se emite una sola vez en /api/registro y las rutas de lectura
 // (/api/workspace/*) la exigen — sin ella los repos privados no son legibles.

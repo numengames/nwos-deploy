@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useEffect, useMemo, useState } from "react";
 
 export default function DeployForm() {

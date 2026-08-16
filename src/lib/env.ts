@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
 // En el runtime de Cloudflare Workers los secrets solo existen en
 // locals.runtime.env; import.meta.env queda como fallback para que
 // `npm run dev` siga leyendo el .env local. Con platformProxy activado

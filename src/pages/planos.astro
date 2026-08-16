@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 import { planos } from "@/data/planos";
 
@@ -19,6 +20,7 @@ const pendientes = ["plano-numinia", "plano-jugador", "plano-lore"];
   canonicalPath="/planos"
   activeNav="planos"
 >
+  <SnapshotNotice />
   <PageHero
     label="CAO · Registro Akáshico"
     title="Los Planos del Mundo"

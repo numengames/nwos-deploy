@@ -5,9 +5,9 @@ import WorkspaceViewer from "@/components/WorkspaceViewer";
 export const prerender = false;
 
 const { slug } = Astro.params;
+const accessKey = Astro.url.searchParams.get("key") ?? "";
 ---
 
-<Layout title={`${slug} — NWOS Workspace`} activeNav="velo">
-	<WorkspaceViewer slug={slug!} client:load />
+<Layout title={`${slug} — NWOS Workspace`} activeNav="velo" canonicalPath={`/workspace/${slug}`}>
+	<WorkspaceViewer slug={slug!} accessKey={accessKey} client:load />
 </Layout>
-

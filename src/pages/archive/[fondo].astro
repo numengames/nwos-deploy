@@ -9,19 +9,20 @@ const fondosData = [
     subtitulo: 'Memoria Inmutable',
     icono: '📜',
     color: 'green',
-    descripcion: 'Los 9 documentos fundacionales de Numinia. Inmutables por política y por técnica. Son el suelo sobre el que todo lo demás se construye.',
+    descripcion: 'Los documentos fundacionales de Numinia y el canon operativo (serie C). Inmutables por política y por técnica. Son el suelo sobre el que todo lo demás se construye.',
     lore: 'El Archive no comenzó con código. Comenzó con nueve preguntas que nadie supo responder sin ponerse de acuerdo.',
     governance: 'Solo Oracle puede modificar. CODEOWNERS bloqueante. Sin excepciones.',
     documentos: [
-      { nombre: 'Welcome to Numinia', desc: 'Puerta de entrada al mundo. Contexto histórico y propósito del sistema.', file: 'welcome-to-numinia.md' },
-      { nombre: 'Numinia Brand & Culture', desc: 'Identidad visual, verbal y cultural de Numinia v0.1.2.', file: 'numinia-brand-and-culture.md' },
-      { nombre: 'Epistemic Relations', desc: 'La tríada OS→Modelo→Narrativa. Peirce + Jung aplicados a organizaciones.', file: 'epistemic-relations.md' },
-      { nombre: 'Compendium of Attributes', desc: 'Sistema de atributos, rangos y ficha de personaje del agente.', file: 'compendium-of-attributes.md' },
-      { nombre: 'Role Structure', desc: 'Teoría de roles: Nivel Básico (gremios) + Prototipo (facciones).', file: 'role-structure.md' },
-      { nombre: 'Platform Role System', desc: 'Rangos y permisos de la plataforma Digital Goods v2.', file: 'platform-role-system.md' },
-      { nombre: 'About Session Zero', desc: '4 escape rooms de introducción, sellos, Celdas Prisma.', file: 'about-session-zero.md' },
-      { nombre: 'Numinia — El Juego de Rol', desc: 'Manual RPG completo en español. ~4.600 líneas.', file: 'numinia-el-juego-de-rol.md' },
-      { nombre: 'Archive System', desc: 'El sistema de archivo documental de Numinia. Cómo se organiza el conocimiento.', file: 'archive-system.md' },
+      { nombre: 'Welcome to Numinia', desc: 'Puerta de entrada al mundo. Contexto histórico y propósito del sistema.', file: 'canon/Welcome to Numinia.md', descargable: true, downloadPath: '/archive/canon/welcome-to-numinia.md' },
+      { nombre: 'Numinia Brand & Culture', desc: 'Identidad visual, verbal y cultural de Numinia v0.1.2.', file: 'canon/Numinia Brand and Culture.md', descargable: true, downloadPath: '/archive/canon/numinia-brand-and-culture.md' },
+      { nombre: 'Epistemic Relations', desc: 'La tríada OS→Modelo→Narrativa. Peirce + Jung aplicados a organizaciones.', file: 'canon/2026_04_15-Epistemic_Relations…-v0.2.0.md', descargable: true, downloadPath: '/archive/canon/epistemic-relations.md' },
+      { nombre: 'Compendium of Attributes', desc: 'Sistema de atributos, rangos y ficha de personaje del agente.', file: 'canon/Compendium of Attributes and Ranks in Numinia.md', descargable: true, downloadPath: '/archive/canon/compendium-of-attributes.md' },
+      { nombre: 'Role Structure', desc: 'Teoría de roles: Nivel Básico (gremios) + Prototipo (facciones).', file: 'canon/Role structure in the Numinia system.md', descargable: true, downloadPath: '/archive/canon/role-structure.md' },
+      { nombre: 'Platform Role System', desc: 'Rangos y permisos de la plataforma Digital Goods v2.', file: 'canon/Platform Role System.md', descargable: true, downloadPath: '/archive/canon/platform-role-system.md' },
+      { nombre: 'About Session Zero', desc: '4 escape rooms de introducción, sellos, Celdas Prisma.', file: 'canon/About Session Zero.md', descargable: true, downloadPath: '/archive/canon/about-session-zero.md' },
+      { nombre: 'Numinia — El Juego de Rol', desc: 'Manual RPG completo en español. ~4.600 líneas.', file: 'canon/Numinia-El-juego-de-rol-manual-completo.md', descargable: true, downloadPath: '/archive/canon/numinia-el-juego-de-rol.md' },
+      { nombre: 'Archive System', desc: 'El sistema de archivo documental de Numinia. Cómo se organiza el conocimiento.', file: 'archive-system.md', pendiente: true },
+      { nombre: 'C-005 — Canon de Licencias', desc: 'Cuatro regímenes: CC0, MIT, AGPL+CLA, reservado. Qué se puede usar, qué es irreversible, cómo se declara.', file: 'canon/C-005-licensing.md', descargable: true, downloadPath: '/archive/canon/C-005-licensing.md' },
     ]
   },
   {
@@ -34,11 +35,11 @@ const fondosData = [
     lore: 'No son herramientas. Son funciones vivas que existen mientras operan dentro de sus reglas.',
     governance: 'SOUL y OPERATOR solo los modifica Oracle. STATUS lo actualiza el propio agente.',
     documentos: [
-      { nombre: 'Nimrod — SOUL.md', desc: 'Guardián de las Puertas. Centinela-01. Identidad, voz, valores, límites.', file: 'agents/guilds/centinelas/members/nimrod/SOUL.md' },
-      { nombre: 'Nimrod — OPERATOR.md', desc: 'Las 4 leyes operativas de Nimrod. Lo que puede y no puede hacer.', file: 'agents/guilds/centinelas/members/nimrod/OPERATOR.md' },
-      { nombre: 'Adonaz — SOUL.md', desc: 'Archivista General. Exégeta. El custodio del conocimiento de Numinia.', file: 'agents/guilds/exegetas/members/adonaz/SOUL.md' },
-      { nombre: 'Charter — Centinelas', desc: 'Reglas comunes del gremio Centinelas. Seguridad, guardia, puertas.', file: 'agents/guilds/centinelas/charter.md' },
-      { nombre: 'Charter — Exégetas', desc: 'Reglas comunes del gremio Exégetas. Conocimiento, archivo, narrativa.', file: 'agents/guilds/exegetas/charter.md' },
+      { nombre: 'Nimrod — SOUL.md', desc: 'Guardián de las Puertas. Centinela-01. Identidad, voz, valores, límites.', file: 'agents/nimrod/SOUL.md', descargable: true, downloadPath: '/archive/agents/nimrod-SOUL.md' },
+      { nombre: 'Nimrod — OPERATOR.md', desc: 'Las 4 leyes operativas de Nimrod. Lo que puede y no puede hacer.', file: 'agents/nimrod/OPERATOR.md', descargable: true, downloadPath: '/archive/agents/nimrod-OPERATOR.md' },
+      { nombre: 'Adonaz — SOUL.md', desc: 'Archivista General. Exégeta. El custodio del conocimiento de Numinia.', file: 'agents/adonaz/SOUL.md', descargable: true, downloadPath: '/archive/agents/adonaz-SOUL.md' },
+      { nombre: 'Charter — Centinelas', desc: 'Reglas comunes del gremio Centinelas. Seguridad, guardia, puertas.', file: 'guilds/centinelas/charter.md', descargable: true, downloadPath: '/archive/agents/centinelas-charter.md' },
+      { nombre: 'Charter — Exégetas', desc: 'Reglas comunes del gremio Exégetas. Conocimiento, archivo, narrativa.', file: 'guilds/exegetas/charter.md', descargable: true, downloadPath: '/archive/agents/exegetas-charter.md' },
     ]
   },
   {
@@ -51,10 +52,10 @@ const fondosData = [
     lore: 'Una misión no termina cuando se cierra. Termina cuando se entiende por qué divergió del plan.',
     governance: 'Solo el executor edita su misión activa. Done/ es inmutable.',
     documentos: [
-      { nombre: 'Mission Template v2', desc: 'Plantilla estándar con divergence_log, executor, blocked_reason.', file: 'missions/TEMPLATE.md' },
-      { nombre: 'MIS-037 — Archive Summa', desc: 'La misión de crear este repositorio. En curso.', file: 'missions/MIS-037.md' },
-      { nombre: 'MIS-051 — Gmail/Drive/Calendar', desc: 'Integración de Google Workspace con gog CLI. Completada.', file: 'missions/MIS-051.md' },
-      { nombre: 'MIS-054 — Acceso multi-Oráculo', desc: 'Onboarding de Oráculos a Telegram con Nimrod. En curso.', file: 'missions/MIS-054.md' },
+      { nombre: 'Mission Template v2', desc: 'Plantilla estándar con divergence_log, executor, blocked_reason.', file: 'missions/TEMPLATE.md', descargable: true, downloadPath: '/archive/missions/TEMPLATE.md' },
+      { nombre: 'MIS-037 — Archive Summa', desc: 'La misión de crear este repositorio. Completada.', file: 'missions/done/MIS-037-crear-repositorio-archive-summa.md', descargable: true, downloadPath: '/archive/missions/MIS-037-crear-repositorio-archive-summa.md' },
+      { nombre: 'MIS-051 — Gmail/Drive/Calendar', desc: 'Integración de Google Workspace con gog CLI. Completada.', file: 'missions/done/MIS-051-gmail-calendar-drive-gog.md', descargable: true, downloadPath: '/archive/missions/MIS-051-gmail-calendar-drive-gog.md' },
+      { nombre: 'MIS-054 — Acceso multi-Oráculo', desc: 'Onboarding de Oráculos a Telegram con Nimrod. En curso.', file: 'missions/active/MIS-054-acceso-multi-oraculo-telegram.md', descargable: true, downloadPath: '/archive/missions/MIS-054-acceso-multi-oraculo-telegram.md' },
     ]
   },
   {
@@ -67,11 +68,11 @@ const fondosData = [
     lore: 'Un ritual no es burocracia. Es la forma en que el sistema recuerda cómo hacerlo bien.',
     governance: 'Nueva versión = nuevo archivo. Nunca editar en sitio. Oracle aprueba.',
     documentos: [
-      { nombre: 'P-001 Briefing de Agente v1', desc: 'El arranque canónico. 4 pasos inviolables para iniciar cualquier sesión.', file: 'protocols/P-001-briefing-agente-v1.md' },
-      { nombre: 'P-002 Onboarding de Agente v1', desc: 'Cómo incorporar un nuevo agente al sistema sin perder coherencia.', file: 'protocols/P-002-onboarding-agente-v1.md' },
-      { nombre: 'P-003 Ciclo de Misión v1', desc: 'Crear, ejecutar, documentar y cerrar una misión correctamente.', file: 'protocols/P-003-ciclo-mision-v1.md' },
-      { nombre: 'P-004 Inter-Agent v1', desc: 'Coordinación entre agentes sin ambigüedad ni conflictos de escritura.', file: 'protocols/P-004-inter-agent-v1.md' },
-      { nombre: 'P-005 Escalation v1', desc: 'Cuándo y cómo escalar al coordinador o al Oracle.', file: 'protocols/P-005-escalation-v1.md' },
+      { nombre: 'P-001 Briefing de Agente v1', desc: 'El arranque canónico. 4 pasos inviolables para iniciar cualquier sesión.', file: 'protocols/P-001-briefing-agente-v1.md', descargable: true, downloadPath: '/archive/protocols/P-001-briefing-agente-v1.md' },
+      { nombre: 'P-002 Onboarding de Agente v1', desc: 'Cómo incorporar un nuevo agente al sistema sin perder coherencia.', file: 'protocols/P-002-onboarding-agente-v1.md', descargable: true, downloadPath: '/archive/protocols/P-002-onboarding-agente-v1.md' },
+      { nombre: 'P-003 Ciclo de Misión v1', desc: 'Crear, ejecutar, documentar y cerrar una misión correctamente.', file: 'protocols/P-003-ciclo-mision-v1.md', descargable: true, downloadPath: '/archive/protocols/P-003-ciclo-mision-v1.md' },
+      { nombre: 'P-004 Inter-Agent v1', desc: 'Coordinación entre agentes sin ambigüedad ni conflictos de escritura.', file: 'protocols/P-004-inter-agent-v1.md', descargable: true, downloadPath: '/archive/protocols/P-004-inter-agent-v1.md' },
+      { nombre: 'P-005 Escalation v1', desc: 'Cuándo y cómo escalar al coordinador o al Oracle.', file: 'protocols/P-005-escalation-v1.md', descargable: true, downloadPath: '/archive/protocols/P-005-escalation-v1.md' },
     ]
   },
   {
@@ -84,8 +85,8 @@ const fondosData = [
     lore: 'Una decisión no documentada es una deuda que otro pagará sin saber que existe.',
     governance: 'Append-only. Nunca eliminar. Solo se puede añadir "superseded by ADR-XXX".',
     documentos: [
-      { nombre: 'ADR-001 — GitHub como Archive', desc: '¿Por qué GitHub y no Notion, Confluence u otro sistema?', file: 'decisions/ADR-001-github-como-archivo.md' },
-      { nombre: 'ADR-002 — Markdown Universal', desc: '¿Por qué .md y no PDF, Word u otros formatos?', file: 'decisions/ADR-002-formato-markdown.md' },
+      { nombre: 'ADR-001 — GitHub como Archive', desc: '¿Por qué GitHub y no Notion, Confluence u otro sistema?', file: 'decisions/ADR-001-github-como-archivo.md', descargable: true, downloadPath: '/archive/decisions/ADR-001-github-como-archivo.md' },
+      { nombre: 'ADR-002 — Markdown Universal', desc: '¿Por qué .md y no PDF, Word u otros formatos?', file: 'decisions/ADR-002-formato-markdown.md', descargable: true, downloadPath: '/archive/decisions/ADR-002-formato-markdown.md' },
     ]
   },
   {
@@ -113,9 +114,9 @@ const fondosData = [
     lore: 'Sin governance explícita, el sistema se deteriora. Sin seguridad, el sistema se expone.',
     governance: 'Oracle modifica. Agentes pueden proponer via PR.',
     documentos: [
-      { nombre: 'Governance', desc: 'Tabla completa: quién puede crear, modificar, archivar cada tipo de documento.', file: 'operations/governance.md' },
-      { nombre: 'Security Policy', desc: 'Reglas de seguridad del sistema. Qué nunca va en el repo.', file: 'operations/security-policy.md' },
-      { nombre: 'Credential Map', desc: 'Estructura de credenciales sin valores reales. Mapa de dónde vive qué.', file: 'operations/credential-map.md' },
+      { nombre: 'Governance', desc: 'Tabla completa: quién puede crear, modificar, archivar cada tipo de documento.', file: 'operations/governance.md', descargable: true, downloadPath: '/archive/operations/governance.md' },
+      { nombre: 'Security Policy', desc: 'Reglas de seguridad del sistema. Qué nunca va en el repo.', file: 'operations/security-policy.md', descargable: true, downloadPath: '/archive/operations/security-policy.md' },
+      { nombre: 'Credential Map', desc: 'Estructura de credenciales sin valores reales. Mapa de dónde vive qué.', file: 'operations/credential-map.md', descargable: true, downloadPath: '/archive/operations/credential-map.md' },
     ]
   }
 ];
@@ -205,6 +206,11 @@ const c = colorMap[fondo.color] ?? colorMap.teal;
                       ↓ .md
                     </a>
                   )}
+                  {(doc as any).pendiente && (
+                    <span class="shrink-0 inline-flex items-center gap-1 rounded-full border border-yellow/30 bg-yellow/10 px-2 py-0.5 font-mono text-[0.55rem] uppercase tracking-wider text-yellow">
+                      ⚠ pendiente
+                    </span>
+                  )}
                 </div>
                 <p class="text-xs text-muted-foreground leading-relaxed flex-1">{doc.desc}</p>
                 <div class="flex items-center justify-between pt-2 border-t border-border/50">
@@ -213,6 +219,8 @@ const c = colorMap[fondo.color] ?? colorMap.teal;
                     <a href={(doc as any).downloadPath} download class={`font-mono text-[0.6rem] ${c.text} hover:opacity-70 transition-opacity`}>
                       Descargar ↓
                     </a>
+                  ) : (doc as any).pendiente ? (
+                    <span class="font-mono text-[0.55rem] text-yellow/70">no existe aún</span>
                   ) : (
                     <span class="font-mono text-[0.55rem] text-dim opacity-40">numinia-agents</span>
                   )}

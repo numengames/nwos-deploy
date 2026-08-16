@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
 import HighlightBox from "@/components/HighlightBox.astro";
@@ -184,6 +185,7 @@ function bgColor(n: number) {
   canonicalPath="/gaps"
   activeNav=""
 >
+  <SnapshotNotice />
   <PageHero
     label="NWOS — Gaps"
     title="Los puntos ciegos que hay que ver antes de que te los señale el mercado"

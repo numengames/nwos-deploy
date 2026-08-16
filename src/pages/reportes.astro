@@ -1,8 +1,27 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 
 const reportes = [
+  {
+    id: "diario-2026-04-07",
+    tipo: "Diario",
+    fecha: "2026-04-07",
+    semana: "W15",
+    agente: "Nimrod",
+    modelo: "claude-sonnet-4.6",
+    titulo: "Reporte Diario — 2026-04-07",
+    resumen: "QA profundo del sistema. STANDARDS.md v1.0.0, arquitectura de agentes migrada a capa raíz, 6 nuevas páginas web. Score 8.8/10.",
+    prs: 6,
+    misiones: 57,
+    coste: "~$4",
+    destacado: [
+      "STANDARDS.md v1.0.0 — ISO 8601, UUID v7, BDD, ADR, Wardley, DORA, SemVer",
+      "P-006 Session Close Protocol — cierre de sesión con git commit obligatorio",
+      "Bug sentinels/centinelas resuelto — Nimrod existía en dos rutas duplicadas",
+    ],
+  },
   {
     id: "diario-2026-04-06",
     tipo: "Diario",
@@ -92,6 +111,7 @@ const tipoColor: Record<string, string> = {
   canonicalPath="/reportes"
   activeNav="reportes"
 >
+  <SnapshotNotice />
   <PageHero
     label="CAO · Centinela-01"
     title="Reportes de Actividad"

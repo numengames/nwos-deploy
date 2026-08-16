@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
 import HighlightBox from "@/components/HighlightBox.astro";
@@ -188,6 +189,7 @@ function pctBar(n: number, max = 100) {
   canonicalPath="/simulaciones"
   activeNav=""
 >
+  <SnapshotNotice />
   <PageHero
     label="NWOS — 100 Simulaciones"
     title="¿Qué pasa cuando el Narrative Work OS encuentra al mundo real?"

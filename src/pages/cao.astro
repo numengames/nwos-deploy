@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 
 // Métricas de la CAO — actualizadas por los agentes
@@ -113,6 +114,7 @@ const estadoLabel: Record<string, string> = {
   canonicalPath="/cao"
   activeNav="cao"
 >
+  <SnapshotNotice />
   <PageHero
     label="Numen Games · CAO"
     title="Dashboard de Agentes"

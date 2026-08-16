@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 import { misiones as misionesData } from "@/data/misiones";
 
@@ -130,6 +131,7 @@ const doneMisiones = sorted.filter(m => m.estado === "done");
   canonicalPath="/misiones"
   activeNav="misiones"
 >
+  <SnapshotNotice />
   <PageHero
     label="CAO · Procyon"
     title="Tablero de Misiones"

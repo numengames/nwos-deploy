@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 
 const score = 8.8;
 const scoreAntes = 9.5;
@@ -140,6 +141,7 @@ const raizDelProblema = {
   canonicalPath="/auditoria"
   activeNav="auditoria"
 >
+  <SnapshotNotice />
   <!-- Hero -->
   <section class="pt-16 pb-12 border-b border-border">
     <div class="mx-auto max-w-[800px] px-6">

@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
 import HighlightBox from "@/components/HighlightBox.astro";
@@ -232,6 +233,7 @@ const agentColors: Record<string, string> = {
   canonicalPath="/soluciones"
   activeNav=""
 >
+  <SnapshotNotice />
   <PageHero
     label="NWOS — Soluciones"
     title="De los puntos ciegos a las respuestas"

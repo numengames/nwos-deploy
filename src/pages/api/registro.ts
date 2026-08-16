@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
 import Anthropic from "@anthropic-ai/sdk";
 import { Octokit } from "octokit";
+import { getEnv } from "@/lib/env";
+import { keySecret, signWorkspaceKey } from "@/lib/token";
 
 function sanitize(name: string): string {
   return name
@@ -9,6 +11,11 @@ function sanitize(name: string): string {
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 }
+
+// Sin comillas, backticks, llaves ni saltos de línea: companyName se
+// interpola en los prompts del agente y en contenido commiteado al repo.
+const COMPANY_NAME_RE = /^[\p{L}\p{N}][\p{L}\p{N} .,&'()+-]{1,59}$/u;
+const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
 
 export const prerender = false;
 
@@ -165,9 +172,21 @@ ${progress}
   }
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const { companyName, email, acceptedTerms } = await request.json();
+    let body: any;
+    try {
+      body = await request.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Cuerpo de la petición no válido" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+    const companyName =
+      typeof body?.companyName === "string" ? body.companyName.trim() : "";
+    const email = typeof body?.email === "string" ? body.email.trim() : "";
+    const acceptedTerms = body?.acceptedTerms === true;
 
     if (!companyName || !email || !acceptedTerms) {
       return new Response(
@@ -176,11 +195,38 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    if (!COMPANY_NAME_RE.test(companyName)) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "Nombre de organización no válido: usa 2-60 caracteres (letras, números, espacios y . , & ' ( ) + -)",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!EMAIL_RE.test(email) || email.length > 254) {
+      return new Response(
+        JSON.stringify({ error: "Email no válido" }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const slug = sanitize(companyName);
-    const org = import.meta.env.GITHUB_ORG;
-    const templateRepo = import.meta.env.GITHUB_TEMPLATE_REPO;
-    const token = import.meta.env.GITHUB_TOKEN;
-    const anthropicKey = import.meta.env.ANTHROPIC_API_KEY;
+    if (slug.length < 2) {
+      return new Response(
+        JSON.stringify({
+          error: "El nombre debe contener al menos 2 caracteres alfanuméricos (a-z, 0-9)",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    const env = getEnv(locals);
+    const org = env.GITHUB_ORG;
+    const templateRepo = env.GITHUB_TEMPLATE_REPO;
+    const token = env.GITHUB_TOKEN;
+    const anthropicKey = env.ANTHROPIC_API_KEY;
 
     if (!org || !templateRepo || !token || !anthropicKey) {
       console.error(
@@ -195,18 +241,30 @@ export const POST: APIRoute = async ({ request }) => {
     const octokit = new Octokit({ auth: token });
     const anthropic = new Anthropic({ apiKey: anthropicKey });
 
-    // Create repo from template
-    await octokit.request(
-      "POST /repos/{template_owner}/{template_repo}/generate",
-      {
-        template_owner: org,
-        template_repo: templateRepo,
-        owner: org,
-        name: slug,
-        private: true,
-        description: `NWOS Workspace for ${companyName}`,
+    // Create repo from template. El 422 de "name already exists" solo puede
+    // venir de esta llamada — no lo mapeamos desde el catch global, donde un
+    // 422 posterior (p.ej. commit) daría un mensaje falso.
+    try {
+      await octokit.request(
+        "POST /repos/{template_owner}/{template_repo}/generate",
+        {
+          template_owner: org,
+          template_repo: templateRepo,
+          owner: org,
+          name: slug,
+          private: true,
+          description: `NWOS Workspace for ${companyName}`,
+        }
+      );
+    } catch (error: any) {
+      if (error?.status === 422) {
+        return new Response(
+          JSON.stringify({ error: "Ya existe un workspace con ese nombre" }),
+          { status: 422, headers: { "Content-Type": "application/json" } }
+        );
       }
-    );
+      throw error;
+    }
 
     // Wait for GitHub to finish copying files
     await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -280,23 +338,23 @@ export const POST: APIRoute = async ({ request }) => {
       }
     }
 
-    await updateStatus(octokit, org, slug, completedPaths, allPaths, true);
+    try {
+      await updateStatus(octokit, org, slug, completedPaths, allPaths, true);
+    } catch (e) {
+      // El workspace ya está creado y poblado; un fallo aquí no debe
+      // convertir el deploy en un error de cara al usuario.
+      console.error("Final STATUS.md update failed:", e);
+    }
 
     const repoUrl = `https://github.com/${org}/${slug}`;
+    const accessKey = await signWorkspaceKey(slug, keySecret(env));
 
     return new Response(
-      JSON.stringify({ success: true, slug, repoUrl }),
+      JSON.stringify({ success: true, slug, repoUrl, accessKey }),
       { status: 200, headers: { "Content-Type": "application/json" } }
     );
   } catch (error: any) {
     console.error("Deploy error:", error);
-
-    if (error.status === 422) {
-      return new Response(
-        JSON.stringify({ error: "Ya existe un workspace con ese nombre" }),
-        { status: 422, headers: { "Content-Type": "application/json" } }
-      );
-    }
 
     return new Response(
       JSON.stringify({ error: "Error interno del servidor" }),

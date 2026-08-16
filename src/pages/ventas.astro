@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import SnapshotNotice from "@/components/SnapshotNotice.astro";
 import PageHero from "@/components/PageHero.astro";
 import SectionHeader from "@/components/SectionHeader.astro";
 import HighlightBox from "@/components/HighlightBox.astro";
@@ -171,6 +172,7 @@ const colorMap: Record<string, string> = {
   canonicalPath="/ventas"
   activeNav=""
 >
+  <SnapshotNotice />
   <PageHero
     label="NWOS — Ventas"
     title="Cómo conseguir los primeros clientes"

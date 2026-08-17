@@ -11,6 +11,7 @@
     "build": "astro build",
     "postbuild": "node scripts/license-check.mjs",
     "license-check": "node scripts/license-check.mjs",
+    "test": "vitest run",
     "preview": "wrangler dev",
     "astro": "astro"
   },
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "vitest": "^4.1.10",
     "wrangler": "^4.123.0"
   }
 }

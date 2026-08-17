@@ -12,8 +12,8 @@ version = 1
 # --- Application code and configuration → AGPL-3.0-only (C-005 §2) -------
 [[annotations]]
 path = [
-  "src/**", "public/**",
-  "astro.config.mjs", "tailwind.config.mjs", "tsconfig.json",
+  "src/**", "public/**", "test/**", "scripts/**",
+  "astro.config.mjs", "tailwind.config.mjs", "tsconfig.json", "vitest.config.ts",
   "wrangler.jsonc", "package.json", "package-lock.json",
   ".gitignore", ".github/**",
 ]

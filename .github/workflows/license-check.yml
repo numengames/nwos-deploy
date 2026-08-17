@@ -21,6 +21,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm test
       # build + postbuild (license-check sobre dist/); las páginas
       # estáticas construyen sin secretos.
       - run: npm run build

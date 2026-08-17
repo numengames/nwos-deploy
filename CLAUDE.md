@@ -8,7 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` — production build to `dist/`
 - `npm run preview` — serve the production build locally
 
-No tests, lint, or CI. Node ≥ 22.12 required.
+- `npm test` — vitest unit tests in `test/` (pure logic: mould spec parsing, licence classification, tokens, slugs)
+- `npm run license-check` — C-005 §5 artifact guard over `dist/` (also runs as `postbuild`)
+
+CI (`.github/workflows/license-check.yml`) runs tests + build + license-check on push/PR, and a CLA gate on PRs. No lint. Node ≥ 22.12 required.
 
 ## Stack & architecture
 

@@ -71,6 +71,30 @@ Mark the document with <!-- NEEDS REVIEW --> if most terms are inferred.`,
   },
 ] as const;
 
+// PROVENANCE.md del workspace (aprobado en principio por el oráculo):
+// declara cómo se generaron los documentos canon. Un solo artefacto
+// localizable, no una cabecera por documento. La parte contractual va
+// marcada [ABOGADO]: la fija el contrato tras revisión de asesoría, no
+// este archivo. Se personaliza con los mismos reemplazos que el resto.
+const PROVENANCE_TEMPLATE = `# Procedencia de los documentos canon
+
+Los documentos de \`canon/\` fueron generados el {{DEPLOY_DATE}} por un
+sistema de IA (Claude, de Anthropic) con búsqueda web, por encargo de
+{{COMPANY_NAME}}.
+
+Son **borradores para revisión humana**: las secciones inferidas están
+marcadas \`<!-- NEEDS REVIEW -->\`, y el contenido puede derivar de
+fuentes públicas que deben verificarse antes de cualquier uso externo.
+Las versiones revisadas y editadas por {{COMPANY_NAME}} son obra suya a
+todos los efectos.
+
+<!-- [ABOGADO] Redacción contractual pendiente de asesoría jurídica; los
+compromisos los fija el contrato, no este archivo. -->
+En la medida en que exista algún derecho sobre estos textos, Numen Games
+S.L. lo cede íntegramente a {{COMPANY_NAME}} y se obliga a no conservar
+ni reutilizar copias.
+`;
+
 async function generateContent(
   client: Anthropic,
   companyName: string,
@@ -105,15 +129,56 @@ async function generateContent(
   return text.trim();
 }
 
-// Artefactos §5 del molde (canon C-005): su propia licencia MIT, el mapa
-// REUSE, las marcas y los textos de licencia. Son del molde, no del
-// trabajo generado, y no deben llegar al cliente.
-const MOULD_LICENSE_ARTIFACTS = [
-  "LICENSE",
-  "REUSE.toml",
-  "TRADEMARKS.md",
-  "LICENSES",
-] as const;
+// El REUSE.toml del molde declara en su cabecera, como spec legible por
+// máquina, qué artefactos son solo del molde (y se retiran del repo
+// generado) y qué archivo se renombra a LICENSE. Se lee del repo generado
+// en cada deploy: dos fuentes de verdad para el mismo hecho es como un
+// artefacto nuevo del molde (LEGAL_DEBT.md) llegó a heredarse. Formato:
+//
+//   # Mould-only artifacts, stripped by nwos-deploy after generation:
+//   #   LICENSE, LICENSES/, REUSE.toml, TRADEMARKS.md, LEGAL_DEBT.md
+//   # Renamed by nwos-deploy after generation:
+//   #   LICENSE.client -> LICENSE (placeholders resolved)
+//
+// Devuelve null si el spec no aparece o no es coherente: el deploy debe
+// abortar, nunca adivinar una lista.
+function parseMouldSpec(
+  reuseToml: string
+): { strip: string[]; renameFrom: string; renameTo: string } | null {
+  const lines = reuseToml
+    .split("\n")
+    .map((line) => line.replace(/^#\s?/, "").trim());
+
+  const stripIdx = lines.findIndex((line) =>
+    line.startsWith("Mould-only artifacts, stripped by nwos-deploy")
+  );
+  const renameIdx = lines.findIndex((line) =>
+    line.startsWith("Renamed by nwos-deploy")
+  );
+  if (stripIdx === -1 || renameIdx === -1) return null;
+
+  const strip: string[] = [];
+  for (let i = stripIdx + 1; i < renameIdx; i++) {
+    strip.push(
+      ...lines[i]
+        .split(",")
+        .map((entry) => entry.trim().replace(/\/$/, ""))
+        .filter(Boolean)
+    );
+  }
+
+  const rename = lines[renameIdx + 1]?.match(/^(\S+)\s*->\s*(\S+)/);
+  if (!rename || strip.length === 0) return null;
+  const [, renameFrom, renameTo] = rename;
+  if (renameFrom === renameTo) return null;
+
+  return {
+    // Defensivo: el archivo a renombrar nunca forma parte del strip.
+    strip: strip.filter((path) => path !== renameFrom),
+    renameFrom,
+    renameTo,
+  };
+}
 
 // Borra un path del repo si existe (404 = el molde no trae ese artefacto).
 // Los directorios se recorren y borran archivo a archivo: la contents API
@@ -330,13 +395,48 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Wait for GitHub to finish copying files
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
+    // Leer el spec del molde desde el propio repo generado: qué artefactos
+    // §5 se retiran y qué archivo pasa a ser el LICENSE del cliente. Es la
+    // única fuente de verdad; sin spec coherente el deploy aborta en vez
+    // de adivinar la lista.
+    let mouldSpec: ReturnType<typeof parseMouldSpec> = null;
+    try {
+      const { data: reuseData } = await octokit.request(
+        "GET /repos/{owner}/{repo}/contents/{path}",
+        { owner: org, repo: slug, path: "REUSE.toml" }
+      );
+      mouldSpec = parseMouldSpec(
+        Buffer.from((reuseData as any).content, "base64").toString("utf-8")
+      );
+      if (!mouldSpec) {
+        console.error(
+          `Aborting deploy of ${org}/${slug}: REUSE.toml carries no parseable mould spec`
+        );
+      }
+    } catch (e) {
+      console.error(
+        `Aborting deploy of ${org}/${slug}: cannot read REUSE.toml from generated repo:`,
+        e
+      );
+    }
+    if (!mouldSpec) {
+      return new Response(
+        JSON.stringify({
+          error:
+            "El despliegue se ha abortado: la plantilla no declara sus artefactos de licencia. Se ha creado un repositorio parcial; contacta con el equipo antes de reintentar.",
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     // Personalize files — replace placeholders with real data.
     // Solo archivos raíz del workspace: los _template/ del repo generado
     // llevan placeholders a propósito y no deben tocarse.
-    // LICENSE.client va primero: si falta o no se puede personalizar, el
-    // deploy aborta antes de tocar nada más (ver el catch del bucle).
+    // La futura licencia del cliente va primero: si falta o no se puede
+    // personalizar, el deploy aborta antes de tocar nada más (ver el
+    // catch del bucle).
     const filesToPersonalize = [
-      "LICENSE.client",
+      mouldSpec.renameFrom,
       "README.md",
       "CHANGELOG.md",
       "web/index.html",
@@ -379,13 +479,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
           }
         );
       } catch (e) {
-        // LICENSE.client es la licencia que se entrega al cliente: si no
-        // existe en el repo generado o no se puede personalizar, abortar.
-        // Un workspace sin ella acabaría con la licencia MIT del molde o
-        // sin LICENSE — peor que un deploy fallido (canon C-005).
-        if (filePath === "LICENSE.client") {
+        // renameFrom (LICENSE.client) es la licencia que se entrega al
+        // cliente: si no existe en el repo generado o no se puede
+        // personalizar, abortar. Un workspace sin ella acabaría con la
+        // licencia MIT del molde o sin LICENSE — peor que un deploy
+        // fallido (canon C-005).
+        if (filePath === mouldSpec.renameFrom) {
           console.error(
-            `Aborting deploy of ${org}/${slug}: LICENSE.client missing or personalization failed:`,
+            `Aborting deploy of ${org}/${slug}: ${mouldSpec.renameFrom} missing or personalization failed:`,
             e
           );
           return new Response(
@@ -401,16 +502,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Instalar la licencia del cliente. El molde nunca propaga su propia
-    // licencia al trabajo generado (canon C-005): se retiran sus artefactos
-    // §5 y LICENSE.client — ya verificado y personalizado por el bucle
-    // anterior — pasa a ser el LICENSE del workspace, con derechos
-    // reservados a nombre del cliente. Cualquier fallo aquí aborta.
+    // licencia al trabajo generado (canon C-005): se retiran los artefactos
+    // que su spec declara y renameFrom — ya verificado y personalizado por
+    // el bucle anterior — pasa a ser el LICENSE del workspace, con derechos
+    // reservados a nombre del cliente. También se deja PROVENANCE.md, que
+    // declara cómo se generaron los canon. Cualquier fallo aquí aborta.
     try {
-      // Releer LICENSE.client: confirma que sigue ahí antes del strip y da
-      // el sha fresco tras la personalización.
+      // Releer renameFrom: confirma que sigue ahí antes del strip y da el
+      // sha fresco tras la personalización.
       const { data: licenseData } = await octokit.request(
         "GET /repos/{owner}/{repo}/contents/{path}",
-        { owner: org, repo: slug, path: "LICENSE.client" }
+        { owner: org, repo: slug, path: mouldSpec.renameFrom }
       );
       const licenseContent = Buffer.from(
         (licenseData as any).content,
@@ -418,11 +520,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
       ).toString("utf-8");
       if (/\{\{(COMPANY_NAME|DEPLOY_DATE)\}\}/.test(licenseContent)) {
         throw new Error(
-          "LICENSE.client conserva placeholders sin personalizar"
+          `${mouldSpec.renameFrom} conserva placeholders sin personalizar`
         );
       }
 
-      for (const artifact of MOULD_LICENSE_ARTIFACTS) {
+      for (const artifact of mouldSpec.strip) {
         await deletePathIfPresent(
           octokit,
           org,
@@ -435,17 +537,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
       await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
         owner: org,
         repo: slug,
-        path: "LICENSE",
-        message: `Install client LICENSE for ${companyName}`,
+        path: mouldSpec.renameTo,
+        message: `Install client ${mouldSpec.renameTo} for ${companyName}`,
         content: Buffer.from(licenseContent).toString("base64"),
       });
 
       await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
         owner: org,
         repo: slug,
-        path: "LICENSE.client",
-        message: "Remove LICENSE.client after installing client LICENSE",
+        path: mouldSpec.renameFrom,
+        message: `Remove ${mouldSpec.renameFrom} after installing client ${mouldSpec.renameTo}`,
         sha: (licenseData as any).sha,
+      });
+
+      const provenance = PROVENANCE_TEMPLATE.replace(
+        /\{\{COMPANY_NAME\}\}/g,
+        companyName
+      ).replace(/\{\{DEPLOY_DATE\}\}/g, new Date().toISOString().split("T")[0]);
+      await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+        owner: org,
+        repo: slug,
+        path: "PROVENANCE.md",
+        message: `Declare canon provenance for ${companyName}`,
+        content: Buffer.from(provenance).toString("base64"),
       });
     } catch (e) {
       console.error(

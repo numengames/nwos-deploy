@@ -6,4 +6,4 @@ authors against the **GitHub user** column.
 
 | GitHub user | Name     | Email               | Date signed |
 | ----------- | -------- | ------------------- | ----------- |
-| PabloFM     | Pablo FM | fmmpablo@gmail.com  | 2026-08-17  |
+| PabloFMM    | Pablo FM | fmmpablo@gmail.com  | 2026-08-17  |

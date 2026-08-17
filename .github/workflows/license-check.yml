@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Numen Games S.L.
+# SPDX-License-Identifier: AGPL-3.0-only
+# Canon C-005 §5 (DEBE): license-check en cada build, inspeccionando el
+# contenido del artefacto (npm run build ejecuta postbuild →
+# scripts/license-check.mjs). Severidad error: este repo despliega a
+# producción. §6: gate de CLA en cada pull request (repo con código AGPL).
+name: license-check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # build + postbuild (license-check sobre dist/); las páginas
+      # estáticas construyen sin secretos.
+      - run: npm run build
+
+  cla:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify PR author signed the CLA
+        env:
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: |
+          if grep -qiE "^\|\s*${AUTHOR}\s*\|" CLA-SIGNATORIES.md; then
+            echo "CLA on file for ${AUTHOR}."
+          else
+            echo "::error::${AUTHOR} has not signed the CLA. Read CLA.md and add yourself to CLA-SIGNATORIES.md in this PR (see CONTRIBUTING.md)."
+            exit 1
+          fi

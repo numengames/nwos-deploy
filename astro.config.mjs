@@ -23,5 +23,11 @@ export default defineConfig({
 				"@": path.resolve(__dirname, "./src"),
 			},
 		},
+		build: {
+			// scripts/license-check.mjs inspecciona los module paths del
+			// artefacto vía sourcemaps (canon C-005 §5: contenido, nunca
+			// comentarios). App AGPL: publicar los maps es coherente.
+			sourcemap: true,
+		},
 	},
 });

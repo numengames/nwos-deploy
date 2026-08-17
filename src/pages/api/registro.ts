@@ -105,6 +105,52 @@ async function generateContent(
   return text.trim();
 }
 
+// Artefactos §5 del molde (canon C-005): su propia licencia MIT, el mapa
+// REUSE, las marcas y los textos de licencia. Son del molde, no del
+// trabajo generado, y no deben llegar al cliente.
+const MOULD_LICENSE_ARTIFACTS = [
+  "LICENSE",
+  "REUSE.toml",
+  "TRADEMARKS.md",
+  "LICENSES",
+] as const;
+
+// Borra un path del repo si existe (404 = el molde no trae ese artefacto).
+// Los directorios se recorren y borran archivo a archivo: la contents API
+// de GitHub no borra directorios enteros.
+async function deletePathIfPresent(
+  octokit: Octokit,
+  org: string,
+  repo: string,
+  path: string,
+  message: string
+): Promise<void> {
+  let data: any;
+  try {
+    ({ data } = await octokit.request(
+      "GET /repos/{owner}/{repo}/contents/{path}",
+      { owner: org, repo, path }
+    ));
+  } catch (error: any) {
+    if (error?.status === 404) return;
+    throw error;
+  }
+
+  for (const entry of Array.isArray(data) ? data : [data]) {
+    if (entry.type === "dir") {
+      await deletePathIfPresent(octokit, org, repo, entry.path, message);
+    } else {
+      await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
+        owner: org,
+        repo,
+        path: entry.path,
+        message,
+        sha: entry.sha,
+      });
+    }
+  }
+}
+
 async function commitFile(
   octokit: Octokit,
   org: string,
@@ -287,7 +333,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Personalize files — replace placeholders with real data.
     // Solo archivos raíz del workspace: los _template/ del repo generado
     // llevan placeholders a propósito y no deben tocarse.
+    // LICENSE.client va primero: si falta o no se puede personalizar, el
+    // deploy aborta antes de tocar nada más (ver el catch del bucle).
     const filesToPersonalize = [
+      "LICENSE.client",
       "README.md",
       "CHANGELOG.md",
       "web/index.html",
@@ -330,8 +379,86 @@ export const POST: APIRoute = async ({ request, locals }) => {
           }
         );
       } catch (e) {
+        // LICENSE.client es la licencia que se entrega al cliente: si no
+        // existe en el repo generado o no se puede personalizar, abortar.
+        // Un workspace sin ella acabaría con la licencia MIT del molde o
+        // sin LICENSE — peor que un deploy fallido (canon C-005).
+        if (filePath === "LICENSE.client") {
+          console.error(
+            `Aborting deploy of ${org}/${slug}: LICENSE.client missing or personalization failed:`,
+            e
+          );
+          return new Response(
+            JSON.stringify({
+              error:
+                "El despliegue se ha abortado: no se pudo preparar la licencia del workspace. Se ha creado un repositorio parcial; contacta con el equipo antes de reintentar.",
+            }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+          );
+        }
         console.warn(`Skipping ${filePath}:`, e);
       }
+    }
+
+    // Instalar la licencia del cliente. El molde nunca propaga su propia
+    // licencia al trabajo generado (canon C-005): se retiran sus artefactos
+    // §5 y LICENSE.client — ya verificado y personalizado por el bucle
+    // anterior — pasa a ser el LICENSE del workspace, con derechos
+    // reservados a nombre del cliente. Cualquier fallo aquí aborta.
+    try {
+      // Releer LICENSE.client: confirma que sigue ahí antes del strip y da
+      // el sha fresco tras la personalización.
+      const { data: licenseData } = await octokit.request(
+        "GET /repos/{owner}/{repo}/contents/{path}",
+        { owner: org, repo: slug, path: "LICENSE.client" }
+      );
+      const licenseContent = Buffer.from(
+        (licenseData as any).content,
+        "base64"
+      ).toString("utf-8");
+      if (/\{\{(COMPANY_NAME|DEPLOY_DATE)\}\}/.test(licenseContent)) {
+        throw new Error(
+          "LICENSE.client conserva placeholders sin personalizar"
+        );
+      }
+
+      for (const artifact of MOULD_LICENSE_ARTIFACTS) {
+        await deletePathIfPresent(
+          octokit,
+          org,
+          slug,
+          artifact,
+          `Strip template licensing artifact ${artifact}`
+        );
+      }
+
+      await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+        owner: org,
+        repo: slug,
+        path: "LICENSE",
+        message: `Install client LICENSE for ${companyName}`,
+        content: Buffer.from(licenseContent).toString("base64"),
+      });
+
+      await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
+        owner: org,
+        repo: slug,
+        path: "LICENSE.client",
+        message: "Remove LICENSE.client after installing client LICENSE",
+        sha: (licenseData as any).sha,
+      });
+    } catch (e) {
+      console.error(
+        `Aborting deploy of ${org}/${slug}: client LICENSE install failed:`,
+        e
+      );
+      return new Response(
+        JSON.stringify({
+          error:
+            "El despliegue se ha abortado: no se pudo instalar la licencia del workspace. Se ha creado un repositorio parcial; contacta con el equipo antes de reintentar.",
+        }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
     }
 
     // Run agent population inline (user waits)

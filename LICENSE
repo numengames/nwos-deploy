@@ -8,6 +8,9 @@ REUSE.toml with full texts in LICENSES/ (Numinia canon C-005):
   - Documentation, specs, guides                   CC-BY-4.0
   - Brand marks (favicons)                         All rights reserved
                                                    (LicenseRef-Numen-AllRightsReserved)
+  - Geist / Geist Mono fonts, third party,
+    served with the site (their licence text
+    accompanies them at /licenses/OFL-1.1.txt)     OFL-1.1
 
 Where REUSE.toml declares no license for a path, no rights are granted:
 all rights reserved.
@@ -18,6 +21,7 @@ this service belong to the client who commissioned them and do not
 inherit this repository's license (C-005 §2.5).
 
 Contributions to this repository require a CLA (C-005 §6: any repo
-containing AGPL code, per repo, not per path).
+containing AGPL code, per repo, not per path); see CLA.md and
+CONTRIBUTING.md.
 
 Trademarks are not licensed; see TRADEMARKS.md.

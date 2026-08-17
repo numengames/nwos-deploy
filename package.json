@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/license-check.mjs",
+    "license-check": "node scripts/license-check.mjs",
     "preview": "wrangler dev",
     "astro": "astro"
   },

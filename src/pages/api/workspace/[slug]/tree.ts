@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { APIRoute } from "astro";
+import { errorStatus } from "@/lib/log";
 import { Octokit } from "octokit";
 import { getEnv } from "@/lib/env";
 import { keySecret, verifyWorkspaceKey } from "@/lib/token";
@@ -45,15 +46,12 @@ export const GET: APIRoute = async ({ params, url, locals }) => {
 	const octokit = new Octokit({ auth: token });
 
 	try {
-		const { data } = await octokit.request(
-			"GET /repos/{owner}/{repo}/git/trees/{tree_sha}",
-			{
-				owner: org,
-				repo: slug,
-				tree_sha: "main",
-				recursive: "1",
-			},
-		);
+		const { data } = await octokit.request("GET /repos/{owner}/{repo}/git/trees/{tree_sha}", {
+			owner: org,
+			repo: slug,
+			tree_sha: "main",
+			recursive: "1",
+		});
 
 		const tree = buildTree(data.tree as Array<{ path?: string; type?: string }>);
 
@@ -61,22 +59,18 @@ export const GET: APIRoute = async ({ params, url, locals }) => {
 			status: 200,
 			headers: { "Content-Type": "application/json" },
 		});
-	} catch (error: any) {
+	} catch (error) {
 		return new Response(JSON.stringify({ error: "Workspace not found" }), {
-			status: error?.status || 500,
+			status: errorStatus(error) ?? 500,
 			headers: { "Content-Type": "application/json" },
 		});
 	}
 };
 
-function buildTree(
-	flatItems: Array<{ path?: string; type?: string }>,
-): TreeItem[] {
+function buildTree(flatItems: Array<{ path?: string; type?: string }>): TreeItem[] {
 	const root: TreeItem[] = [];
 
-	const items = flatItems.filter(
-		(item) => item.path && (item.type === "blob" || item.type === "tree"),
-	);
+	const items = flatItems.filter((item) => item.path && (item.type === "blob" || item.type === "tree"));
 
 	for (const item of items) {
 		const parts = item.path!.split("/");
@@ -112,4 +106,3 @@ function buildTree(
 
 	return root;
 }
-

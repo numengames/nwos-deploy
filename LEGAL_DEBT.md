@@ -22,4 +22,4 @@ Two kinds of entry:
 | Package | Verified licence | Kind | Exit threshold / notes |
 | ------- | ---------------- | ---- | ---------------------- |
 
-*(No entries. Rows must keep this column order — the checker parses them.)*
+_(No entries. Rows must keep this column order — the checker parses them.)_

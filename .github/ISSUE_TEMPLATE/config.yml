@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/numengames/nwos-deploy/security/advisories/new
+    about: Never report a security problem in a public issue. Use private reporting.
+  - name: Anything else
+    url: mailto:hello@numen.games
+    about: Questions, partnerships, or anything that is not a bug or a request.

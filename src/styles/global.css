@@ -11,49 +11,65 @@
 		--font-sans: "Geist Variable", system-ui, sans-serif;
 		--font-mono: "Geist Mono Variable", ui-monospace, monospace;
 
-		/* ── Core palette — RGB triplets for Tailwind opacity support ──────── */
+		/* ────────────────────────────────────────────────────────────────────
+		 * Sistema de Diseño de Numen Games v5.0.0 · tokens canónicos §19.3.
+		 * Registro Umbral · modo Nocturno. RGB triplets so Tailwind can apply
+		 * opacity. A colour that is not in §19.3 does not exist here.
+		 * ──────────────────────────────────────────────────────────────────── */
 
-		/* Fondo: negro espacio */
-		--bg: 10 10 10;
-		--bg-card: 10 12 14;
-		--bg-card-hover: 16 20 24;
-		--border: 35 42 50;
-		--text: 248 247 243;
-		--text-muted: 139 134 128;
-		--text-dim: 90 88 84;
+		/* Nocturno — la noche cálida de jardín, no el neón */
+		--bg: 20 17 15; /* #14110F noche */
+		--bg-card: 30 26 23; /* #1E1A17 superficie */
+		--bg-card-hover: 41 36 32; /* #292420 elevada */
+		--border: 58 51 45; /* #3A332D línea fuerte */
+		--border-soft: 36 31 27; /* #241F1B línea tenue */
+		--text: 249 235 220; /* #F9EBDC arena */
+		--text-muted: 196 181 166; /* #C4B5A6 secundario */
+		--text-dim: 138 125 114; /* #8A7D72 terciario */
 
-		/* Accent principal: teal cálido */
-		--accent: 45 212 191;
+		/* Enlace y acento del Nocturno */
+		--accent: 166 218 213; /* #A6DAD5 verdemar */
 
-		/* ── Solarpunk mediterráneo ───────────────────────────────────────── */
-		--terracota: 193 123 74;   /* #C17B4A */
-		--ocre: 212 168 85;        /* #D4A855 */
-		--arena: 232 213 176;      /* #E8D5B0 */
-		--azul-med: 43 108 176;    /* #2B6CB0 */
-		--salvia: 107 143 94;      /* #6B8F5E */
+		/* Rellenos de acción · la interacción OSCURECE (§3.4, §9.1) */
+		--interactivo: 1 124 141; /* #017C8D */
+		--interactivo-hover: 1 110 125; /* #016E7D */
+		--interactivo-activo: 1 88 102; /* #015866 */
 
-		/* ── Steampunk ───────────────────────────────────────────────────── */
-		--cobre: 184 115 51;       /* #B87333 */
-		--bronce: 139 105 20;      /* #8B6914 */
+		/* ── Marca ────────────────────────────────────────────────────────── */
+		--verdemar: 166 218 213; /* #A6DAD5 */
+		--turquesa: 1 142 161; /* #018EA1 */
+		--ambar: 239 165 23; /* #EFA517 */
+		--arena: 249 235 220; /* #F9EBDC */
+		--coral: 243 80 88; /* #F35059 aviso */
+		--grana: 211 52 64; /* #D33440 crítico */
 
-		/* ── Cyberpunk contenido ─────────────────────────────────────────── */
-		--teal: 45 212 191;        /* #2DD4BF */
-		--ambar: 245 158 11;       /* #F59E0B */
+		/* ── Alias heredados ──────────────────────────────────────────────
+		 * The old flavour names stay so existing classes keep working, but
+		 * each one now holds the §19.3 token that occupies its role. */
+		--terracota: 239 165 23; /* → ámbar */
+		--ocre: 239 165 23; /* → ámbar */
+		--cobre: 239 165 23; /* → ámbar */
+		--bronce: 138 125 114; /* → terciario */
+		--salvia: 143 196 107; /* → #8FC46B */
+		--azul-med: 93 155 214; /* → #5D9BD6 */
+		--teal: 1 142 161; /* → turquesa */
 
-		/* ── Semantic colors ─────────────────────────────────────────────── */
-		--green: 34 197 94;
-		--red: 239 68 68;
-		--yellow: 234 179 8;
-		--blue: 59 130 246;
-		--purple: 168 85 247;
+		/* ── Paleta de datos §3.8 ─────────────────────────────────────────── */
+		--green: 143 196 107; /* #8FC46B */
+		--red: 211 52 64; /* #D33440 grana */
+		--yellow: 239 165 23; /* #EFA517 ámbar */
+		--blue: 93 155 214; /* #5D9BD6 */
+		--purple: 169 139 224; /* #A98BE0 */
 
-		/* ── Glow (direct rgba for non-Tailwind use) ─────────────────────── */
-		--accent-glow: rgba(45, 212, 191, 0.10);
-		--veil-glow: rgba(45, 212, 191, 0.04);
-		--cobre-glow: rgba(45, 212, 191, 0.18);
+		/* ── Atmósfera del Velo §2.7 · solo alfa sobre canónicos ──────────── */
+		--accent-glow: rgba(1, 142, 161, 0.08);
+		--veil-glow: rgba(1, 142, 161, 0.06);
+		--cobre-glow: rgba(239, 165, 23, 0.18);
 
-		/* ── Radius ──────────────────────────────────────────────────────── */
-		--radius: 0.75rem;
+		/* ── Forma §5 · dos radios y solo dos ─────────────────────────────── */
+		--radius: 8px; /* marco */
+		--radius-control: 6px;
+		--ciclo: cubic-bezier(0.2, 0, 0, 1);
 
 		/* ── shadcn compat aliases ───────────────────────────────────────── */
 		--background: var(--bg);
@@ -71,15 +87,15 @@
 	}
 
 	html {
-		background-color: #0a0a0a;
-		color: #F8F7F3;
+		background-color: #14110f;
+		color: #f9ebdc;
 		scroll-behavior: smooth;
 	}
 
 	body {
 		@apply min-h-screen font-sans text-foreground antialiased;
 		background-color: transparent;
-		color: #F8F7F3;
+		color: #f9ebdc;
 	}
 
 	/* ── Subtle ambient glow (no grid) ──────────────────────────────────── */
@@ -89,21 +105,8 @@
 		inset: 0;
 		z-index: 0;
 		pointer-events: none;
-		background-image:
-			radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent);
+		background-image: radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent);
 		background-size: 100% 100%;
-	}
-
-	/* ── Noise texture overlay ───────────────────────────────────────────── */
-	body::after {
-		content: "";
-		position: fixed;
-		inset: 0;
-		z-index: 9999;
-		pointer-events: none;
-		opacity: 0.04;
-		background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-		background-repeat: repeat;
 	}
 
 	/* ── Custom scrollbar ────────────────────────────────────────────────── */
@@ -112,26 +115,44 @@
 		height: 6px;
 	}
 	::-webkit-scrollbar-track {
-		background: rgb(10 10 10);
+		background: rgb(20 17 15);
 	}
 	::-webkit-scrollbar-thumb {
-		background: rgba(45, 212, 191, 0.30);
+		background: rgba(1, 142, 161, 0.3);
 		border-radius: 3px;
 	}
 	::-webkit-scrollbar-thumb:hover {
-		background: rgba(45, 212, 191, 0.55);
+		background: rgba(1, 142, 161, 0.55);
 	}
 
 	/* Firefox scrollbar */
 	* {
 		scrollbar-width: thin;
-		scrollbar-color: rgba(45, 212, 191, 0.30) transparent;
+		scrollbar-color: rgba(1, 142, 161, 0.3) transparent;
 	}
 
 	/* ── Text selection ──────────────────────────────────────────────────── */
 	::selection {
-		background: rgba(45, 212, 191, 0.22);
-		color: rgb(241, 240, 235);
+		background: rgba(1, 142, 161, 0.22);
+		color: rgb(249, 235, 220);
+	}
+
+	/* §10 · prefers-reduced-motion: todo instantáneo, sin excepción. */
+	@media (prefers-reduced-motion: reduce) {
+		*,
+		*::before,
+		*::after {
+			animation-duration: 0.001ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.001ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+
+	/* §12 · el foco se ve siempre y nunca se anima. */
+	:focus-visible {
+		outline: 2px solid rgb(var(--turquesa));
+		outline-offset: 2px;
 	}
 
 	/* ── Animations ──────────────────────────────────────────────────────── */
@@ -147,12 +168,22 @@
 	}
 
 	@keyframes twinkle {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.2; }
+		0%,
+		100% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0.2;
+		}
 	}
 
 	@keyframes twinkle-slow {
-		0%, 100% { opacity: 0.9; }
-		50% { opacity: 0.15; }
+		0%,
+		100% {
+			opacity: 0.9;
+		}
+		50% {
+			opacity: 0.15;
+		}
 	}
 }

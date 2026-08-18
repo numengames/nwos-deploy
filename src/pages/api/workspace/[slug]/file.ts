@@ -1,6 +1,14 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { APIRoute } from "astro";
+import { errorStatus } from "@/lib/log";
+
+/** The subset of GitHub's contents payload this route reads. */
+interface GitHubFile {
+	name: string;
+	path: string;
+	content: string;
+}
 import { Octokit } from "octokit";
 import { getEnv } from "@/lib/env";
 import { keySecret, verifyWorkspaceKey } from "@/lib/token";
@@ -47,32 +55,26 @@ export const GET: APIRoute = async ({ params, url, locals }) => {
 	const octokit = new Octokit({ auth: token });
 
 	try {
-		const { data } = await octokit.request(
-			"GET /repos/{owner}/{repo}/contents/{path}",
-			{
-				owner: org,
-				repo: slug,
-				path: filePath,
-			},
-		);
+		const { data } = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", {
+			owner: org,
+			repo: slug,
+			path: filePath,
+		});
 
-		const content = Buffer.from((data as any).content, "base64").toString(
-			"utf-8",
-		);
+		const content = Buffer.from((data as GitHubFile).content, "base64").toString("utf-8");
 
 		return new Response(
 			JSON.stringify({
 				content,
-				name: (data as any).name,
-				path: (data as any).path,
+				name: (data as GitHubFile).name,
+				path: (data as GitHubFile).path,
 			}),
 			{ status: 200, headers: { "Content-Type": "application/json" } },
 		);
-	} catch (error: any) {
+	} catch (error) {
 		return new Response(JSON.stringify({ error: "File not found" }), {
-			status: error?.status || 500,
+			status: errorStatus(error) ?? 500,
 			headers: { "Content-Type": "application/json" },
 		});
 	}
 };
-

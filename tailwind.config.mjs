@@ -18,6 +18,18 @@ export default {
 					DEFAULT: "rgb(var(--accent) / <alpha-value>)",
 					glow: "var(--accent-glow)",
 				},
+				/* §19.3 · marca */
+				verdemar: "rgb(var(--verdemar) / <alpha-value>)",
+				turquesa: "rgb(var(--turquesa) / <alpha-value>)",
+				coral: "rgb(var(--coral) / <alpha-value>)",
+				grana: "rgb(var(--grana) / <alpha-value>)",
+				/* §9.1 · rellenos de acción; la interacción oscurece */
+				interactivo: {
+					DEFAULT: "rgb(var(--interactivo) / <alpha-value>)",
+					hover: "rgb(var(--interactivo-hover) / <alpha-value>)",
+					activo: "rgb(var(--interactivo-activo) / <alpha-value>)",
+				},
+				"border-soft": "rgb(var(--border-soft) / <alpha-value>)",
 				card: {
 					DEFAULT: "rgb(var(--card) / <alpha-value>)",
 					hover: "rgb(var(--bg-card-hover) / <alpha-value>)",
@@ -46,10 +58,25 @@ export default {
 				teal: "rgb(var(--teal) / <alpha-value>)",
 				ambar: "rgb(var(--ambar) / <alpha-value>)",
 			},
+			/* §5 · dos radios: control 6px, marco 8px. */
 			borderRadius: {
 				lg: "var(--radius)",
 				md: "calc(var(--radius) - 2px)",
 				sm: "calc(var(--radius) - 4px)",
+				marco: "var(--radius)",
+				control: "var(--radius-control)",
+			},
+
+			/* §10 · duraciones y curva del catálogo de movimiento. */
+			transitionDuration: {
+				instante: "120ms",
+				corto: "200ms",
+				medio: "320ms",
+				largo: "560ms",
+			},
+
+			transitionTimingFunction: {
+				ciclo: "var(--ciclo)",
 			},
 			fontFamily: {
 				display: ["var(--font-display)", "system-ui", "sans-serif"],
@@ -57,10 +84,8 @@ export default {
 				mono: ["var(--font-mono)", "ui-monospace", "monospace"],
 			},
 			backgroundImage: {
-				"accent-glow":
-					"radial-gradient(ellipse 60% 40% at 70% -10%, var(--accent-glow), transparent)",
-				"veil-glow":
-					"radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent)",
+				"accent-glow": "radial-gradient(ellipse 60% 40% at 70% -10%, var(--accent-glow), transparent)",
+				"veil-glow": "radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent)",
 			},
 			boxShadow: {
 				"accent-sm": "0 0 12px var(--accent-glow)",
@@ -74,7 +99,7 @@ export default {
 				"slide-up-2": "slideUp 0.7s ease-out 0.2s both",
 				"slide-up-3": "slideUp 0.7s ease-out 0.3s both",
 				"slide-up-4": "slideUp 0.7s ease-out 0.4s both",
-				"twinkle": "twinkle 3s ease-in-out infinite",
+				twinkle: "twinkle 3s ease-in-out infinite",
 			},
 			keyframes: {
 				slideUp: {

@@ -25,74 +25,43 @@ SPDX-License-Identifier = "MIT"
 `;
 
 describe("parseMouldSpec", () => {
-  it("lee el spec real del molde: strip completo y rename", () => {
-    expect(parseMouldSpec(REAL_HEADER)).toEqual({
-      strip: ["LICENSE", "LICENSES", "REUSE.toml", "TRADEMARKS.md", "LEGAL_DEBT.md"],
-      renameFrom: "LICENSE.client",
-      renameTo: "LICENSE",
-    });
-  });
+	it("lee el spec real del molde: strip completo y rename", () => {
+		expect(parseMouldSpec(REAL_HEADER)).toEqual({
+			strip: ["LICENSE", "LICENSES", "REUSE.toml", "TRADEMARKS.md", "LEGAL_DEBT.md"],
+			renameFrom: "LICENSE.client",
+			renameTo: "LICENSE",
+		});
+	});
 
-  it("admite la lista de strip repartida en varias líneas", () => {
-    const spec = parseMouldSpec(
-      "# Mould-only artifacts, stripped by nwos-deploy after generation:\n" +
-        "#   LICENSE, LICENSES/\n" +
-        "#   REUSE.toml\n" +
-        "# Renamed by nwos-deploy after generation:\n" +
-        "#   LICENSE.client -> LICENSE\n"
-    );
-    expect(spec?.strip).toEqual(["LICENSE", "LICENSES", "REUSE.toml"]);
-  });
+	it("admite la lista de strip repartida en varias líneas", () => {
+		const spec = parseMouldSpec("# Mould-only artifacts, stripped by nwos-deploy after generation:\n" + "#   LICENSE, LICENSES/\n" + "#   REUSE.toml\n" + "# Renamed by nwos-deploy after generation:\n" + "#   LICENSE.client -> LICENSE\n");
+		expect(spec?.strip).toEqual(["LICENSE", "LICENSES", "REUSE.toml"]);
+	});
 
-  it("excluye renameFrom del strip aunque el spec lo liste", () => {
-    const spec = parseMouldSpec(
-      "# Mould-only artifacts, stripped by nwos-deploy after generation:\n" +
-        "#   LICENSE, LICENSE.client\n" +
-        "# Renamed by nwos-deploy after generation:\n" +
-        "#   LICENSE.client -> LICENSE\n"
-    );
-    expect(spec?.strip).toEqual(["LICENSE"]);
-  });
+	it("excluye renameFrom del strip aunque el spec lo liste", () => {
+		const spec = parseMouldSpec("# Mould-only artifacts, stripped by nwos-deploy after generation:\n" + "#   LICENSE, LICENSE.client\n" + "# Renamed by nwos-deploy after generation:\n" + "#   LICENSE.client -> LICENSE\n");
+		expect(spec?.strip).toEqual(["LICENSE"]);
+	});
 
-  // Todos los casos incoherentes devuelven null: el deploy aborta en vez
-  // de adivinar (fail closed).
-  it("sin cabecera de spec → null", () => {
-    expect(parseMouldSpec("version = 1\n[[annotations]]\npath = '**'")).toBeNull();
-  });
+	// Todos los casos incoherentes devuelven null: el deploy aborta en vez
+	// de adivinar (fail closed).
+	it("sin cabecera de spec → null", () => {
+		expect(parseMouldSpec("version = 1\n[[annotations]]\npath = '**'")).toBeNull();
+	});
 
-  it("lista de strip vacía → null", () => {
-    expect(
-      parseMouldSpec(
-        "# Mould-only artifacts, stripped by nwos-deploy after generation:\n" +
-          "# Renamed by nwos-deploy after generation:\n" +
-          "#   A -> B\n"
-      )
-    ).toBeNull();
-  });
+	it("lista de strip vacía → null", () => {
+		expect(parseMouldSpec("# Mould-only artifacts, stripped by nwos-deploy after generation:\n" + "# Renamed by nwos-deploy after generation:\n" + "#   A -> B\n")).toBeNull();
+	});
 
-  it("sin par de rename → null", () => {
-    expect(
-      parseMouldSpec(
-        "# Mould-only artifacts, stripped by nwos-deploy after generation:\n" +
-          "#   X, Y\n" +
-          "# Renamed by nwos-deploy after generation:\n" +
-          "version = 1\n"
-      )
-    ).toBeNull();
-  });
+	it("sin par de rename → null", () => {
+		expect(parseMouldSpec("# Mould-only artifacts, stripped by nwos-deploy after generation:\n" + "#   X, Y\n" + "# Renamed by nwos-deploy after generation:\n" + "version = 1\n")).toBeNull();
+	});
 
-  it("rename a sí mismo → null", () => {
-    expect(
-      parseMouldSpec(
-        "# Mould-only artifacts, stripped by nwos-deploy after generation:\n" +
-          "#   X\n" +
-          "# Renamed by nwos-deploy after generation:\n" +
-          "#   LICENSE -> LICENSE\n"
-      )
-    ).toBeNull();
-  });
+	it("rename a sí mismo → null", () => {
+		expect(parseMouldSpec("# Mould-only artifacts, stripped by nwos-deploy after generation:\n" + "#   X\n" + "# Renamed by nwos-deploy after generation:\n" + "#   LICENSE -> LICENSE\n")).toBeNull();
+	});
 
-  it("cadena vacía → null", () => {
-    expect(parseMouldSpec("")).toBeNull();
-  });
+	it("cadena vacía → null", () => {
+		expect(parseMouldSpec("")).toBeNull();
+	});
 });

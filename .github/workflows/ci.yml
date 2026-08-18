@@ -1,0 +1,72 @@
+# SPDX-FileCopyrightText: 2026 Numen Games S.L.
+# SPDX-License-Identifier: AGPL-3.0-only
+# ARC-01: the same pipeline in every repo — type-check → lint → test → build.
+# SEC-07: third-party actions pinned by commit SHA. SEC-08: read-only tokens.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions: read-all
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pipeline:
+    name: type-check → lint → test → build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      # build runs postbuild → scripts/license-check.mjs (Canon C-005 §5).
+      - name: Build
+        run: npm run build
+
+  presence:
+    name: Repository checklist (§3.3)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Every file the standards require is present
+        run: |
+          missing=0
+          for f in CLAUDE.md SECURITY.md CONTRIBUTING.md CODE_OF_CONDUCT.md \
+                   TODO.md .editorconfig .env.example REUSE.toml LICENSE \
+                   TRADEMARKS.md CLA.md CLA-SIGNATORIES.md \
+                   .github/CODEOWNERS .github/PULL_REQUEST_TEMPLATE.md \
+                   .github/dependabot.yml .github/ISSUE_TEMPLATE/bug_report.yml; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::missing — required by engineering-standards §4"
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - name: CLAUDE.md carries the agent contract
+        run: |
+          grep -q "audit the current branch state" CLAUDE.md \
+            || { echo "::error::CLAUDE.md must open with the AGT-01 audit instruction"; exit 1; }
+          grep -q "Sistema de Diseño" CLAUDE.md \
+            || { echo "::error::CLAUDE.md must point at the Design System (§0.3)"; exit 1; }

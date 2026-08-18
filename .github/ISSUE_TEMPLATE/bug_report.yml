@@ -1,0 +1,32 @@
+name: Bug report
+description: Something in NWOS behaves wrongly
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Never report a security problem here — see `SECURITY.md`."
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where
+      options:
+        - Landing (nwos.numen.games)
+        - Deploy form / workspace creation
+        - Workspace viewer
+        - Generated workspace contents
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead. Never paste an access key or token.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true

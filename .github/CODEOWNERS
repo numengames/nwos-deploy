@@ -1,0 +1,25 @@
+# Code owners (SEC-10). Every sensitive path needs a named reviewer before main.
+
+*                       @PabloFMM
+
+# Legal surface — Canon C-005 territory, Oracle-gated.
+/LICENSE                @PabloFMM
+/LICENSES/              @PabloFMM
+/REUSE.toml             @PabloFMM
+/CLA.md                 @PabloFMM
+/CLA-SIGNATORIES.md     @PabloFMM
+/LEGAL_DEBT.md          @PabloFMM
+/TRADEMARKS.md          @PabloFMM
+/SECURITY.md            @PabloFMM
+/CODE_OF_CONDUCT.md     @PabloFMM
+
+# CI, deployment and the agent contract.
+/.github/               @PabloFMM
+/.github/workflows/     @PabloFMM
+/wrangler.jsonc         @PabloFMM
+/scripts/               @PabloFMM
+/CLAUDE.md              @PabloFMM
+
+# The credential and key surface.
+/src/lib/               @PabloFMM
+/src/pages/api/         @PabloFMM

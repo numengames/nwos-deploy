@@ -271,6 +271,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
 		// Wait for GitHub to finish copying files
 		await new Promise((resolve) => setTimeout(resolve, 3000));
 
+		// Desactivar Actions antes del primer push: los workflows del molde
+		// (.github/ se retira después, en el strip) dispararían runs zombis
+		// en el repo generado con cada commit de personalización — CI ajeno
+		// fallando en cascada en el workspace del cliente (MIS-090).
+		try {
+			await octokit.request("PUT /repos/{owner}/{repo}/actions/permissions", { owner: org, repo: slug, enabled: false });
+		} catch (e) {
+			// No bloquea el deploy: sin este permiso los runs zombis solo son
+			// ruido, y el strip retira los workflows igualmente.
+			log.warn("deploy.actions.disable_failed", { repo: `${org}/${slug}`, error: errorMessage(e) });
+		}
+
 		// Leer el spec del molde desde el propio repo generado: qué artefactos
 		// §5 se retiran y qué archivo pasa a ser el LICENSE del cliente. Es la
 		// única fuente de verdad; sin spec coherente el deploy aborta en vez

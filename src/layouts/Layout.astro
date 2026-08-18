@@ -1,4 +1,6 @@
 ---
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
 import "@/styles/global.css";
 import "@fontsource-variable/geist";
 import "@fontsource-variable/geist-mono";
@@ -54,13 +56,6 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
     <!-- Fonts: Geist (loaded via @fontsource-variable in Layout frontmatter) -->
 
     <title>{title}</title>
-
-    <!-- Umami Analytics — privacy-first, no cookies -->
-    <script
-      defer
-      src="https://analytics.pablofm.com/script.js"
-      data-website-id="3754d1da-a351-42a2-99da-c104b922d958"
-    ></script>
 
     <slot name="head" />
   </head>

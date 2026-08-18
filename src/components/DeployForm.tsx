@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useEffect, useMemo, useState } from "react";
 
 export default function DeployForm() {
@@ -82,7 +84,7 @@ export default function DeployForm() {
             Tu workspace está listo en GitHub.
           </p>
           <a
-            href={`/workspace/${result.slug}`}
+            href={`/workspace/${result.slug}?key=${encodeURIComponent(result.accessKey ?? "")}`}
             className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-2.5 text-sm font-semibold text-background transition-colors hover:bg-accent/90"
           >
             Browse workspace →
@@ -98,6 +100,10 @@ export default function DeployForm() {
           <p className="mt-4 text-sm text-muted-foreground">
             El agente ya terminó de investigar y poblar el workspace. Puedes revisar el archivo
             STATUS.md en el repo para ver el progreso y el historial.
+          </p>
+          <p className="mt-3 text-xs text-dim">
+            Guarda el enlace "Browse workspace": incluye tu clave de acceso privada
+            y es la única forma de ver el workspace desde la web.
           </p>
         </div>
       </div>

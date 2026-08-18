@@ -1,3 +1,5 @@
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
 import { useEffect, useState } from "react";
 
 interface RepoFile {
@@ -13,7 +15,13 @@ interface FileContent {
 	path: string;
 }
 
-export default function WorkspaceViewer({ slug }: { slug: string }) {
+export default function WorkspaceViewer({
+	slug,
+	accessKey,
+}: {
+	slug: string;
+	accessKey: string;
+}) {
 	const [tree, setTree] = useState<RepoFile[]>([]);
 	const [selectedFile, setSelectedFile] = useState<FileContent | null>(null);
 	const [status, setStatus] = useState<string | null>(null);
@@ -27,12 +35,18 @@ export default function WorkspaceViewer({ slug }: { slug: string }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [slug]);
 
+	const keyParam = `key=${encodeURIComponent(accessKey)}`;
+
 	async function loadTree() {
 		try {
-			const res = await fetch(`/api/workspace/${slug}/tree`);
+			const res = await fetch(`/api/workspace/${slug}/tree?${keyParam}`);
+			if (res.status === 403)
+				throw new Error(
+					"Access denied — this workspace requires its private access link.",
+				);
 			if (!res.ok) throw new Error("Workspace not found");
 			const data = await res.json();
-			setTree(data.tree);
+			setTree(Array.isArray(data.tree) ? data.tree : []);
 			setLoading(false);
 		} catch (e: any) {
 			setError(e.message);
@@ -42,7 +56,9 @@ export default function WorkspaceViewer({ slug }: { slug: string }) {
 
 	async function loadStatus() {
 		try {
-			const res = await fetch(`/api/workspace/${slug}/file?path=STATUS.md`);
+			const res = await fetch(
+				`/api/workspace/${slug}/file?path=STATUS.md&${keyParam}`,
+			);
 			if (res.ok) {
 				const data = await res.json();
 				setStatus(data.content);
@@ -56,7 +72,7 @@ export default function WorkspaceViewer({ slug }: { slug: string }) {
 		setFileLoading(true);
 		try {
 			const res = await fetch(
-				`/api/workspace/${slug}/file?path=${encodeURIComponent(path)}`,
+				`/api/workspace/${slug}/file?path=${encodeURIComponent(path)}&${keyParam}`,
 			);
 			if (!res.ok) throw new Error("File not found");
 			const data = await res.json();
@@ -245,9 +261,32 @@ function FileTree({
 	);
 }
 
+// El markdown viene de repos poblados a partir de input del usuario y de
+// texto generado por LLM: se escapa TODO el HTML antes de aplicar las reglas,
+// y los hrefs se limitan a esquemas seguros (nada de javascript:).
+function escapeHtml(text: string): string {
+	return text
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
+function safeHref(href: string): string | null {
+	const trimmed = href.trim();
+	if (/^(https?:|mailto:)/i.test(trimmed)) return trimmed;
+	if (/^(\/|#|\.\/)/.test(trimmed)) return trimmed;
+	return null;
+}
+
+const NEEDS_REVIEW_TOKEN = "%%NEEDS_REVIEW%%";
+
 function markdownToHtml(md: string): string {
-	let html = md
-		.replace(/<!--[\s\S]*?-->/g, "")
+	let html = escapeHtml(
+		md
+			.replace(/<!--\s*NEEDS REVIEW\s*-->/gi, NEEDS_REVIEW_TOKEN)
+			.replace(/<!--[\s\S]*?-->/g, ""),
+	)
 		.replace(/^### (.+)$/gm, "<h3>$1</h3>")
 		.replace(/^## (.+)$/gm, "<h2>$1</h2>")
 		.replace(/^# (.+)$/gm, "<h1>$1</h1>")
@@ -255,10 +294,13 @@ function markdownToHtml(md: string): string {
 		.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
 		.replace(/\*(.+?)\*/g, "<em>$1</em>")
 		.replace(/`(.+?)`/g, "<code>$1</code>")
-		.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+		.replace(/\[(.+?)\]\((.+?)\)/g, (match, text, href) => {
+			const url = safeHref(href);
+			return url ? `<a href="${url}">${text}</a>` : text;
+		})
 		.replace(/^---$/gm, "<hr/>")
 		.replace(/^- \[x\] (.+)$/gm, "<li>✅ $1</li>")
-		.replace(/^- \\[ \\] (.+)$/gm, "<li>⬜ $1</li>")
+		.replace(/^- \[ \] (.+)$/gm, "<li>⬜ $1</li>")
 		.replace(/^- (.+)$/gm, "<li>$1</li>")
 		.replace(/^\|(.+)\|$/gm, (match) => {
 			const cells = match
@@ -287,6 +329,10 @@ function markdownToHtml(md: string): string {
 	html = html.replace(
 		/(<tr>[\s\S]*?<\/tr>(?:\s*<tr>[\s\S]*?<\/tr>)*)/g,
 		"<table>$1</table>",
+	);
+	html = html.replace(
+		/%%NEEDS_REVIEW%%/g,
+		'<span class="inline-block rounded border border-yellow-500/40 bg-yellow-500/10 px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-yellow-400">⚠ needs review</span>',
 	);
 
 	return html;

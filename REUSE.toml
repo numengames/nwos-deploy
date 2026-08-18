@@ -16,7 +16,7 @@ path = [
   "astro.config.mjs", "tailwind.config.mjs", "tsconfig.json", "vitest.config.ts",
   "eslint.config.js", ".prettierrc", ".prettierignore", ".editorconfig",
   "wrangler.jsonc", "package.json", "package-lock.json",
-  ".gitignore", ".github/**",
+  ".gitignore", ".github/**", ".env.example",
 ]
 SPDX-FileCopyrightText = "2026 Numen Games S.L."
 SPDX-License-Identifier = "AGPL-3.0-only"

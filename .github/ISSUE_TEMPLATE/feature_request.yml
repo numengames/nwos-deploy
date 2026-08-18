@@ -1,0 +1,24 @@
+name: Change request
+description: Propose a change to NWOS
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What is not working for whom. The situation, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+    validations:
+      required: true
+  - type: checkboxes
+    id: standards
+    attributes:
+      label: Standards
+      options:
+        - label: This change can be expressed within the Design System v5.0.0
+        - label: This change touches licensing, credentials or visibility (needs the Oracle)

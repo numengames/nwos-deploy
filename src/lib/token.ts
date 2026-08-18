@@ -12,32 +12,13 @@ export function keySecret(env: Env): string {
 	return env.WORKSPACE_KEY_SECRET || env.GITHUB_TOKEN;
 }
 
-export async function signWorkspaceKey(
-	slug: string,
-	secret: string,
-): Promise<string> {
-	const key = await crypto.subtle.importKey(
-		"raw",
-		encoder.encode(secret),
-		{ name: "HMAC", hash: "SHA-256" },
-		false,
-		["sign"],
-	);
-	const sig = await crypto.subtle.sign(
-		"HMAC",
-		key,
-		encoder.encode(`nwos-workspace:${slug}`),
-	);
-	return [...new Uint8Array(sig)]
-		.map((b) => b.toString(16).padStart(2, "0"))
-		.join("");
+export async function signWorkspaceKey(slug: string, secret: string): Promise<string> {
+	const key = await crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+	const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(`nwos-workspace:${slug}`));
+	return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-export async function verifyWorkspaceKey(
-	slug: string,
-	candidate: string | null,
-	secret: string,
-): Promise<boolean> {
+export async function verifyWorkspaceKey(slug: string, candidate: string | null, secret: string): Promise<boolean> {
 	if (!candidate) return false;
 	const expected = await signWorkspaceKey(slug, secret);
 	if (candidate.length !== expected.length) return false;

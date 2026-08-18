@@ -15,5 +15,11 @@ type Env = {
 type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
 
 declare namespace App {
+	// Astro's documented pattern for typing locals; the empty body is the point.
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 	interface Locals extends Runtime {}
 }
+
+// The fontsource packages ship CSS only: a side-effect import needs a stub.
+declare module "@fontsource-variable/geist";
+declare module "@fontsource-variable/geist-mono";

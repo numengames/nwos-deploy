@@ -8,10 +8,7 @@ interface Props {
 	lang?: "es" | "en";
 }
 const { fecha = "7 de abril de 2026", lang = "es" } = Astro.props;
-const texto =
-	lang === "en"
-		? `Historical snapshot — this page reflects the state of the system as of April 7, 2026 and is not updated in real time. The live source of truth is the`
-		: `Snapshot histórico — esta página refleja el estado del sistema a ${fecha} y no se actualiza en tiempo real. La fuente de verdad viva es el`;
+const texto = lang === "en" ? `Historical snapshot — this page reflects the state of the system as of April 7, 2026 and is not updated in real time. The live source of truth is the` : `Snapshot histórico — esta página refleja el estado del sistema a ${fecha} y no se actualiza en tiempo real. La fuente de verdad viva es el`;
 const repoLabel = lang === "en" ? "canon repo" : "repo canon";
 ---
 
@@ -20,12 +17,7 @@ const repoLabel = lang === "en" ? "canon repo" : "repo canon";
 		<span class="text-sm leading-none pt-0.5">📸</span>
 		<p class="font-mono text-[0.7rem] leading-relaxed text-yellow/90">
 			{texto}
-			<a
-				href="https://github.com/numengames/numinia-digital-agents"
-				target="_blank"
-				rel="noopener noreferrer"
-				class="underline hover:text-yellow transition-colors">{repoLabel}</a
-			>.
+			<a href="https://github.com/numengames/numinia-digital-agents" target="_blank" rel="noopener noreferrer" class="underline hover:text-yellow transition-colors">{repoLabel}</a>.
 		</p>
 	</div>
 </div>

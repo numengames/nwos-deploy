@@ -1,5 +1,9 @@
 # NWOS — Narrative Work OS
 
+[![CI](https://github.com/numengames/nwos-deploy/actions/workflows/ci.yml/badge.svg)](https://github.com/numengames/nwos-deploy/actions/workflows/ci.yml)
+[![license-check](https://github.com/numengames/nwos-deploy/actions/workflows/license-check.yml/badge.svg)](https://github.com/numengames/nwos-deploy/actions/workflows/license-check.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/numengames/nwos-deploy/badge)](https://scorecard.dev/viewer/?uri=github.com/numengames/nwos-deploy)
+
 Servicio de despliegue de NWOS (Narrative Work OS): landing del producto y generación de workspaces de organización desde `nwos-workspace-template`. El visor de Numinia que vivía aquí se extrajo a `numengames/numinia-nwos` (rama `merge-viewer`).
 
 **URL**: https://nwos.numen.games
@@ -7,17 +11,30 @@ Servicio de despliegue de NWOS (Narrative Work OS): landing del producto y gener
 ## Stack
 
 - Astro 5 (`output: "static"` + adaptador Cloudflare Workers) con islas React 19
-- Tailwind 3, dark-only, tipografía Geist
-- Sistema de diseño en `DESIGN.md`
+- Tailwind 3, Nocturno, tipografía Geist y Geist Mono autoalojadas
+- Sistema de Diseño de Numen Games **v5.0.0** (registro Umbral; el Velo en `/velo`
+  y el visor). El máster vive en
+  [`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos/tree/main/standards);
+  el fragmento de instrucción, en [`docs/design-system-fragment.md`](docs/design-system-fragment.md).
+  `DESIGN.md` queda superseded.
 
 ## Desarrollo
 
 Requiere Node ≥ 22.12.
 
 ```bash
+git clone https://github.com/numengames/nwos-deploy.git
+cd nwos-deploy
 npm install
+npm test         # unit tests, no secrets needed
 npm run dev      # http://localhost:4321
 npm run build
+```
+
+Before pushing, run what CI runs:
+
+```bash
+npm run type-check && npm run lint && npm test && npm run build
 ```
 
 ## Variables de entorno

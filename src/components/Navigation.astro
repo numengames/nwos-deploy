@@ -209,7 +209,11 @@ const numaniaActive = numaniaIds.includes(activeNav ?? "");
     // Click toggle
     dropBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      panel!.classList.contains("hidden") ? openPanel() : scheduleClose();
+      if (panel!.classList.contains("hidden")) {
+        openPanel();
+      } else {
+        scheduleClose();
+      }
     });
 
     // Close on outside click

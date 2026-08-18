@@ -102,11 +102,7 @@ Mark the document with <!-- NEEDS REVIEW --> if most terms are inferred.`,
   },
 ];
 
-async function generateContent(
-  client: Anthropic,
-  companyName: string,
-  promptTemplate: string
-): Promise<string> {
+async function generateContent(client: Anthropic, companyName: string, promptTemplate: string): Promise<string> {
   const prompt = promptTemplate.replace(/\{companyName\}/g, companyName);
 
   const response = await client.messages.create({
@@ -135,19 +131,9 @@ async function generateContent(
   return text;
 }
 
-async function commitFile(
-  octokit: Octokit,
-  org: string,
-  repo: string,
-  path: string,
-  content: string,
-  message: string
-) {
+async function commitFile(octokit: Octokit, org: string, repo: string, path: string, content: string, message: string) {
   // Get current file to obtain SHA
-  const { data: fileData } = await octokit.request(
-    "GET /repos/{owner}/{repo}/contents/{path}",
-    { owner: org, repo, path }
-  );
+  const { data: fileData } = await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", { owner: org, repo, path });
 
   await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
     owner: org,
@@ -159,14 +145,7 @@ async function commitFile(
   });
 }
 
-async function updateStatus(
-  octokit: Octokit,
-  org: string,
-  repo: string,
-  completedDocs: string[],
-  allDocs: string[],
-  isFinished: boolean
-) {
+async function updateStatus(octokit: Octokit, org: string, repo: string, completedDocs: string[], allDocs: string[], isFinished: boolean) {
   const progress = allDocs
     .map((doc) => {
       const name = doc.split("/").pop()?.replace(".md", "") || doc;
@@ -186,16 +165,7 @@ ${progress}
 `;
 
   try {
-    await commitFile(
-      octokit,
-      org,
-      repo,
-      "STATUS.md",
-      statusContent,
-      isFinished
-        ? "Agent: population complete"
-        : `Agent: progress update (${completedDocs.length}/${allDocs.length})`
-    );
+    await commitFile(octokit, org, repo, "STATUS.md", statusContent, isFinished ? "Agent: population complete" : `Agent: progress update (${completedDocs.length}/${allDocs.length})`);
   } catch (e) {
     // STATUS.md might not exist yet — create it
     await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
@@ -213,10 +183,7 @@ export const POST: APIRoute = async ({ request }) => {
     const { slug, companyName, email } = await request.json();
 
     if (!slug || !companyName) {
-      return new Response(
-        JSON.stringify({ error: "slug and companyName required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
-      );
+      return new Response(JSON.stringify({ error: "slug and companyName required" }), { status: 400, headers: { "Content-Type": "application/json" } });
     }
 
     const org = import.meta.env.GITHUB_ORG;
@@ -232,20 +199,9 @@ export const POST: APIRoute = async ({ request }) => {
     // Process each document sequentially
     for (const doc of DOCUMENTS) {
       try {
-        const content = await generateContent(
-          anthropic,
-          companyName,
-          doc.prompt
-        );
+        const content = await generateContent(anthropic, companyName, doc.prompt);
 
-        await commitFile(
-          octokit,
-          org,
-          slug,
-          doc.path,
-          content,
-          `Agent: populate ${doc.path} for ${companyName}`
-        );
+        await commitFile(octokit, org, slug, doc.path, content, `Agent: populate ${doc.path} for ${companyName}`);
 
         completedPaths.push(doc.path);
 
@@ -265,14 +221,11 @@ export const POST: APIRoute = async ({ request }) => {
         populated: completedPaths.length,
         total: allDocs.length,
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      { status: 200, headers: { "Content-Type": "application/json" } },
     );
   } catch (error: any) {
     console.error("Populate error:", error);
-    return new Response(
-      JSON.stringify({ error: "Error populating workspace" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Error populating workspace" }), { status: 500, headers: { "Content-Type": "application/json" } });
   }
 };
 ```
@@ -323,10 +276,7 @@ In `src/components/DeployForm.tsx`, update the success state to inform the user 
 In the success `<div>`, after the "Open workspace" link, add:
 
 ```tsx
-<p className="mt-4 text-sm text-muted-foreground">
-  An AI agent is now researching your company and populating the workspace.
-  Check the STATUS.md file in your repo for progress.
-</p>
+<p className="mt-4 text-sm text-muted-foreground">An AI agent is now researching your company and populating the workspace. Check the STATUS.md file in your repo for progress.</p>
 ```
 
 ---

@@ -20,9 +20,6 @@ const env = Object.fromEntries(
 );
 
 const secret = env.WORKSPACE_KEY_SECRET || env.GITHUB_TOKEN;
-const key = crypto
-	.createHmac("sha256", secret)
-	.update(`nwos-workspace:${slug}`)
-	.digest("hex");
+const key = crypto.createHmac("sha256", secret).update(`nwos-workspace:${slug}`).digest("hex");
 
 console.log(`https://nwos.numen.games/workspace/${slug}?key=${key}`);

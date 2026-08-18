@@ -12,45 +12,39 @@
 //   #   LICENSE.client -> LICENSE (placeholders resolved)
 
 export interface MouldSpec {
-  strip: string[];
-  renameFrom: string;
-  renameTo: string;
+	strip: string[];
+	renameFrom: string;
+	renameTo: string;
 }
 
 // Devuelve null si el spec no aparece o no es coherente: el deploy debe
 // abortar, nunca adivinar una lista.
 export function parseMouldSpec(reuseToml: string): MouldSpec | null {
-  const lines = reuseToml
-    .split("\n")
-    .map((line) => line.replace(/^#\s?/, "").trim());
+	const lines = reuseToml.split("\n").map((line) => line.replace(/^#\s?/, "").trim());
 
-  const stripIdx = lines.findIndex((line) =>
-    line.startsWith("Mould-only artifacts, stripped by nwos-deploy")
-  );
-  const renameIdx = lines.findIndex((line) =>
-    line.startsWith("Renamed by nwos-deploy")
-  );
-  if (stripIdx === -1 || renameIdx === -1) return null;
+	const stripIdx = lines.findIndex((line) => line.startsWith("Mould-only artifacts, stripped by nwos-deploy"));
+	const renameIdx = lines.findIndex((line) => line.startsWith("Renamed by nwos-deploy"));
+	if (stripIdx === -1 || renameIdx === -1) return null;
 
-  const strip: string[] = [];
-  for (let i = stripIdx + 1; i < renameIdx; i++) {
-    strip.push(
-      ...lines[i]
-        .split(",")
-        .map((entry) => entry.trim().replace(/\/$/, ""))
-        .filter(Boolean)
-    );
-  }
+	const strip: string[] = [];
+	for (let i = stripIdx + 1; i < renameIdx; i++) {
+		strip.push(
+			...lines[i]
+				.split(",")
+				.map((entry) => entry.trim().replace(/\/$/, ""))
+				.filter(Boolean),
+		);
+	}
 
-  const rename = lines[renameIdx + 1]?.match(/^(\S+)\s*->\s*(\S+)/);
-  if (!rename || strip.length === 0) return null;
-  const [, renameFrom, renameTo] = rename;
-  if (renameFrom === renameTo) return null;
+	const rename = lines[renameIdx + 1]?.match(/^(\S+)\s*->\s*(\S+)/);
+	if (!rename || strip.length === 0) return null;
+	const [, renameFrom, renameTo] = rename;
+	if (renameFrom === renameTo) return null;
 
-  return {
-    // Defensivo: el archivo a renombrar nunca forma parte del strip.
-    strip: strip.filter((path) => path !== renameFrom),
-    renameFrom,
-    renameTo,
-  };
+	return {
+		// Defensivo: el archivo a renombrar nunca forma parte del strip.
+		strip: strip.filter((path) => path !== renameFrom),
+		renameFrom,
+		renameTo,
+	};
 }

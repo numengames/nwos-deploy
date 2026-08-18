@@ -1,0 +1,11 @@
+dist
+.astro
+.wrangler
+.vercel
+node_modules
+package-lock.json
+public
+
+# prettier-plugin-astro cannot parse this template (pre-existing: the same
+# failure happens on the file as it was before any of our changes).
+src/components/Navigation.astro

@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 import { describe, expect, it } from "vitest";
-import { parseMouldSpec } from "@/lib/mould";
+import { buildInstallTree, parseMouldSpec } from "@/lib/mould";
 
 // Cabecera real de nwos-workspace-template/REUSE.toml (main). Si el
 // formato del molde cambia, este fixture debe cambiar con él.
@@ -63,5 +63,55 @@ describe("parseMouldSpec", () => {
 
 	it("cadena vacía → null", () => {
 		expect(parseMouldSpec("")).toBeNull();
+	});
+});
+
+describe("buildInstallTree", () => {
+	const spec = {
+		strip: ["LICENSE", "LICENSES", "REUSE.toml", ".github", "tests"],
+		renameFrom: "LICENSE.client",
+		renameTo: "LICENSE",
+	};
+	const head = [
+		{ path: "README.md", mode: "100644", type: "blob", sha: "a1" },
+		{ path: "LICENSE", mode: "100644", type: "blob", sha: "a2" },
+		{ path: "LICENSE.client", mode: "100644", type: "blob", sha: "a3" },
+		{ path: "LICENSES", mode: "040000", type: "tree", sha: "a4" },
+		{ path: "LICENSES/MIT.txt", mode: "100644", type: "blob", sha: "a5" },
+		{ path: ".github", mode: "040000", type: "tree", sha: "a6" },
+		{ path: ".github/workflows/ci.yml", mode: "100644", type: "blob", sha: "a7" },
+		{ path: "canon", mode: "040000", type: "tree", sha: "a8" },
+		{ path: "canon/C-001.md", mode: "100644", type: "blob", sha: "a9" },
+		{ path: "vendored", mode: "160000", type: "commit", sha: "s1" },
+	];
+
+	it("retira los artefactos del spec por ruta exacta y por prefijo de directorio", () => {
+		const tree = buildInstallTree(head, spec, "prov");
+		const paths = tree.map((e) => e.path);
+		expect(paths).not.toContain("LICENSES/MIT.txt");
+		expect(paths).not.toContain(".github/workflows/ci.yml");
+		expect(paths).toContain("canon/C-001.md");
+	});
+
+	it("no confunde prefijo de directorio con prefijo de nombre", () => {
+		const tree = buildInstallTree([...head, { path: "LICENSES-INDEX.md", mode: "100644", type: "blob", sha: "b1" }], spec, "prov");
+		expect(tree.map((e) => e.path)).toContain("LICENSES-INDEX.md");
+	});
+
+	it("renombra renameFrom conservando su blob personalizado y añade PROVENANCE.md", () => {
+		const tree = buildInstallTree(head, spec, "prov");
+		expect(tree.map((e) => e.path)).not.toContain("LICENSE.client");
+		expect(tree.find((e) => e.path === "LICENSE")).toMatchObject({ sha: "a3", type: "blob" });
+		expect(tree.find((e) => e.path === "PROVENANCE.md")).toMatchObject({ content: "prov" });
+	});
+
+	it("omite las entradas de directorio y conserva submódulos no afectados", () => {
+		const tree = buildInstallTree(head, spec, "prov");
+		expect(tree.some((e) => e.type === "tree")).toBe(false);
+		expect(tree.find((e) => e.path === "vendored")).toMatchObject({ type: "commit", sha: "s1" });
+	});
+
+	it("lanza si renameFrom no está en HEAD: el deploy debe abortar", () => {
+		expect(() => buildInstallTree([{ path: "README.md", mode: "100644", type: "blob", sha: "a1" }], spec, "prov")).toThrow(/LICENSE\.client/);
 	});
 });

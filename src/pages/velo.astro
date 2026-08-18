@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import Layout from "@/layouts/Layout.astro";
 import DeployForm from "@/components/DeployForm";
+import { DEMO_WORKSPACE_SLUG } from "@/lib/demo";
 
 export const prerender = false;
 ---
@@ -30,6 +31,15 @@ export const prerender = false;
 			</div>
 
 			<DeployForm client:visible />
+
+			<!-- MIS-090: ver antes de desplegar, sin coste de generación -->
+			<div class="mt-10 text-center">
+				<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">¿Quieres verlo antes?</p>
+				<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+					<a href={`/workspace/${DEMO_WORKSPACE_SLUG}`} class="font-mono text-[0.7rem] text-accent hover:text-accent/80 transition-colors">Ver un workspace de ejemplo →</a>
+					<a href="https://numinia.org" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.7rem] text-dim hover:text-foreground transition-colors">Ver Numinia — la referencia 5/5 →</a>
+				</div>
+			</div>
 		</div>
 	</section>
 </Layout>

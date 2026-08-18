@@ -12,6 +12,7 @@ interface GitHubFile {
 import { Octokit } from "octokit";
 import { getEnv } from "@/lib/env";
 import { keySecret, verifyWorkspaceKey } from "@/lib/token";
+import { isDemoWorkspace } from "@/lib/demo";
 
 export const prerender = false;
 
@@ -45,7 +46,7 @@ export const GET: APIRoute = async ({ params, url, locals }) => {
 	}
 
 	const key = url.searchParams.get("key");
-	if (!(await verifyWorkspaceKey(slug, key, keySecret(env)))) {
+	if (!isDemoWorkspace(slug) && !(await verifyWorkspaceKey(slug, key, keySecret(env)))) {
 		return new Response(JSON.stringify({ error: "Access denied" }), {
 			status: 403,
 			headers: { "Content-Type": "application/json" },

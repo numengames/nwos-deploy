@@ -1,11 +1,11 @@
 <!--
 SPDX-FileCopyrightText: 2026 Numen Games S.L.
 SPDX-License-Identifier: CC-BY-4.0
-Reproduced verbatim from standards/2026_08_18-Sistema_de_Diseno-v5.0.0.md §19.5 —
+Reproduced verbatim from standards/2026_08_18-Sistema_de_Diseno-v5.1.0.md §19.5 —
 do not edit here: the source is the master document upstream.
 -->
 
-# Sistema de Diseño v5.0.0 — fragmento de instrucción (§19.5)
+# Sistema de Diseño v5.1.0 — fragmento de instrucción (§19.5)
 
 ```
 Diseña con el Sistema de Diseño de Numen Games v5.0.0.
@@ -45,16 +45,18 @@ relieve. El libro es Diurno con conmutador propio, la luna es el marcapáginas, 
 la factura no hereda nada de esto. Piezas editoriales en §9.9; iconos del libro en §7.5
 (rejilla 16, trazo 1.5) — fuera del libro manda Phosphor, subconjunto de §7.3, y el
 conmutador de modo muestra el modo AL QUE LLEVA un toque, no el actual.
-Animación, solo estas doce: tecleo 22ms/car con cursor de bloque (titulares hero, lore,
+Animación, solo estas trece: tecleo 22ms/car con cursor de bloque (titulares hero, lore,
 cargas — la bandera, herencia de aventuras gráficas); revelado 320ms al entrar en
 viewport; barrido de señal 8s máx. uno; elevación 120ms sin desplazamiento; pulso
 legendario 2.4s ×2 solo al obtener; fase lunar 560ms/paso en cargas largas; puntos de
 espera 900ms en botones; cursor 1s; momento orquestado (tecleo + escalonado 80ms), uno
 por pieza. Del Velo y el papel vivo (nunca en Umbral corporativo): afloramiento
 560ms (opacidad + blur 8→0 + 8px de ascenso, al descubrirse), cristalización 320ms
-(blur 0→12 + borde), paso de página 320ms (capítulos del códex; specs por verificar
-contra el LAP). Prohibido: parallax, glitch, loops ambientales, animar foco o color
-de texto. prefers-reduced-motion: todo instantáneo.
+(blur 0→12 + borde), trazo 1.6s (marcos de grabado que se dibujan, portada y capítulo),
+cielo (deriva ±0.06px + alfa .05–.85 — única excepción al veto de loops, solo fondo
+del Velo). La 12 está retirada: el códex no anima el paso de hoja. Prohibido: parallax,
+glitch, loops ambientales, animar foco o color de texto.
+prefers-reduced-motion: todo instantáneo, y el cielo se detiene a alfa media.
 Botones: relleno de acción #017C8D con blanco (uno por vista) y estados que OSCURECEN
 (hover #016E7D, active #015866; destructivo grana con hover #B02330, con confirmación y
 lejos del primario), fantasma, silencioso; radio 6px; etiquetas = verbos, sin versales.
@@ -65,7 +67,7 @@ pátina de imagen única (§6.3); la época es sabor, no skin. El registro píxe
 Diurno: sus escenas permanecen Nocturno aunque la pieza que las enmarca sea clara.
 La binaria habla: codifica «Leave things better than we found them.» en 8 bits +
 sedimento x — cópiala de tokens binaria.bits o usa binaria() del kit; no inventes ruido.
-Forma: dos radios — control 6px, marco 10px; el registro píxel conserva cantos rectos.
+Forma: dos radios — control 6px, marco 8px; el registro píxel conserva cantos rectos.
 Mensajes (§9.7): qué pasó + qué hacer, nivel I; el error mudo está prohibido; tooltip
 habla en el modo contrario; aviso 6s máx 3; destructivo nunca preenfocado.
 Entregable: el kit zip (LEEME.md en raíz); kit/sistema.{css,js,tokens.json} generados —

@@ -1,9 +1,9 @@
 # DESIGN.md — pablofm.com
 
 > **SUPERSEDED (2026-08-18, MIS-091).** The source of truth for design is the
-> **Numen Games Design System v5.0.0**, in
+> **Numen Games Design System v5.1.0**, in
 > [`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos/tree/main/standards)
-> → `standards/2026_08_18-Sistema_de_Diseno-v5.0.0.md`. Its reusable instruction
+> → `standards/2026_08_18-Sistema_de_Diseno-v5.1.0.md`. Its reusable instruction
 > fragment is kept verbatim in [`docs/design-system-fragment.md`](docs/design-system-fragment.md).
 >
 > Where this file disagrees with the master — the teal accent `#2DD4BF`, the

@@ -48,3 +48,52 @@ export function parseMouldSpec(reuseToml: string): MouldSpec | null {
 		renameTo,
 	};
 }
+
+// Entrada: entradas del árbol recursivo de HEAD tal como las da GitHub.
+export interface HeadTreeEntry {
+	path?: string;
+	mode?: string;
+	type?: string;
+	sha?: string | null;
+}
+
+// Salida: entradas para POST /git/trees (sin base_tree, GitHub reconstruye
+// los directorios a partir de los blobs).
+export interface InstallTreeEntry {
+	path: string;
+	mode: "100644" | "100755" | "040000" | "160000" | "120000";
+	type: "blob" | "tree" | "commit";
+	sha?: string | null;
+	content?: string;
+}
+
+/**
+ * Árbol del commit único que instala la licencia del cliente: retira los
+ * artefactos del spec (por ruta exacta o prefijo de directorio), renombra
+ * renameFrom → renameTo conservando su blob — ya personalizado por el bucle
+ * anterior — y añade PROVENANCE.md. Un solo commit vía Git Data API en vez
+ * de un borrado por archivo con la API de contents: el número de
+ * subrequests deja de depender del tamaño del spec del molde (MIS-090).
+ * Lanza si renameFrom no está en HEAD: el deploy debe abortar.
+ */
+export function buildInstallTree(headTree: HeadTreeEntry[], spec: MouldSpec, provenance: string): InstallTreeEntry[] {
+	const stripped = (path: string) => spec.strip.some((artifact) => path === artifact || path.startsWith(`${artifact}/`));
+
+	const renameEntry = headTree.find((entry) => entry.type === "blob" && entry.path === spec.renameFrom);
+	if (!renameEntry?.sha) {
+		throw new Error(`${spec.renameFrom} missing from the generated repo's HEAD tree`);
+	}
+
+	const kept = headTree.filter((entry): entry is Required<Pick<HeadTreeEntry, "path" | "mode" | "type">> & HeadTreeEntry => entry.type !== "tree" && !!entry.path && !!entry.mode && entry.path !== spec.renameFrom && entry.path !== spec.renameTo && entry.path !== "PROVENANCE.md" && !stripped(entry.path));
+
+	return [
+		...kept.map((entry) => ({
+			path: entry.path,
+			mode: entry.mode as InstallTreeEntry["mode"],
+			type: entry.type as InstallTreeEntry["type"],
+			sha: entry.sha,
+		})),
+		{ path: spec.renameTo, mode: "100644", type: "blob", sha: renameEntry.sha },
+		{ path: "PROVENANCE.md", mode: "100644", type: "blob", content: provenance },
+	];
+}

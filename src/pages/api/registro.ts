@@ -5,7 +5,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { Octokit } from "octokit";
 import { getEnv } from "@/lib/env";
 import { keySecret, signWorkspaceKey } from "@/lib/token";
-import { parseMouldSpec } from "@/lib/mould";
+import { buildInstallTree, parseMouldSpec } from "@/lib/mould";
 import { log, errorMessage, errorStatus } from "@/lib/log";
 
 /** The subset of GitHub's contents payload this route reads. */
@@ -141,33 +141,6 @@ async function generateContent(client: Anthropic, companyName: string, promptTem
 		.join("\n\n");
 
 	return text.trim();
-}
-
-// Borra un path del repo si existe (404 = el molde no trae ese artefacto).
-// Los directorios se recorren y borran archivo a archivo: la contents API
-// de GitHub no borra directorios enteros.
-async function deletePathIfPresent(octokit: Octokit, org: string, repo: string, path: string, message: string): Promise<void> {
-	let data: GitHubContent | GitHubContent[];
-	try {
-		({ data } = (await octokit.request("GET /repos/{owner}/{repo}/contents/{path}", { owner: org, repo, path })) as { data: GitHubContent | GitHubContent[] });
-	} catch (error) {
-		if (errorStatus(error) === 404) return;
-		throw error;
-	}
-
-	for (const entry of Array.isArray(data) ? data : [data]) {
-		if (entry.type === "dir") {
-			await deletePathIfPresent(octokit, org, repo, entry.path, message);
-		} else {
-			await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
-				owner: org,
-				repo,
-				path: entry.path,
-				message,
-				sha: entry.sha,
-			});
-		}
-	}
 }
 
 async function commitFile(octokit: Octokit, org: string, repo: string, path: string, content: string, message: string) {
@@ -401,34 +374,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
 				throw new Error(`${mouldSpec.renameFrom} conserva placeholders sin personalizar`);
 			}
 
-			for (const artifact of mouldSpec.strip) {
-				await deletePathIfPresent(octokit, org, slug, artifact, `Strip template licensing artifact ${artifact}`);
+			const provenance = PROVENANCE_TEMPLATE.replace(/\{\{COMPANY_NAME\}\}/g, companyName).replace(/\{\{DEPLOY_DATE\}\}/g, new Date().toISOString().split("T")[0]);
+
+			// Un solo commit vía Git Data API: strip + rename + PROVENANCE.md.
+			// La versión anterior borraba archivo a archivo con la API de
+			// contents — un commit y 2+ subrequests por artefacto — y moría
+			// contra los límites del Worker/GitHub al crecer el spec del molde.
+			const { data: headRef } = await octokit.request("GET /repos/{owner}/{repo}/git/ref/{ref}", { owner: org, repo: slug, ref: "heads/main" });
+			const { data: headCommit } = await octokit.request("GET /repos/{owner}/{repo}/git/commits/{commit_sha}", { owner: org, repo: slug, commit_sha: headRef.object.sha });
+			const { data: headTree } = await octokit.request("GET /repos/{owner}/{repo}/git/trees/{tree_sha}", { owner: org, repo: slug, tree_sha: headCommit.tree.sha, recursive: "1" });
+			if (headTree.truncated) {
+				throw new Error("HEAD tree truncated: el repo generado excede lo esperable de un molde");
 			}
 
-			await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
+			const installTree = buildInstallTree(headTree.tree, mouldSpec, provenance);
+			const { data: newTree } = await octokit.request("POST /repos/{owner}/{repo}/git/trees", { owner: org, repo: slug, tree: installTree });
+			const { data: installCommit } = await octokit.request("POST /repos/{owner}/{repo}/git/commits", {
 				owner: org,
 				repo: slug,
-				path: mouldSpec.renameTo,
-				message: `Install client ${mouldSpec.renameTo} for ${companyName}`,
-				content: Buffer.from(licenseContent).toString("base64"),
+				message: `Install client ${mouldSpec.renameTo} for ${companyName}; strip mould artifacts`,
+				tree: newTree.sha,
+				parents: [headRef.object.sha],
 			});
-
-			await octokit.request("DELETE /repos/{owner}/{repo}/contents/{path}", {
-				owner: org,
-				repo: slug,
-				path: mouldSpec.renameFrom,
-				message: `Remove ${mouldSpec.renameFrom} after installing client ${mouldSpec.renameTo}`,
-				sha: (licenseData as GitHubContent).sha,
-			});
-
-			const provenance = PROVENANCE_TEMPLATE.replace(/\{\{COMPANY_NAME\}\}/g, companyName).replace(/\{\{DEPLOY_DATE\}\}/g, new Date().toISOString().split("T")[0]);
-			await octokit.request("PUT /repos/{owner}/{repo}/contents/{path}", {
-				owner: org,
-				repo: slug,
-				path: "PROVENANCE.md",
-				message: `Declare canon provenance for ${companyName}`,
-				content: Buffer.from(provenance).toString("base64"),
-			});
+			await octokit.request("PATCH /repos/{owner}/{repo}/git/refs/{ref}", { owner: org, repo: slug, ref: "heads/main", sha: installCommit.sha });
 		} catch (e) {
 			log.error("deploy.abort", {
 				repo: `${org}/${slug}`,

@@ -40,6 +40,14 @@ path = [
 SPDX-FileCopyrightText = "2026 Numen Games S.L."
 SPDX-License-Identifier = "CC-BY-4.0"
 
+# Arrived from numinia-nwos/blueprints/ (MIS-129, ADR-035), where it was
+# published under CC0-1.0. C-005 holds a published CC0 waiver irrevocable:
+# the repository changed, the licence cannot. Overrides docs/** above.
+[[annotations]]
+path = "docs/nwos-system-description.md"
+SPDX-FileCopyrightText = "2026 Numen Games S.L."
+SPDX-License-Identifier = "CC0-1.0"
+
 # --- Brand marks → reserved (C-005 §7: the mark is the hard border) ------
 [[annotations]]
 path = ["public/favicon.svg", "public/favicon.ico"]

@@ -14,6 +14,7 @@ origin_id: "BLU-008"
 origin_note: "Lived in numinia-nwos as blueprints/BLU-008-nwos-system.md until 2026-08-31. Moved here by MIS-129 under ADR-035: it is product copy, not a plan for a future state, and this is the repository that serves nwos.numen.games."
 duplication_warning: "27 of this document's 36 prose strings (75%) are byte-identical to src/pages/index.astro in this repository, and 32 of 48 to numinia-nwos's HomeView.astro. Three copies of the same text exist and have already diverged: the field renamed area -> territory (D-010) reached numinia.org only. Which copy is the master is UNDECIDED. Until it is decided, treat this file as a third copy, not as the source."
 ---
+
 # Narrative Work OS
 
 > A structured, file-based operating system for organizations. Built on markdown, git, and AI agents. No proprietary formats. No lock-in.
@@ -22,23 +23,23 @@ duplication_warning: "27 of this document's 36 prose strings (75%) are byte-iden
 
 ## What it is
 
-| | |
-|---|---|
-| **For teams** | 10–200 people who need shared memory, decision traceability, and async coordination. |
-| **Not a SaaS** | A set of structured conventions and file formats. You own your data. It runs anywhere git runs. |
-| **AI-native** | Designed from the start for AI agents to read, write, and operate within the same files as humans. |
+|                |                                                                                                    |
+| -------------- | -------------------------------------------------------------------------------------------------- |
+| **For teams**  | 10–200 people who need shared memory, decision traceability, and async coordination.               |
+| **Not a SaaS** | A set of structured conventions and file formats. You own your data. It runs anywhere git runs.    |
+| **AI-native**  | Designed from the start for AI agents to read, write, and operate within the same files as humans. |
 
 ---
 
 ## Architecture — Layers L0–L4
 
-| Layer | Name | Description |
-|---|---|---|
-| L0 | 📄 File Layer | All data is markdown files with YAML frontmatter. No proprietary formats. |
-| L1 | 🔀 Version Layer | Git provides full history, branching, and collaboration via PRs. |
-| L2 | 🤖 Agent Layer | AI agents read and write files like any contributor. |
-| L3 | 🧬 Human Layer | Oracles (humans) approve decisions, set direction, and audit agent work. |
-| L4 | 🎭 Narrative Layer | Optional. Guilds, lore, and game mechanics that make the system engaging for humans. |
+| Layer | Name               | Description                                                                          |
+| ----- | ------------------ | ------------------------------------------------------------------------------------ |
+| L0    | 📄 File Layer      | All data is markdown files with YAML frontmatter. No proprietary formats.            |
+| L1    | 🔀 Version Layer   | Git provides full history, branching, and collaboration via PRs.                     |
+| L2    | 🤖 Agent Layer     | AI agents read and write files like any contributor.                                 |
+| L3    | 🧬 Human Layer     | Oracles (humans) approve decisions, set direction, and audit agent work.             |
+| L4    | 🎭 Narrative Layer | Optional. Guilds, lore, and game mechanics that make the system engaging for humans. |
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -59,7 +60,7 @@ duplication_warning: "27 of this document's 36 prose strings (75%) are byte-iden
 └──────────────────────────────────────────────┘
 ```
 
-*L4 (Narrative) is opt-in. The system works without it. It adds engagement and cultural coherence for teams that want it.*
+_L4 (Narrative) is opt-in. The system works without it. It adds engagement and cultural coherence for teams that want it._
 
 ---
 
@@ -140,10 +141,10 @@ Operational procedures written as markdown files. Protocols define how recurring
 
 ## Implementation — Requirements
 
-| Requirement | Note |
-|---|---|
-| ✓ Git repository | GitHub, GitLab, or self-hosted |
-| ✓ Markdown editor | Any editor that reads .md files |
+| Requirement       | Note                               |
+| ----------------- | ---------------------------------- |
+| ✓ Git repository  | GitHub, GitLab, or self-hosted     |
+| ✓ Markdown editor | Any editor that reads .md files    |
 | ✓ AI agent access | Optional. Unlocks the agent layer. |
 
 ---
@@ -156,4 +157,4 @@ If you want the system without the narrative, it's still the same files, the sam
 
 ---
 
-*Metadata of the original page (`index.astro`): HTML title «Narrative Work OS — Numen Games» · description «A file-based operating system for organizations that need alignment, memory, and AI agent integration. No proprietary formats. No lock-in.» · canonical route `/`.*
+_Metadata of the original page (`index.astro`): HTML title «Narrative Work OS — Numen Games» · description «A file-based operating system for organizations that need alignment, memory, and AI agent integration. No proprietary formats. No lock-in.» · canonical route `/`._

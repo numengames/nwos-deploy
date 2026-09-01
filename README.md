@@ -12,7 +12,7 @@ Servicio de despliegue de NWOS (Narrative Work OS): landing del producto y gener
 
 - Astro 5 (`output: "static"` + adaptador Cloudflare Workers) con islas React 19
 - Tailwind 3, Nocturno, tipografía Geist y Geist Mono autoalojadas
-- Sistema de Diseño de Numen Games **v5.0.0** (registro Umbral; el Velo en `/velo`
+- Sistema de Diseño de Numen Games **v5.1.0** (registro Umbral; el Velo en `/velo`
   y el visor). El máster vive en
   [`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos/tree/main/standards);
   el fragmento de instrucción, en [`docs/design-system-fragment.md`](docs/design-system-fragment.md).

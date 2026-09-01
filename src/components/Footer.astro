@@ -17,7 +17,7 @@ import { socialLinks } from "@/data/social-links";
 
 			<!-- Nav links -->
 			<div class="flex flex-col gap-2 text-center sm:text-left">
-				<span class="mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Navegación</span>
+				<span class="mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Navigation</span>
 				<a href="/" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Home</a>
 				<a href="/velo" class="text-sm text-muted-foreground transition-colors hover:text-foreground">Deploy workspace</a>
 			</div>
@@ -35,10 +35,16 @@ import { socialLinks } from "@/data/social-links";
 			</div>
 		</div>
 
-		<!-- Copyright -->
+		<!-- Licence. C-005: a file with no declared licence defaults to all rights
+		     reserved, and "declaring is what liberates". This page sells File over
+		     App and no lock-in, so the footer must state the regime the repository
+		     actually carries — AGPL-3.0-only for this service, per REUSE.toml —
+		     rather than reserve rights the licence has already granted. -->
 		<div class="mt-12 border-t border-border/50 pt-6 text-center">
 			<p class="font-mono text-xs text-dim">
-				&copy; {new Date().getFullYear()} Numen Games. Todos los derechos reservados.
+				&copy; {new Date().getFullYear()} Numen Games S.L. — this service is free software under
+				<a href="https://github.com/numengames/nwos-deploy/blob/main/LICENSES/AGPL-3.0-only.txt" class="underline underline-offset-2 transition-colors hover:text-foreground">AGPL-3.0-only</a>. Per-path regimes are declared in
+				<a href="https://github.com/numengames/nwos-deploy/blob/main/REUSE.toml" class="underline underline-offset-2 transition-colors hover:text-foreground">REUSE.toml</a>.
 			</p>
 		</div>
 	</div>

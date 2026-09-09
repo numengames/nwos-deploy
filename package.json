@@ -30,7 +30,7 @@
     "@fontsource-variable/geist": "^5.2.8",
     "@fontsource-variable/geist-mono": "^5.2.7",
     "@numengames/design-kit": "https://github.com/numengames/numinia-nwos/releases/download/design-kit-v6.0.0/numengames-design-kit-6.0.0.tgz",
-    "astro": "^5.18.1",
+    "astro": "^7.2.8",
     "octokit": "^5.0.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

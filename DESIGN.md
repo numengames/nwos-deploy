@@ -1,10 +1,11 @@
 # DESIGN.md — pablofm.com
 
 > **SUPERSEDED (2026-08-18, MIS-091).** The source of truth for design is the
-> **Numen Games Design System v5.1.0**, in
-> [`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos/tree/main/standards)
-> → `standards/2026_08_18-Sistema_de_Diseno-v5.1.0.md`. Its reusable instruction
-> fragment is kept verbatim in [`docs/design-system-fragment.md`](docs/design-system-fragment.md).
+> **Numen Games Design System**, in
+> [`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos): rules
+> `standards/STD-008-design-tokens.md`, values `standards/STD-023-design-values.md`,
+> direction `canon/CAN-008-visual-identity.md`. This repo installs it as
+> `@numengames/design-kit`; the agent instruction is the package's `sistema.prompt.txt`.
 >
 > Where this file disagrees with the master — the teal accent `#2DD4BF`, the
 > terracota/ocre/cobre flavours, the noise overlay — **the master wins**: those

@@ -1,5 +1,6 @@
 /* SPDX-FileCopyrightText: 2026 Numen Games S.L. */
 /* SPDX-License-Identifier: AGPL-3.0-only */
+@import "./tokens.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,65 +12,8 @@
 		--font-sans: "Geist Variable", system-ui, sans-serif;
 		--font-mono: "Geist Mono Variable", ui-monospace, monospace;
 
-		/* ────────────────────────────────────────────────────────────────────
-		 * Sistema de Diseño de Numen Games v5.0.0 · tokens canónicos §19.3.
-		 * Registro Umbral · modo Nocturno. RGB triplets so Tailwind can apply
-		 * opacity. A colour that is not in §19.3 does not exist here.
-		 * ──────────────────────────────────────────────────────────────────── */
-
-		/* Nocturno — la noche cálida de jardín, no el neón */
-		--bg: 20 17 15; /* #14110F noche */
-		--bg-card: 30 26 23; /* #1E1A17 superficie */
-		--bg-card-hover: 41 36 32; /* #292420 elevada */
-		--border: 58 51 45; /* #3A332D línea fuerte */
-		--border-soft: 36 31 27; /* #241F1B línea tenue */
-		--text: 249 235 220; /* #F9EBDC arena */
-		--text-muted: 196 181 166; /* #C4B5A6 secundario */
-		--text-dim: 138 125 114; /* #8A7D72 terciario */
-
-		/* Enlace y acento del Nocturno */
-		--accent: 166 218 213; /* #A6DAD5 verdemar */
-
-		/* Rellenos de acción · la interacción OSCURECE (§3.4, §9.1) */
-		--interactivo: 1 124 141; /* #017C8D */
-		--interactivo-hover: 1 110 125; /* #016E7D */
-		--interactivo-activo: 1 88 102; /* #015866 */
-
-		/* ── Marca ────────────────────────────────────────────────────────── */
-		--verdemar: 166 218 213; /* #A6DAD5 */
-		--turquesa: 1 142 161; /* #018EA1 */
-		--ambar: 239 165 23; /* #EFA517 */
-		--arena: 249 235 220; /* #F9EBDC */
-		--coral: 243 80 88; /* #F35059 aviso */
-		--grana: 211 52 64; /* #D33440 crítico */
-
-		/* ── Alias heredados ──────────────────────────────────────────────
-		 * The old flavour names stay so existing classes keep working, but
-		 * each one now holds the §19.3 token that occupies its role. */
-		--terracota: 239 165 23; /* → ámbar */
-		--ocre: 239 165 23; /* → ámbar */
-		--cobre: 239 165 23; /* → ámbar */
-		--bronce: 138 125 114; /* → terciario */
-		--salvia: 143 196 107; /* → #8FC46B */
-		--azul-med: 93 155 214; /* → #5D9BD6 */
-		--teal: 1 142 161; /* → turquesa */
-
-		/* ── Paleta de datos §3.8 ─────────────────────────────────────────── */
-		--green: 143 196 107; /* #8FC46B */
-		--red: 211 52 64; /* #D33440 grana */
-		--yellow: 239 165 23; /* #EFA517 ámbar */
-		--blue: 93 155 214; /* #5D9BD6 */
-		--purple: 169 139 224; /* #A98BE0 */
-
-		/* ── Atmósfera del Velo §2.7 · solo alfa sobre canónicos ──────────── */
-		--accent-glow: rgba(1, 142, 161, 0.08);
-		--veil-glow: rgba(1, 142, 161, 0.06);
-		--cobre-glow: rgba(239, 165, 23, 0.18);
-
-		/* ── Forma §5 · dos radios y solo dos ─────────────────────────────── */
-		--radius: 8px; /* marco */
-		--radius-control: 6px;
-		--ciclo: cubic-bezier(0.2, 0, 0, 1);
+		/* Colour, radius and curve tokens: src/styles/tokens.css, generated from
+		 * @numengames/design-kit by scripts/design-tokens.mjs. Not here. */
 
 		/* ── shadcn compat aliases ───────────────────────────────────────── */
 		--background: var(--bg);
@@ -137,7 +81,7 @@
 		color: rgb(249, 235, 220);
 	}
 
-	/* §10 · prefers-reduced-motion: todo instantáneo, sin excepción. */
+	/* STD-008 DSN-008 · prefers-reduced-motion: todo instantáneo, sin excepción. */
 	@media (prefers-reduced-motion: reduce) {
 		*,
 		*::before,

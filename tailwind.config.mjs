@@ -18,7 +18,7 @@ export default {
 					DEFAULT: "rgb(var(--accent) / <alpha-value>)",
 					glow: "var(--accent-glow)",
 				},
-				/* §19.3 · marca */
+				/* Marca (tokens.css, generado del paquete) */
 				verdemar: "rgb(var(--verdemar) / <alpha-value>)",
 				turquesa: "rgb(var(--turquesa) / <alpha-value>)",
 				coral: "rgb(var(--coral) / <alpha-value>)",

@@ -6,11 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Standards adopted by reference
 
-| Document                     | Canonical location                                               | What it governs here                                 |
-| ---------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------- |
-| **Engineering Standards**    | `numengames/numinia-nwos` → `standards/engineering-standards.md` | CI, repo hygiene, security practices, agent protocol |
-| **Sistema de Diseño v5.1.0** | same folder → `standards/2026_08_18-Sistema_de_Diseno-v5.1.0.md` | Every visible pixel of nwos.numen.games              |
-| **Canon C-005**              | Numinia canon                                                    | Licensing — reproduced in full below                 |
+| Document                  | Canonical location                                                                                             | What it governs here                                 |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| **Engineering Standards** | `numengames/numinia-nwos` → `standards/engineering-standards.md`                                               | CI, repo hygiene, security practices, agent protocol |
+| **Sistema de Diseño**     | same repo → `STD-008` rules, `STD-023` values, `CAN-008` direction; installed here as `@numengames/design-kit` | Every visible pixel of nwos.numen.games              |
+| **Canon C-005**           | Numinia canon                                                                                                  | Licensing — reproduced in full below                 |
 
 This repo is **downstream**: it executes those documents, it does not edit them. A change to a standard goes upstream via ADR + PR (engineering-standards §7.1).
 
@@ -20,10 +20,10 @@ Follow the §7 protocol: classify every task as **cosmetic** or **irreversible**
 
 ## Design system — the short version
 
-Full contract in the master document §19; the reusable fragment is reproduced verbatim in `docs/design-system-fragment.md`. `DESIGN.md` is **superseded** and kept only for what the master does not cover.
+The design system is an installed package, `@numengames/design-kit` (source: `packages/design-kit/` in `numinia-nwos`; rules in `STD-008`, values in `STD-023`, direction in `CAN-008`). The agent instruction is `node_modules/@numengames/design-kit/sistema.prompt.txt` — paste it, do not retype it. `DESIGN.md` is **superseded** and kept only for what the master does not cover.
 
-- **Registers:** the landing and the deploy flow are **Umbral**; `/velo` and the workspace viewer are the **Velo** (§2.7) — the register boundary is visible, the two never blend.
-- **Colour only from §19.3.** Never invent a hex: every value lives in `src/styles/global.css` as an RGB triplet and reaches components as a Tailwind token.
+- **Registers:** the landing and the deploy flow are **Umbral**; `/velo` and the workspace viewer are the **Velo** — the register boundary is visible, the two never blend.
+- **Colour only from the kit.** Never invent a hex: `scripts/design-tokens.mjs` generates `src/styles/tokens.css` from the package's `sistema.tokens.json` on every `dev`/`build`; a hand edit there is overwritten. Components reach values as Tailwind tokens.
 - The Velo adds **alpha over canonical colours**, never new hexes: grid ≤3%, mist ≤8%, atmosphere behind the content, Nocturno only.
 - **The sky** (§2.7.1) is the rarity scale made cosmos: 175 stars, weights 60/25/10/4/1, no parallax, stopped under `prefers-reduced-motion`.
 - **Typography: only Geist and Geist Mono**, self-hosted through fontsource.

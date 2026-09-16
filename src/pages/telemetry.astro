@@ -1,0 +1,36 @@
+---
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// /telemetry — what the service measures about itself. Today, the two
+// facts the footer already prints, so the link has a destination; the
+// measurements (workspaces generated, time to first deploy) are their own
+// mission. numinia.org has the full version of this idea over the corpus.
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import { VERSION, COMMIT_SHA, COMMIT_URL } from "@/lib/build-info";
+---
+
+<Layout title="Telemetry — NWOS" description="What this service measures about itself: version and commit today; the rest is yet to be built." canonicalPath="/telemetry">
+	<PageHero label="Telemetry" title="What this service measures about itself" description="Today, only two facts about the artefact you are looking at. Pending: workspaces generated, time to first deploy, and how the deploy form is used — measured here when it exists, not asserted." />
+	<section class="pb-20">
+		<div class="mx-auto max-w-[800px] px-6">
+			<dl class="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 font-mono text-sm">
+				<dt class="text-[0.65rem] uppercase tracking-[0.15em] text-dim">Version</dt>
+				<dd class="text-foreground">{VERSION}</dd>
+				<dt class="text-[0.65rem] uppercase tracking-[0.15em] text-dim">Commit</dt>
+				<dd class="text-foreground">
+					{
+						COMMIT_URL ? (
+							<a href={COMMIT_URL} target="_blank" rel="noopener noreferrer" class="hover:text-accent">
+								{COMMIT_SHA}
+							</a>
+						) : (
+							COMMIT_SHA
+						)
+					}
+				</dd>
+			</dl>
+		</div>
+	</section>
+</Layout>

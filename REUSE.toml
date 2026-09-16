@@ -42,6 +42,6 @@ SPDX-License-Identifier = "CC-BY-4.0"
 
 # --- Brand marks → reserved (C-005 §7: the mark is the hard border) ------
 [[annotations]]
-path = ["public/favicon.svg", "public/favicon.ico"]
+path = ["public/favicon.svg", "public/favicon.ico", "src/brand/**"]
 SPDX-FileCopyrightText = "2026 Numen Games S.L."
 SPDX-License-Identifier = "LicenseRef-Numen-AllRightsReserved"

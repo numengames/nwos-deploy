@@ -1,11 +1,15 @@
 # SEC-03: dependency and action updates arrive as PRs; they merge only on green CI.
+# Dependabot: keep every dependency at its latest version.
+# Oracle rule (2026-09-18): nothing stays pinned to an old release; the
+# checks decide, not a person. `dependabot-auto-merge.yml` approves and
+# merges each update once CI is green.
 version: 2
 updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: weekly
-    open-pull-requests-limit: 5
+      interval: daily
+    open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
     groups:
@@ -17,6 +21,6 @@ updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: weekly
+      interval: daily
     commit-message:
       prefix: "ci(deps)"

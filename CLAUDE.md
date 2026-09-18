@@ -60,8 +60,12 @@ lint fails.
 
 - `scripts/check-version-bump.mjs`: any change under `src/**` needs a new
   entry in `src/data/updates.ts` and a raised version.
-- CI presence check (`ci.yml`): the root files it lists must exist; this
-  file must contain "audit the current branch state" and "design-kit".
+- The required check is the job named `build` in `ci.yml`: the
+  conjunction of the artefact steps (type-check → lint → test → version
+  bump → build → share card). The `presence` job (root files that must
+  exist; this file must contain "audit the current branch state" and
+  "design-kit") only reports while the archive's STD-015 is draft — it
+  looks, it does not bite.
 - `license-check.yml`: the PR author must be listed in
   `CLA-SIGNATORIES.md` — this repository ships AGPL-3.0-only code and a
   CLA is required per repository.

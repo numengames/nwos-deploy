@@ -5,6 +5,16 @@
 {
   "name": "nwos-deploy",
   "main": "./dist/_worker.js/index.js",
+  // The build lives HERE, not in the Cloudflare panel. Workers Builds runs
+  // `npm ci`, then `npx wrangler deploy`; wrangler runs this first. The
+  // panel's "Build command" field stays EMPTY — on the other three sites
+  // (2026-09-17) anything in it ran before wrangler, without the right
+  // tool or env, and failed. `npm run build` is `astro build` plus the
+  // licence check (postbuild). No build variables needed: the runtime
+  // secrets (GITHUB_TOKEN, GITHUB_ORG, …) are Worker secrets, not build.
+  "build": {
+    "command": "npm run build",
+  },
   "compatibility_date": "2026-08-14",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {

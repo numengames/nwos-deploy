@@ -51,6 +51,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      # DSN-014 (STD-008): a link presents itself. prebuild drew the favicon
+      # set and the 1200×630 share card into public/; this proves they exist.
+      - name: Share card
+        run: node scripts/share-card.mjs --check
+
   presence:
     name: Repository checklist (§3.3)
     runs-on: ubuntu-latest

@@ -15,11 +15,14 @@ interface Props {
 	activeNav?: string;
 }
 
-const { title = "NWOS — Narrative Work OS", description = "A file-based operating system for organizations that need alignment, memory, and AI agent integration. No proprietary formats. No lock-in.", canonicalPath = "", ogImage, activeNav } = Astro.props;
+// STD-023 §19 — this site's row: the same name and line the footer's Numen
+// Games column, the share card (scripts/share-card.mjs) and this head read.
+// This is the service; numinia.org is the archive.
+const { title = "NWOS for your organisation — Numen Games", description = "A file-based operating system for organisations. Markdown, git, AI agents. Adopt it.", canonicalPath = "", ogImage, activeNav } = Astro.props;
 
 const siteUrl = "https://nwos.numen.games";
 const canonical = `${siteUrl}${canonicalPath}`;
-const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
+const resolvedOgImage = ogImage ?? `${siteUrl}/og-card.png`;
 ---
 
 <!doctype html>
@@ -27,6 +30,8 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
@@ -35,6 +40,7 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-default.png`;
 
 		<!-- Open Graph -->
 		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="NWOS — Numen Games" />
 		<meta property="og:url" content={canonical} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />

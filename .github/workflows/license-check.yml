@@ -29,7 +29,9 @@ jobs:
       - run: npm run build
 
   cla:
-    if: github.event_name == 'pull_request'
+    # A robot cannot sign a CLA and contributes no copyrightable work: a
+    # version bump is data. Dependabot skips the gate; humans do not.
+    if: github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0

@@ -1,64 +1,31 @@
-# NWOS — Narrative Work OS
+# nwos-deploy
 
-[![CI](https://github.com/numengames/nwos-deploy/actions/workflows/ci.yml/badge.svg)](https://github.com/numengames/nwos-deploy/actions/workflows/ci.yml)
-[![license-check](https://github.com/numengames/nwos-deploy/actions/workflows/license-check.yml/badge.svg)](https://github.com/numengames/nwos-deploy/actions/workflows/license-check.yml)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/numengames/nwos-deploy/badge)](https://scorecard.dev/viewer/?uri=github.com/numengames/nwos-deploy)
+**[nwos.numen.games](https://nwos.numen.games)** — the Narrative Work OS as a
+service: a landing that explains it and a generator that creates an
+organisation's own workspace from `nwos-workspace-template`.
 
-Servicio de despliegue de NWOS (Narrative Work OS): landing del producto y generación de workspaces de organización desde `nwos-workspace-template`. El visor de Numinia que vivía aquí se extrajo a `numengames/numinia-nwos` (rama `merge-viewer`).
+The rules of the house, its vocabulary and its decisions live in
+[`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos)
+(numinia.org). This repository holds code only.
 
-**URL**: https://nwos.numen.games
-
-## Stack
-
-- Astro 5 (`output: "static"` + adaptador Cloudflare Workers) con islas React 19
-- Tailwind 3, Nocturno, tipografía Geist y Geist Mono autoalojadas
-- Sistema de Diseño de Numen Games, instalado como paquete `@numengames/design-kit`
-  (registro Umbral; el Velo en `/velo` y el visor). El máster vive en
-  [`numengames/numinia-nwos`](https://github.com/numengames/numinia-nwos)
-  (`STD-008` reglas, `STD-023` valores, `CAN-008` dirección); los tokens CSS se
-  generan con `scripts/design-tokens.mjs`. `DESIGN.md` queda superseded.
-
-## Desarrollo
-
-Requiere Node ≥ 22.12.
+## Run
 
 ```bash
-git clone https://github.com/numengames/nwos-deploy.git
-cd nwos-deploy
-npm install
-npm test         # unit tests, no secrets needed
-npm run dev      # http://localhost:4321
-npm run build
+npm ci
+npm run dev                                                        # http://localhost:4321
+npm run type-check && npm run lint && npm test && npm run build    # what CI runs
 ```
 
-Before pushing, run what CI runs:
+Node ≥ 22.12. `/velo` and `/workspace/[slug]` need the variables in
+`.env.example` (GitHub + Anthropic); without them the static pages still
+work and those routes return 500. Architecture, gates and deploy are in
+[`CLAUDE.md`](CLAUDE.md).
 
-```bash
-npm run type-check && npm run lint && npm test && npm run build
-```
+## Licences
 
-## Variables de entorno
+`AGPL-3.0-only` for the application, declared per path in
+[`REUSE.toml`](REUSE.toml). Contributions require the CLA
+([`CLA.md`](CLA.md), [`CONTRIBUTING.md`](CONTRIBUTING.md)). Trademarks:
+[`TRADEMARKS.md`](TRADEMARKS.md).
 
-Las rutas SSR (`/velo`, `/workspace/[slug]`, `/api/*`) necesitan las variables de `.env.example` (GitHub + Anthropic). Sin ellas, el resto del sitio funciona pero esas rutas devuelven 500.
-
-- **`npm run dev`**: se leen del `.env` local (fallback) o de un `.dev.vars` (mismo formato `CLAVE=valor`).
-- **`npm run preview`** (`wrangler dev`, emula el runtime de Workers): se leen solo de `.dev.vars`.
-- **Producción (Cloudflare Workers)**: configúralas como secrets una a una:
-
-  ```bash
-  npx wrangler secret put GITHUB_ORG
-  npx wrangler secret put GITHUB_TOKEN
-  npx wrangler secret put GITHUB_TEMPLATE_REPO
-  npx wrangler secret put ANTHROPIC_API_KEY
-  ```
-
-En runtime el código las lee de `locals.runtime.env` (ver `src/lib/env.ts`); `import.meta.env` solo funciona en desarrollo.
-
-## Deploy
-
-`npm run build` y después `npx wrangler deploy` (usa `wrangler.jsonc`: worker en `dist/_worker.js/index.js` + assets estáticos de `dist/`).
-
-## Estructura
-
-- `src/pages/` — `/` (landing estática), `/velo` y `/workspace/[slug]` (SSR) y las rutas API bajo `api/`
-- El flujo de deploy NWOS: `/velo` → `POST /api/registro` → crea repo privado desde `nwos-workspace-template`, genera docs canon con Claude y se explora en `/workspace/[slug]?key=<hmac>`
+Version and what changed: [nwos.numen.games/updates](https://nwos.numen.games/updates/).

@@ -53,8 +53,8 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 	}
 
 	// Load-on-mount: both calls are async and only touch state after their
-	// fetch resolves. Moving this to a data-fetching primitive is tracked in
-	// TODO.md; until then the two rules below are silenced on purpose.
+	// fetch resolves. Moving this to a data-fetching primitive would remove
+	// the two disables below; until then they are silenced on purpose.
 	useEffect(() => {
 		// eslint-disable-next-line react-hooks/set-state-in-effect
 		loadTree();

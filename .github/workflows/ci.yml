@@ -61,12 +61,12 @@ jobs:
         run: |
           missing=0
           for f in CLAUDE.md SECURITY.md CONTRIBUTING.md CODE_OF_CONDUCT.md \
-                   TODO.md .editorconfig .env.example REUSE.toml LICENSE \
+                   .editorconfig .env.example REUSE.toml LICENSE \
                    TRADEMARKS.md CLA.md CLA-SIGNATORIES.md \
                    .github/CODEOWNERS .github/PULL_REQUEST_TEMPLATE.md \
                    .github/dependabot.yml .github/ISSUE_TEMPLATE/bug_report.yml; do
             if [ ! -f "$f" ]; then
-              echo "::error file=$f::missing — required by engineering-standards §4"
+              echo "::error file=$f::missing — required by the repository checklist"
               missing=1
             fi
           done
@@ -75,6 +75,6 @@ jobs:
       - name: CLAUDE.md carries the agent contract
         run: |
           grep -q "audit the current branch state" CLAUDE.md \
-            || { echo "::error::CLAUDE.md must open with the AGT-01 audit instruction"; exit 1; }
-          grep -q "Sistema de Diseño" CLAUDE.md \
-            || { echo "::error::CLAUDE.md must point at the Design System (§0.3)"; exit 1; }
+            || { echo "::error::CLAUDE.md must open with the audit instruction"; exit 1; }
+          grep -q "design-kit" CLAUDE.md \
+            || { echo "::error::CLAUDE.md must point at the design kit"; exit 1; }

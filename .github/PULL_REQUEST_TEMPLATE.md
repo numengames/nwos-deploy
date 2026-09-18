@@ -1,22 +1,18 @@
-## What
+## Qué cambia
 
-<!-- One or two sentences. -->
+<!-- Qué se ve distinto en la web, un punto por elemento. -->
 
-## Why
+## Cómo comprobarlo
 
-<!-- The reason, not the mechanism. Link the issue or mission (MIS-XXX). -->
+<!-- Dónde hacer clic en la preview. -->
 
-## How to verify
+## Verificado en local
 
-<!-- The steps a reviewer follows. Screenshots for visual changes. -->
+<!-- `npm run type-check && npm run lint && npm test && npm run build`, una línea. -->
 
-## Definition of Done
+## Pendiente, fuera de esta PR
 
-- [ ] `npm run type-check && npm run lint && npm test && npm run build` pass locally
-- [ ] Conventional commit messages; practice IDs referenced where they apply
-- [ ] CLA signed (`CLA-SIGNATORIES.md`) — this repo ships AGPL code
-- [ ] Licensing untouched, or the change is signed off by the Oracle (C-005)
-- [ ] Visual changes follow the Design System (STD-008, `@numengames/design-kit`): generated tokens only, Geist/Geist Mono, spacing on the 4 scale, motion from the §10.1 catalogue
-- [ ] Accessibility: contrast AA, focus visible, nothing by colour alone, `prefers-reduced-motion` respected
-- [ ] No secrets, no loose `console.*` (use `src/lib/log.ts`), no new dependency with an unresolved licence
-- [ ] Docs updated (`README.md`, `CLAUDE.md`, `.env.example`) if setup or behaviour changed
+<!-- Lo que se deja fuera a sabiendas. -->
+
+- [ ] Entrada en `src/data/updates.ts` y versión subida (si cambia `src/**`)
+- [ ] CLA firmado (`CLA-SIGNATORIES.md`) — este repo lleva código AGPL

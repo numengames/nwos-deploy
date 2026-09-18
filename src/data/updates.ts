@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.2.0",
+		date: "2026-09-18",
+		entries: [
+			{
+				type: "CHG",
+				text: "The repository keeps code only: the superseded DESIGN.md, the two iteration guides written for the personal site this service was extracted from, and the TODO register are retired — the rules, the vocabulary and the decisions of the house live in numinia-nwos (numinia.org). Nothing changes on the site.",
+			},
+		],
+	},
+	{
 		version: "v0.1.0",
 		date: "2026-09-16",
 		entries: [

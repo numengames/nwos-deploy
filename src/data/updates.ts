@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.3.0",
+		date: "2026-09-18",
+		entries: [
+			{
+				type: "ADD",
+				text: "A link to this site presents itself (DSN-014): the scarab as favicon, a title and description that say this is the service — NWOS for your organisation — not the archive, and a 1200×630 share card drawn at build. The share image was a broken link (og-default.png did not exist).",
+			},
+		],
+	},
+	{
 		version: "v0.2.0",
 		date: "2026-09-18",
 		entries: [

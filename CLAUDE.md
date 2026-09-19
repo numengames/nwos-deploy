@@ -3,7 +3,7 @@
 This repository serves **nwos.numen.games**: the Narrative Work OS as a
 service — a landing and the generator that creates a client's workspace.
 The rules, the vocabulary and the decisions of Numen Games live in one
-place, `numengames/numinia-nwos` (numinia.org): read its `AGENTS.md`
+place, `numengames/numinia-archive` (numinia.org): read its `AGENTS.md`
 first, transition regime included. This file only says what is specific
 here.
 

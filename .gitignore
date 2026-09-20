@@ -32,3 +32,6 @@ public/favicon.svg
 public/favicon.png
 public/apple-touch-icon.png
 public/og-card.png
+
+# coverage reports (vitest, printed in the log; the files are not the record)
+.coverage/

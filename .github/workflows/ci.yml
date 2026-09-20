@@ -77,8 +77,27 @@ jobs:
         run: npm run lint
 
       # vitest. Red means a behaviour changed and its test says so.
+      #
+      # Coverage of the logic (src/lib, src/data, src/pages/api, scripts) is
+      # measured on every run and its summary goes to the job summary. It
+      # has no threshold: while STD-015 is draft the figure is seen, not
+      # enforced (ENG-067). The threshold arrives when the register goes
+      # active, pinned to the value measured then. A failing test still
+      # fails this step.
       - name: Test
-        run: npm test
+        run: |
+          set +e
+          out="$(npm test 2>&1)"; status=$?
+          set -e
+          echo "$out"
+          {
+            echo "### Coverage of the logic — seen, not enforced (STD-015 draft, ENG-067)"
+            echo
+            echo '```'
+            echo "$out" | grep -E '^(Statements|Branches|Functions|Lines) ' || echo "(no coverage summary in the output)"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$status"
 
       # A change to the site must say what it changed: any diff under src/
       # needs a new entry (and version) in src/data/updates.ts. The footer

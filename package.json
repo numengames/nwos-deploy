@@ -29,11 +29,11 @@
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/geist-mono": "^5.2.7",
     "@numengames/design-kit": "https://github.com/numengames/numinia-archive/releases/download/design-kit-v6.0.0/numengames-design-kit-6.0.0.tgz",
+    "@tailwindcss/vite": "^4.2.5",
     "astro": "^7.3.3",
     "octokit": "^5.0.5",
     "react": "^19.2.4",
     "react-dom": "^19.3.0",
-    "@tailwindcss/vite": "^4.2.5",
     "tailwindcss": "^4.2.5"
   },
   "devDependencies": {
@@ -42,16 +42,16 @@
     "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.3.0",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.1",
     "eslint": "^10.8.1",
     "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.11.0",
     "prettier": "^3.9.6",
-    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-astro": "^1.0.1",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.67.0",
-    "vitest": "^4.1.10",
+    "vitest": "^5.0.1",
     "wawoff2": "^2.0.1",
     "wrangler": "^4.123.0"
   }

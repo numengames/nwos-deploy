@@ -41,39 +41,37 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 	<div class="mx-auto max-w-[1100px] px-6 py-12">
 		<div class="grid grid-cols-1 gap-8 text-center sm:grid-cols-[1.4fr_1fr_1.2fr_1fr] sm:text-left">
 			<div>
-				<a href="/" class="inline-flex min-h-[44px] items-center font-display text-xl text-foreground">Narrative Work OS</a>
+				<a href="/" class="inline-flex min-h-[44px] items-center font-display text-xl text-foreground">
+					Narrative Work OS
+				</a>
 				<p class="mx-auto mt-2 max-w-xs text-sm text-muted-foreground sm:mx-0">The service: a workspace for your organisation, generated from the NWOS mould. Markdown, git and agents — nothing proprietary.</p>
 			</div>
 
 			<nav aria-label="Navigation" class="flex flex-col gap-2">
 				<span class={heading}>Navigation</span>
 				<div class:list={["grid gap-x-6", twoColumns ? "grid-cols-2 grid-flow-col" : "grid-cols-1"]} style={twoColumns ? `grid-template-rows: repeat(${rows}, auto)` : undefined}>
-					{
-						nav.map((n) => (
-							<a href={n.href} class={link}>
-								{n.label}
-							</a>
-						))
-					}
+					{nav.map((n) => (
+						<a href={n.href} class={link}>
+							{n.label}
+						</a>
+					))}
 				</div>
 			</nav>
 
 			<nav aria-label="Numen Games" class="flex flex-col gap-2">
 				<span class={heading}>Numen Games</span>
-				{
-					HOUSE_LINKS.map((site) =>
-						site.id === THIS_SITE ? (
-							<span class="flex items-center justify-center gap-2 text-sm text-foreground sm:justify-start sm:py-1" aria-current="page">
-								{site.label}
-								<span class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim">you are here</span>
-							</span>
-						) : (
-							<a href={site.href} target="_blank" rel="noopener noreferrer" class={link} title={site.what}>
-								{site.label}
-							</a>
-						),
-					)
-				}
+				{HOUSE_LINKS.map((site) =>
+					site.id === THIS_SITE ? (
+						<span class="flex items-center justify-center gap-2 text-sm text-foreground sm:justify-start sm:py-1" aria-current="page">
+							{site.label}
+							<span class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim">you are here</span>
+						</span>
+					) : (
+						<a href={site.href} target="_blank" rel="noopener noreferrer" class={link} title={site.what}>
+							{site.label}
+						</a>
+					),
+				)}
 			</nav>
 
 			<div class="flex flex-col gap-2">
@@ -81,21 +79,23 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 					<span class={heading}>Legal</span>
 					<!-- This domain serves no legal texts yet; the company's apply
 					     (they name www.numen.games as their scope). See /updates. -->
-					<a href="https://numen.games/en/legal/terms" target="_blank" rel="noopener noreferrer" class={link}>Terms and conditions</a>
-					<a href="https://numen.games/en/legal/privacy" target="_blank" rel="noopener noreferrer" class={link}>Privacy policy</a>
+					<a href="https://numen.games/en/legal/terms" target="_blank" rel="noopener noreferrer" class={link}>
+						Terms and conditions
+					</a>
+					<a href="https://numen.games/en/legal/privacy" target="_blank" rel="noopener noreferrer" class={link}>
+						Privacy policy
+					</a>
 				</nav>
-				{
-					socialLinks.length > 0 && (
-						<nav aria-label="Social" class="mt-4 flex flex-col gap-2">
-							<span class={heading}>Social</span>
-							{socialLinks.map((s) => (
-								<a href={s.href} target="_blank" rel="noopener noreferrer" class={link}>
-									{s.label}
-								</a>
-							))}
-						</nav>
-					)
-				}
+				{socialLinks.length > 0 && (
+					<nav aria-label="Social" class="mt-4 flex flex-col gap-2">
+						<span class={heading}>Social</span>
+						{socialLinks.map((s) => (
+							<a href={s.href} target="_blank" rel="noopener noreferrer" class={link}>
+								{s.label}
+							</a>
+						))}
+					</nav>
+				)}
 			</div>
 		</div>
 
@@ -103,24 +103,30 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 			<span class="escarabajo inline-flex text-dim" aria-hidden="true" set:html={scarab} />
 			<div>
 				<p class="text-sm text-muted-foreground">
-					by <a href="https://numen.games" target="_blank" rel="noopener noreferrer" class="text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent">Numen Games</a> — we build for a better future.
+					by <a href="https://numen.games" target="_blank" rel="noopener noreferrer" class="text-foreground underline decoration-border underline-offset-4 transition-colors hover:text-accent">
+						Numen Games
+					</a> — we build for a better future.
 				</p>
 				<p class="mt-1 font-mono text-[0.65rem] text-dim">
-					<a href={LICENSE_URL} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-accent" title="Free software, AGPL-3.0-only; docs CC-BY-4.0; brand reserved. The per-path map is REUSE.toml">Open by licence, per file</a>
+					<a href={LICENSE_URL} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-accent" title="Free software, AGPL-3.0-only; docs CC-BY-4.0; brand reserved. The per-path map is REUSE.toml">
+						Open by licence, per file
+					</a>
 					{" · "}
-					<a href="/telemetry" class="transition-colors hover:text-accent" title="Measurements of this service — version and commit today">Telemetry</a>
+					<a href="/telemetry" class="transition-colors hover:text-accent" title="Measurements of this service — version and commit today">
+						Telemetry
+					</a>
 					{" · "}
-					<a href="/updates" class="transition-colors hover:text-accent" title="What changed in each version">{VERSION}</a>
+					<a href="/updates" class="transition-colors hover:text-accent" title="What changed in each version">
+						{VERSION}
+					</a>
 					{" · "}
-					{
-						COMMIT_URL ? (
-							<a href={COMMIT_URL} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-accent" title="See this commit on GitHub">
-								{COMMIT_SHA}
-							</a>
-						) : (
-							COMMIT_SHA
-						)
-					}
+					{COMMIT_URL ? (
+						<a href={COMMIT_URL} target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-accent" title="See this commit on GitHub">
+							{COMMIT_SHA}
+						</a>
+					) : (
+						COMMIT_SHA
+					)}
 				</p>
 			</div>
 		</div>

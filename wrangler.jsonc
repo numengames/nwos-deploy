@@ -4,7 +4,11 @@
 // Deploys the Astro build (static assets + SSR worker) at https://nwos.numen.games.
 {
   "name": "nwos-deploy",
-  "main": "./dist/_worker.js/index.js",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  // El adaptador v14 corre sobre el plugin de Vite de Cloudflare y provee el
+  // entrypoint: `main` ya no apunta al artefacto construido (dist/_worker.js),
+  // que no existe cuando wrangler lee esta configuración.
+  //
   // The build lives HERE, not in the Cloudflare panel. Workers Builds runs
   // `npm ci`, then `npx wrangler deploy`; wrangler runs this first. The
   // panel's "Build command" field stays EMPTY — on the other three sites

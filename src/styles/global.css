@@ -1,18 +1,129 @@
 /* SPDX-FileCopyrightText: 2026 Numen Games S.L. */
 /* SPDX-License-Identifier: AGPL-3.0-only */
 @import "./tokens.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* ── El tema ──────────────────────────────────────────────────────────────
+   Tailwind 4 lee su tema del CSS, no de un fichero de configuración: cada
+   `--color-x` de aquí acuña las utilidades `bg-x` / `text-x` / `border-x`, y
+   el modificador de alfa (`bg-accent/20`) sigue funcionando porque los
+   valores son colores planos. Los tripletes RGB de tokens.css se quedan
+   donde están — toda regla escrita a mano los referencia como
+   `rgb(var(--accent))`, así que las dos capas comparten una sola fuente.
+   Este bloque sustituye a tailwind.config.mjs, retirado con
+   @astrojs/tailwind, que nunca aceptó Astro 6+.
+   ───────────────────────────────────────────────────────────────────────── */
+@theme {
+	--color-border: rgb(var(--border));
+	--color-border-soft: rgb(var(--border-soft));
+	--color-input: rgb(var(--border));
+	--color-ring: rgb(var(--accent));
+	--color-background: rgb(var(--bg));
+	--color-foreground: rgb(var(--text));
+
+	--color-accent: rgb(var(--accent));
+	--color-accent-glow: var(--accent-glow);
+
+	--color-card: rgb(var(--bg-card));
+	--color-card-hover: rgb(var(--bg-card-hover));
+	--color-card-foreground: rgb(var(--text));
+
+	--color-muted: rgb(var(--bg-card-hover));
+	--color-muted-foreground: rgb(var(--text-muted));
+
+	/* Marca (tokens.css, generado del paquete) */
+	--color-verdemar: rgb(var(--verdemar));
+	--color-turquesa: rgb(var(--turquesa));
+	--color-coral: rgb(var(--coral));
+	--color-grana: rgb(var(--grana));
+
+	/* §9.1 · rellenos de acción; la interacción oscurece */
+	--color-interactivo: rgb(var(--interactivo));
+	--color-interactivo-hover: rgb(var(--interactivo-hover));
+	--color-interactivo-activo: rgb(var(--interactivo-activo));
+
+	--color-dim: rgb(var(--text-dim));
+	--color-green: rgb(var(--green));
+	--color-red: rgb(var(--red));
+	--color-yellow: rgb(var(--yellow));
+	--color-blue: rgb(var(--blue));
+	--color-purple: rgb(var(--purple));
+
+	/* Solarpunk mediterráneo */
+	--color-terracota: rgb(var(--terracota));
+	--color-ocre: rgb(var(--ocre));
+	--color-arena: rgb(var(--arena));
+	--color-azul-med: rgb(var(--azul-med));
+	--color-salvia: rgb(var(--salvia));
+	/* Steampunk */
+	--color-cobre: rgb(var(--cobre));
+	--color-bronce: rgb(var(--bronce));
+	/* Cyberpunk contenido */
+	--color-teal: rgb(var(--teal));
+	--color-ambar: rgb(var(--ambar));
+
+	/* §5 · dos radios: control 6px, marco 8px. */
+	--radius-lg: var(--radius);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 4px);
+	--radius-marco: var(--radius);
+	--radius-control: var(--radius-control);
+
+	/* §10 · duraciones y curva del catálogo de movimiento. */
+	--duration-instante: 120ms;
+	--duration-corto: 200ms;
+	--duration-medio: 320ms;
+	--duration-largo: 560ms;
+	--ease-ciclo: var(--ciclo);
+
+	/* §4.1 · las pilas tipográficas se declaran aquí y no en :root, porque
+	   @theme ya las emite como variables de :root — dos declaraciones del
+	   mismo nombre serían una sobreescritura silenciosa. */
+	--font-display: "Geist Variable", system-ui, sans-serif;
+	--font-sans: "Geist Variable", system-ui, sans-serif;
+	--font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+	--background-image-accent-glow: radial-gradient(ellipse 60% 40% at 70% -10%, var(--accent-glow), transparent);
+	--background-image-veil-glow: radial-gradient(ellipse 80% 60% at 0% 100%, var(--veil-glow), transparent);
+
+	--shadow-accent-sm: 0 0 12px var(--accent-glow);
+	--shadow-accent-md: 0 0 24px var(--accent-glow);
+	--shadow-cobre-sm: 0 0 12px rgba(184, 115, 51, 0.3);
+	--shadow-cobre-md: 0 0 24px rgba(184, 115, 51, 0.4);
+
+	--animate-slide-up: slideUp 0.6s ease-out both;
+	--animate-slide-up-1: slideUp 0.7s ease-out 0.1s both;
+	--animate-slide-up-2: slideUp 0.7s ease-out 0.2s both;
+	--animate-slide-up-3: slideUp 0.7s ease-out 0.3s both;
+	--animate-slide-up-4: slideUp 0.7s ease-out 0.4s both;
+	--animate-twinkle: twinkle 3s ease-in-out infinite;
+}
+
+/* ── Dos defaults de Tailwind 3 que el reset de v4 retiró ─────────────────
+   Ninguno es una elección de estilo: son el aspecto que ya tenían estas
+   páginas. v3 daba a todo borde la entrada `border` de la paleta, v4 da
+   currentColor; y el reset de v3 llevaba `cursor: pointer` en los botones,
+   que v4 eliminó para seguir el default nativo del navegador.
+   ───────────────────────────────────────────────────────────────────────── */
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: rgb(var(--border));
+	}
+
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+}
 
 @layer base {
 	:root {
-		/* Font stacks — Geist (Vercel open source) */
-		--font-display: "Geist Variable", system-ui, sans-serif;
-		--font-sans: "Geist Variable", system-ui, sans-serif;
-		--font-mono: "Geist Mono Variable", ui-monospace, monospace;
-
-		/* Colour, radius and curve tokens: src/styles/tokens.css, generated from
+		/* Las pilas tipográficas viven en el bloque @theme de arriba.
+		 * Colour, radius and curve tokens: src/styles/tokens.css, generated from
 		 * @numengames/design-kit by scripts/design-tokens.mjs. Not here. */
 
 		/* ── shadcn compat aliases ───────────────────────────────────────── */
@@ -24,10 +135,6 @@
 		--muted-foreground: var(--text-muted);
 		--ring: var(--accent);
 		--input: var(--border);
-	}
-
-	* {
-		@apply border-border;
 	}
 
 	html {

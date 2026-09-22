@@ -16,7 +16,7 @@ import { isDemoWorkspace } from "@/lib/demo";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ params, url, locals }) => {
+export const GET: APIRoute = async ({ params, url }) => {
 	const { slug } = params;
 	const filePath = url.searchParams.get("path");
 
@@ -27,7 +27,7 @@ export const GET: APIRoute = async ({ params, url, locals }) => {
 		});
 	}
 
-	const env = getEnv(locals);
+	const env = getEnv();
 	const org = env.GITHUB_ORG;
 	const token = env.GITHUB_TOKEN;
 

@@ -16,9 +16,9 @@ interface TreeItem {
 	children?: TreeItem[];
 }
 
-export const GET: APIRoute = async ({ params, url, locals }) => {
+export const GET: APIRoute = async ({ params, url }) => {
 	const { slug } = params;
-	const env = getEnv(locals);
+	const env = getEnv();
 	const org = env.GITHUB_ORG;
 	const token = env.GITHUB_TOKEN;
 

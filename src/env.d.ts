@@ -12,12 +12,20 @@ type Env = {
 	WORKSPACE_KEY_SECRET?: string;
 };
 
-type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
+type Runtime = import("@astrojs/cloudflare").Runtime;
 
 declare namespace App {
 	// Astro's documented pattern for typing locals; the empty body is the point.
 	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 	interface Locals extends Runtime {}
+}
+
+// Los secrets del Worker se leen del binding `env` de `cloudflare:workers`
+// (el adaptador v14 retiró `locals.runtime.env`). `wrangler types` genera
+// 600 KB de tipos de runtime para declarar este módulo: aquí se declara solo
+// lo que src/lib/env.ts usa, que es la forma de Env de arriba.
+declare module "cloudflare:workers" {
+	export const env: Env;
 }
 
 // The fontsource packages ship CSS only: a side-effect import needs a stub.

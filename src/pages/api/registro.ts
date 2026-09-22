@@ -188,7 +188,7 @@ ${progress}
 	}
 }
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request }) => {
 	try {
 		let body: DeployRequest;
 		try {
@@ -230,7 +230,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 			);
 		}
 
-		const env = getEnv(locals);
+		const env = getEnv();
 		const org = env.GITHUB_ORG;
 		const templateRepo = env.GITHUB_TEMPLATE_REPO;
 		const token = env.GITHUB_TOKEN;
@@ -238,11 +238,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
 		if (!org || !templateRepo || !token || !anthropicKey) {
 			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY"].filter(Boolean).join(", ");
-			const runtimeKeys = Object.keys(locals.runtime?.env ?? {});
-			log.error("env.missing", {
-				missing,
-				runtimeKeys,
-			});
+			log.error("env.missing", { missing });
 			return new Response(JSON.stringify({ error: "Configuración del servidor incompleta" }), { status: 500, headers: { "Content-Type": "application/json" } });
 		}
 

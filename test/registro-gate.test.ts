@@ -17,13 +17,21 @@
 // and watching it fail (see the pull request).
 import { describe, expect, it, vi } from "vitest";
 import { POST } from "@/pages/api/registro";
+import { env as workerEnv } from "cloudflare:workers";
 
 /* The body the deploy form posts, valid unless a field is overridden. */
 const valid = { companyName: "Acme, S.L.", email: "ana@acme.example", acceptedTerms: true };
 
-/* Minimal `locals`: what getEnv reads. Empty means the server is
-   misconfigured, which the route must say before any request leaves. */
-const locals = (env: Record<string, string> = {}) => ({ runtime: { env } }) as unknown as App.Locals;
+/* What getEnv reads: the `env` binding of `cloudflare:workers`. Empty means
+   the server is misconfigured, which the route must say before any request
+   leaves. Injected through the module double (vitest.config.ts) because the
+   adapter stopped exposing the secrets through `locals` — see
+   src/lib/env.ts. */
+function setEnv(env: Record<string, string> = {}) {
+	const binding = workerEnv as unknown as Record<string, string>;
+	for (const key of Object.keys(binding)) delete binding[key];
+	Object.assign(binding, env);
+}
 
 async function post(body: unknown, env?: Record<string, string>) {
 	const request = new Request("http://nwos.test/api/registro", {
@@ -31,7 +39,8 @@ async function post(body: unknown, env?: Record<string, string>) {
 		headers: { "Content-Type": "application/json" },
 		body: typeof body === "string" ? body : JSON.stringify(body),
 	});
-	const response = await POST({ request, locals: locals(env) } as never);
+	setEnv(env);
+	const response = await POST({ request } as never);
 	return { status: response.status, json: (await response.json()) as { error?: string; success?: boolean } };
 }
 

@@ -7,6 +7,9 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
+			// `cloudflare:workers` solo existe dentro de workerd; vitest corre
+			// en Node. El doble expone el mismo `env` que lee src/lib/env.ts.
+			"cloudflare:workers": path.resolve(__dirname, "./test/doubles/cloudflare-workers.ts"),
 		},
 	},
 	test: {

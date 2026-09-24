@@ -82,7 +82,12 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 	if (loading) {
 		return (
 			<div className="flex items-center justify-center py-32">
-				<p className="font-mono text-sm text-muted-foreground animate-pulse">Loading workspace...</p>
+				<p className="font-mono text-sm text-muted-foreground">
+					Loading workspace
+					<span className="waiting-dots" aria-hidden="true">
+						···
+					</span>
+				</p>
 			</div>
 		);
 	}
@@ -127,7 +132,12 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 				<main className="min-w-0">
 					{fileLoading ? (
 						<div className="flex items-center justify-center py-20">
-							<p className="font-mono text-sm text-muted-foreground animate-pulse">Loading file...</p>
+							<p className="font-mono text-sm text-muted-foreground">
+								Loading file
+								<span className="waiting-dots" aria-hidden="true">
+									···
+								</span>
+							</p>
 						</div>
 					) : selectedFile ? (
 						<div className="rounded-lg border border-border bg-card p-6 sm:p-8">

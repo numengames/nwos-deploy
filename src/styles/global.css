@@ -177,7 +177,7 @@
 	}
 	::-webkit-scrollbar-thumb {
 		background: rgba(1, 142, 161, 0.3);
-		border-radius: 3px;
+		border-radius: var(--radius-control);
 	}
 	::-webkit-scrollbar-thumb:hover {
 		background: rgba(1, 142, 161, 0.55);
@@ -225,6 +225,25 @@
 		}
 	}
 
+	/* 07 Waiting dots (STD-023 §14): 900 ms · steps(3), "Cargando···".
+	   The only loading motion for text and buttons; reduced motion stops it
+	   (the rule above), leaving the three dots still. */
+	.waiting-dots {
+		display: inline-block;
+		overflow: hidden;
+		vertical-align: bottom;
+		width: 3ch;
+		animation: waiting-dots 900ms steps(3) infinite;
+	}
+	@keyframes waiting-dots {
+		from {
+			width: 0;
+		}
+		to {
+			width: 3ch;
+		}
+	}
+
 	@keyframes twinkle {
 		0%,
 		100% {
@@ -257,7 +276,4 @@ html[data-modo="diurno"] .text-foreground\/50 {
 html[data-modo="diurno"] .bg-accent\/10.text-accent,
 html[data-modo="diurno"] .bg-accent\/15.text-accent {
 	color: rgb(var(--interactivo-activo));
-}
-html[data-modo="diurno"] .bg-border\/60.text-dim {
-	color: rgb(var(--text-muted));
 }

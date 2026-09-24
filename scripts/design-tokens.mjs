@@ -99,6 +99,51 @@ css += `\t--radius: ${get("borderRadius.marco")};\n\t--radius-control: ${get("bo
 const cb = get("cubicBezier.ciclo");
 css += `\t--ciclo: cubic-bezier(${Array.isArray(cb) ? cb.join(", ") : cb});\n}\n`;
 
+/* Modo Diurno (STD-008 DSN-016): the same variable names, re-pointed at the
+   kit's day values when <html data-modo="diurno">; absent = Nocturno above.
+   Accents that are mood colours over the night become their text-over-light
+   variants by day (STD-023: Turquesa, Ámbar, Grana, Verdemar); Coral has no
+   variant by decision, so a coral message is written in Grana-text. */
+const ext = (p) => {
+	const node = p.split(".").reduce((o, k) => (o == null ? undefined : o[k]), t);
+	const v = node?.$extensions?.numen?.diurnoTexto;
+	if (!v) throw new Error(`day text variant missing: ${p}`);
+	return v;
+};
+const DIURNO = {
+	"--bg": () => get("color.diurno.fondo-base"),
+	"--bg-card": () => get("color.diurno.fondo-superficie"),
+	"--bg-card-hover": () => get("color.diurno.linea-tenue"),
+	"--border": () => get("color.nocturno.texto-secundario"),
+	"--border-soft": () => get("color.diurno.linea-tenue"),
+	"--text": () => get("color.diurno.texto-primario"),
+	"--text-muted": () => get("color.diurno.texto-secundario"),
+	"--text-dim": () => get("color.diurno.texto-terciario"),
+	"--accent": () => get("color.enlace.diurno"),
+	"--verdemar": () => get("color.texto-sobre-claro.verdemar"),
+	"--ambar": () => get("color.texto-sobre-claro.ambar"),
+	"--coral": () => get("color.texto-sobre-claro.grana"),
+	"--terracota": () => get("color.texto-sobre-claro.ambar"),
+	"--ocre": () => get("color.texto-sobre-claro.ambar"),
+	"--cobre": () => get("color.texto-sobre-claro.ambar"),
+	"--bronce": () => get("color.diurno.texto-terciario"),
+	"--green": () => ext("color.rareza.poco-comun"),
+	"--red": () => get("color.texto-sobre-claro.grana"),
+	"--yellow": () => get("color.texto-sobre-claro.ambar"),
+	"--blue": () => ext("color.rareza.raro"),
+	"--purple": () => ext("color.rareza.epico"),
+	"--salvia": () => ext("color.rareza.poco-comun"),
+	"--azul-med": () => ext("color.rareza.raro"),
+	"--rareza-comun": () => ext("color.rareza.comun"),
+	"--rareza-poco-comun": () => ext("color.rareza.poco-comun"),
+	"--rareza-raro": () => ext("color.rareza.raro"),
+	"--rareza-epico": () => ext("color.rareza.epico"),
+	"--rareza-legendario": () => ext("color.rareza.legendario"),
+};
+css += `\n/* Modo Diurno · data-modo="diurno" on <html>; absent = Nocturno. */\n[data-modo="diurno"] {\n`;
+for (const [v, f] of Object.entries(DIURNO)) css += `\t${v}: ${rgb(f())}; /* ${f()} */\n`;
+css += `}\n`;
+
 if (CHECK) {
 	const cur = fs.existsSync(OUT) ? fs.readFileSync(OUT, "utf8") : "";
 	if (cur !== css) {

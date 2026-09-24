@@ -54,3 +54,35 @@
 	--radius-control: 6px;
 	--ciclo: cubic-bezier(0.2, 0, 0, 1);
 }
+
+/* Modo Diurno · data-modo="diurno" on <html>; absent = Nocturno. */
+[data-modo="diurno"] {
+	--bg: 249 235 220; /* #F9EBDC */
+	--bg-card: 253 246 238; /* #FDF6EE */
+	--bg-card-hover: 226 211 194; /* #E2D3C2 */
+	--border: 196 181 166; /* #C4B5A6 */
+	--border-soft: 226 211 194; /* #E2D3C2 */
+	--text: 20 17 15; /* #14110F */
+	--text-muted: 74 66 59; /* #4A423B */
+	--text-dim: 110 98 89; /* #6E6259 */
+	--accent: 1 110 125; /* #016E7D */
+	--verdemar: 31 107 95; /* #1F6B5F */
+	--ambar: 122 81 0; /* #7A5100 */
+	--coral: 176 35 48; /* #B02330 */
+	--terracota: 122 81 0; /* #7A5100 */
+	--ocre: 122 81 0; /* #7A5100 */
+	--cobre: 122 81 0; /* #7A5100 */
+	--bronce: 110 98 89; /* #6E6259 */
+	--green: 53 108 25; /* #356C19 */
+	--red: 176 35 48; /* #B02330 */
+	--yellow: 122 81 0; /* #7A5100 */
+	--blue: 46 107 176; /* #2E6BB0 */
+	--purple: 107 68 184; /* #6B44B8 */
+	--salvia: 53 108 25; /* #356C19 */
+	--azul-med: 46 107 176; /* #2E6BB0 */
+	--rareza-comun: 90 79 69; /* #5A4F45 */
+	--rareza-poco-comun: 53 108 25; /* #356C19 */
+	--rareza-raro: 46 107 176; /* #2E6BB0 */
+	--rareza-epico: 107 68 184; /* #6B44B8 */
+	--rareza-legendario: 122 81 0; /* #7A5100 */
+}

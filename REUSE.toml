@@ -44,3 +44,11 @@ SPDX-License-Identifier = "CC-BY-4.0"
 path = ["public/favicon.svg", "public/favicon.ico", "src/brand/**"]
 SPDX-FileCopyrightText = "2026 Numen Games S.L."
 SPDX-License-Identifier = "LicenseRef-Numen-AllRightsReserved"
+
+# --- Icons (Phosphor, vendored) → MIT ----------------------------------------
+# The day-and-night switch, copied from the house subset (numinia-archive
+# web/src/icons). Phosphor is MIT.
+[[annotations]]
+path = ["src/icons/moon-stars.svg", "src/icons/sun.svg"]
+SPDX-FileCopyrightText = "Phosphor Icons (https://phosphoricons.com)"
+SPDX-License-Identifier = "MIT"

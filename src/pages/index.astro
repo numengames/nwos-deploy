@@ -195,7 +195,7 @@ const principles = [
 						<div class="rounded-xl border border-border bg-card overflow-hidden">
 							<div class="p-5 border-b border-border/50">
 								<div class="flex flex-wrap items-center gap-2 mb-3">
-									<span class="font-mono text-[0.6rem] text-dim">{f.id}</span>
+									<span class="font-mono text-[0.6rem] text-muted-foreground">{f.id}</span>
 									<span class="inline-flex rounded-full bg-green/10 px-2.5 py-0.5 font-mono text-[0.6rem] text-green">Active</span>
 									<span class:list={["inline-flex rounded-full px-2.5 py-0.5 font-mono text-[0.6rem]", f.default === "on" ? "bg-accent/10 text-accent" : "bg-yellow/10 text-yellow"]}>{f.default === "on" ? "Default: on" : "Opt-in"}</span>
 								</div>
@@ -204,16 +204,16 @@ const principles = [
 							</div>
 							<div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
 								<div class="p-4">
-									<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim mb-2">Why it matters</p>
+									<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground mb-2">Why it matters</p>
 									<p class="text-xs text-muted-foreground leading-relaxed">{f.why}</p>
 								</div>
 								<div class="p-4">
-									<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim mb-2">vs. alternatives</p>
+									<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground mb-2">vs. alternatives</p>
 									<p class="text-xs text-muted-foreground leading-relaxed">{f.compare}</p>
 								</div>
 							</div>
 							<div class="px-5 py-3 bg-card/50 border-t border-border/50">
-								<p class="font-mono text-[0.6rem] text-dim">
+								<p class="font-mono text-[0.6rem] text-muted-foreground">
 									<span class="text-foreground/50 mr-2">Fields:</span>
 									{f.fields.join(" · ")}
 								</p>
@@ -246,7 +246,7 @@ const principles = [
 					<span class="h-px flex-1 bg-border"></span>
 				</div>
 				<div class="rounded-xl border border-border bg-card p-6">
-					<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-4">Requirements</p>
+					<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground mb-4">Requirements</p>
 					<div class="grid sm:grid-cols-3 gap-4 mb-6">
 						{[
 							{
@@ -272,7 +272,7 @@ const principles = [
 						))}
 					</div>
 					<div class="border-t border-border pt-5">
-						<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">Reference implementation</p>
+						<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground mb-3">Reference implementation</p>
 						<p class="text-sm text-muted-foreground mb-3">
 							The repository <code class="font-mono text-xs text-accent">numengames/numinia-archive</code> is the live reference implementation of the NWOS — Numen Games' own workspace, built in public.
 						</p>

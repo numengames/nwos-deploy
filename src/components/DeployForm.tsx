@@ -125,8 +125,12 @@ export default function DeployForm() {
 			<button onClick={handleDeploy} disabled={!companyName || !email || !acceptedTerms || status === "loading"} className="w-full rounded-control bg-interactivo px-6 py-3 text-sm font-semibold text-arena transition-colors duration-instante ease-ciclo hover:bg-interactivo-hover active:bg-interactivo-activo disabled:opacity-50 disabled:cursor-not-allowed">
 				{status === "loading" ? (
 					<span className="flex items-center justify-center gap-2">
-						<span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-arena/30 border-t-arena" />
-						{phaseLabel} <span className="font-mono text-[0.75rem] tracking-[0.15em]">{elapsedLabel}</span>
+						<span>
+							{phaseLabel}
+							<span className="waiting-dots" aria-hidden="true">
+								···
+							</span>
+						</span> <span className="font-mono text-[0.75rem] tracking-[0.15em]">{elapsedLabel}</span>
 					</span>
 				) : (
 					"Deploy Workspace"

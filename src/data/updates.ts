@@ -27,6 +27,24 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.5.0",
+		date: "2026-09-24",
+		entries: [
+			{
+				type: "CHG",
+				text: "Loading now says so in the house way: 'Loading workspace···' with three waiting dots (animation 07 of the design system) instead of a spinning ring and a blinking line. With reduced motion the dots stand still.",
+			},
+			{
+				type: "CHG",
+				text: "The menu arrow and the mobile menu icon are now Phosphor, the house icon family, instead of hand-drawn lines.",
+			},
+			{
+				type: "FIX",
+				text: "Small grey labels on the home page layers and on the /updates tags were a touch too faint at night (4.3:1); they now read at the house minimum. The scrollbar takes the control radius, one of the system's two.",
+			},
+		],
+	},
+	{
 		version: "v0.4.0",
 		date: "2026-09-24",
 		entries: [

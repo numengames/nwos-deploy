@@ -49,6 +49,6 @@ SPDX-License-Identifier = "LicenseRef-Numen-AllRightsReserved"
 # The day-and-night switch, copied from the house subset (numinia-archive
 # web/src/icons). Phosphor is MIT.
 [[annotations]]
-path = ["src/icons/moon-stars.svg", "src/icons/sun.svg"]
+path = ["src/icons/caret-down.svg", "src/icons/list.svg", "src/icons/moon-stars.svg", "src/icons/sun.svg"]
 SPDX-FileCopyrightText = "Phosphor Icons (https://phosphoricons.com)"
 SPDX-License-Identifier = "MIT"

@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.4.0",
+		date: "2026-09-24",
+		entries: [
+			{
+				type: "ADD",
+				text: "Day and night (DSN-016): a button in the bar showing the moon with stars or the sun for where a tap leads. Until you choose, the page follows your device; once you choose, it remembers (key numinia-modo, the same as numinia.com) and does not flash on reload. The day colours are generated from the design kit like the night ones; the sky shows only at night, and El Velo's opening scene keeps its night inside the day page.",
+			},
+		],
+	},
+	{
 		version: "v0.3.1",
 		date: "2026-09-19",
 		entries: [

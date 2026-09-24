@@ -138,15 +138,22 @@
 	}
 
 	html {
-		background-color: #14110f;
-		color: #f9ebdc;
+		background-color: rgb(var(--bg));
+		color: rgb(var(--text));
+		color-scheme: dark;
 		scroll-behavior: smooth;
 	}
-
+	/* Modo Diurno (DSN-016): the sky is Nocturno only (STD-023, the sky). */
+	html[data-modo="diurno"] {
+		color-scheme: light;
+	}
+	html[data-modo="diurno"] #starfield {
+		display: none;
+	}
 	body {
 		@apply min-h-screen font-sans text-foreground antialiased;
 		background-color: transparent;
-		color: #f9ebdc;
+		color: rgb(var(--text));
 	}
 
 	/* ── Subtle ambient glow (no grid) ──────────────────────────────────── */
@@ -166,7 +173,7 @@
 		height: 6px;
 	}
 	::-webkit-scrollbar-track {
-		background: rgb(20 17 15);
+		background: rgb(var(--bg));
 	}
 	::-webkit-scrollbar-thumb {
 		background: rgba(1, 142, 161, 0.3);
@@ -185,7 +192,7 @@
 	/* ── Text selection ──────────────────────────────────────────────────── */
 	::selection {
 		background: rgba(1, 142, 161, 0.22);
-		color: rgb(249, 235, 220);
+		color: rgb(var(--text));
 	}
 
 	/* STD-008 DSN-008 · prefers-reduced-motion: todo instantáneo, sin excepción. */
@@ -237,4 +244,20 @@
 			opacity: 0.15;
 		}
 	}
+}
+
+/* Day-only contrast (DSN-005), outside @layer so it beats the utilities: over Arena, alpha-thinned inks and the
+   accent on its own tint fall under 4.5:1. The night keeps its values. */
+html[data-modo="diurno"] .text-accent\/80 {
+	color: rgb(var(--accent));
+}
+html[data-modo="diurno"] .text-foreground\/50 {
+	color: rgb(var(--text-dim));
+}
+html[data-modo="diurno"] .bg-accent\/10.text-accent,
+html[data-modo="diurno"] .bg-accent\/15.text-accent {
+	color: rgb(var(--interactivo-activo));
+}
+html[data-modo="diurno"] .bg-border\/60.text-dim {
+	color: rgb(var(--text-muted));
 }

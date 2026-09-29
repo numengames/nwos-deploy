@@ -8,18 +8,18 @@ import { DEMO_WORKSPACE_SLUG } from "@/lib/demo";
 export const prerender = false;
 ---
 
-<Layout title="El Velo — NWOS" activeNav="velo">
+<Layout title="The Veil — NWOS" activeNav="velo">
 	<!-- Star field hero -->
 	<div class="velo-hero">
 		<canvas id="stardust" class="absolute inset-0 h-full w-full"></canvas>
 
 		<div class="relative z-10 flex flex-col items-center gap-8 text-center px-6">
 			<p class="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent/80">NWOS · Numen Workspace OS</p>
-			<p class="velo-cta">Cruza el umbral donde tu organización despierta.</p>
-			<p class="max-w-md text-sm text-muted-foreground leading-relaxed">Despliega el workspace de documentación de tu organización en segundos. Un click, sistema completo con agentes IA.</p>
+			<p class="velo-cta">Cross the threshold where your organisation wakes up.</p>
+			<p class="max-w-md text-sm text-muted-foreground leading-relaxed">Deploy your organisation's documentation workspace in seconds. One click, a complete system with AI agents.</p>
 			<a href="#deploy" class="velo-btn">
 				{" "}
-				Desplegar workspace ↓{" "}
+				Deploy workspace ↓{" "}
 			</a>
 		</div>
 	</div>
@@ -28,22 +28,22 @@ export const prerender = false;
 	<section id="deploy" class="py-20 border-t border-border/40">
 		<div class="mx-auto max-w-[1100px] px-6">
 			<div class="text-center mb-10">
-				<p class="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent mb-3">Iteración 1</p>
+				<p class="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent mb-3">Iteration 1</p>
 				<h2 class="font-display text-3xl sm:text-4xl text-foreground mb-3">Deploy Workspace</h2>
-				<p class="text-sm text-muted-foreground max-w-sm mx-auto">Crea un repositorio GitHub con toda la estructura documental de tu organización, listo para que los agentes lo pueblen.</p>
+				<p class="text-sm text-muted-foreground max-w-sm mx-auto">Creates a GitHub repository with your organisation's whole document structure, ready for the agents to fill in.</p>
 			</div>
 
 			<DeployForm client:visible />
 
 			<!-- MIS-090: ver antes de desplegar, sin coste de generación -->
 			<div class="mt-10 text-center">
-				<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">¿Quieres verlo antes?</p>
+				<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">Want to see it first?</p>
 				<div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
 					<a href={`/workspace/${DEMO_WORKSPACE_SLUG}`} class="font-mono text-[0.7rem] text-accent hover:text-accent/80 transition-colors">
-						Ver un workspace de ejemplo →
+						See an example workspace →
 					</a>
 					<a href="https://numinia.org" target="_blank" rel="noopener noreferrer" class="font-mono text-[0.7rem] text-dim hover:text-foreground transition-colors">
-						Ver Numinia — la referencia 5/5 →
+						See Numinia — the 5/5 reference →
 					</a>
 				</div>
 			</div>

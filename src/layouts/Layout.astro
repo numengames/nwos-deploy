@@ -66,7 +66,7 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-card.png`;
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={resolvedOgImage} />
 
-		<!-- Fonts: Geist (loaded via @fontsource-variable in Layout frontmatter) -->
+		{/* Fonts: Geist (loaded via @fontsource-variable in the Layout frontmatter). An Astro comment, never emitted: the legal pages must not show the word. */}
 
 		<title>{title}</title>
 

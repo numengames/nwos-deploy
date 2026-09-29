@@ -6,7 +6,7 @@
 // archive's masters, copied verbatim into src/content/legal/. Only the
 // Markdown body is rendered: the frontmatter (the archive's review record)
 // never reaches the visitor. The texts say themselves what they apply to.
-import { getEntry, render } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import { LEGAL_PAGES, legalHref } from "@/data/legal";
 
@@ -15,7 +15,9 @@ export function getStaticPaths() {
 }
 
 const page = LEGAL_PAGES.find((p) => p.slug === Astro.params.slug)!;
-const entry = await getEntry("legal", page.file);
+// Matched by the master's own id (its frontmatter), not by the loader's
+// slugified file name.
+const entry = (await getCollection("legal")).find((e) => (e.data as { id?: string }).id === page.id);
 if (!entry) throw new Error(`legal text missing: src/content/legal/${page.file}.md`);
 const { Content } = await render(entry);
 const data = entry.data as { title?: string; version?: string; updated?: string };

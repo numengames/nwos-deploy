@@ -27,6 +27,20 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.6.0",
+		date: "2026-09-29",
+		entries: [
+			{
+				type: "ADD",
+				text: "This site now has its own legal pages: Legal notice, Privacy, Cookies and Terms, at /legal/notice, /legal/privacy, /legal/cookies and /legal/terms. They are the company's texts, copied word for word from the archive, and they say themselves which sites they cover. The footer's Legal column links them here instead of sending you to numen.games, and the workspace form's checkbox now links the Terms and the Privacy policy it asks you to accept.",
+			},
+			{
+				type: "ADD",
+				text: "A cookie notice on your first visit, with Accept all and Reject all side by side and the same size. This site keeps only your day or night choice, if you make one, and your answer to the notice; nothing optional, so both buttons leave the site the same. Browsing without answering accepts nothing. 'Change my cookie choice' in the footer brings the notice back.",
+			},
+		],
+	},
+	{
 		version: "v0.5.0",
 		date: "2026-09-24",
 		entries: [
@@ -110,7 +124,6 @@ export const UPDATES: readonly UpdateVersion[] = [
 
 export const PENDING: readonly PendingItem[] = [
 	{ status: "blocked", text: "Company accounts on X and Discord for the Social column — waiting on the Oracle." },
-	{ status: "planned", text: "Legal texts on this domain: Terms and Privacy are published on the other three sites from the numinia-nwos masters; this one links to numen.games' until it serves its own." },
 	{ status: "planned", text: "Real telemetry of the service: workspaces generated, time to first deploy. Today /telemetry says only version and commit." },
 ];
 

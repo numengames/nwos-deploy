@@ -115,7 +115,13 @@ export default function DeployForm() {
 			{/* Terms */}
 			<label className="flex items-start gap-3 cursor-pointer">
 				<input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} disabled={status === "loading"} className="mt-0.5 h-4 w-4 rounded border-border bg-card accent-accent disabled:opacity-50" />
-				<span className="text-sm text-muted-foreground leading-relaxed">Acepto los términos y condiciones del despliegue del workspace NWOS.</span>
+				<span className="text-sm text-muted-foreground leading-relaxed">
+					Acepto los <a href="/legal/terms" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
+						términos y condiciones
+					</a> y la <a href="/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
+						política de privacidad
+					</a> del despliegue del workspace NWOS.
+				</span>
 			</label>
 
 			{/* Error */}

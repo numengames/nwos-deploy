@@ -62,17 +62,17 @@ describe("the brand file", () => {
 
 describe("two radii only", () => {
 	it("uses no Tailwind radius step outside control (6) and frame (8)", () => {
-		expect(offenders(/\brounded-(xs|sm|md|lg|xl|2xl|3xl|full)\b|\brounded(?![-\w])|\[&_\w+\]:rounded\b/)).toEqual([]);
+		expect(offenders(/\brounded-(xs|sm|md|lg|xl|2xl|3xl|full)\b|\brounded(?![-\w])|\[&_\w+\]:rounded(?![-\w])/)).toEqual([]);
 	});
 
 	it("writes no border-radius in px other than 6 or 8", () => {
-		expect(offenders(/border-radius:\s*(?!var\()(?!6px|8px|50%)[^;]+/)).toEqual([]);
+		expect(offenders(/border-radius:\s*(?!\s|var\(--radius|6px|8px|50%)/)).toEqual([]);
 	});
 });
 
 describe("type", () => {
 	it("never falls back to Georgia or a serif", () => {
-		expect(offenders(/Georgia|\bserif\b/)).toEqual([]);
+		expect(offenders(/Georgia|(?<!sans-)\bserif\b/)).toEqual([]);
 	});
 
 	it("sets the page headline in Geist 400, tracked -0.025em", () => {

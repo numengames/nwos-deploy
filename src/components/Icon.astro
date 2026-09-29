@@ -1,0 +1,22 @@
+---
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// A Phosphor icon (regular) from the house subset, copied file by file from
+// numinia-archive web/src/icons (MIT, see REUSE.toml). Inlined in
+// currentColor so it takes the ink of its label. An unknown name breaks the
+// build: expanding the subset is a decision, not an import.
+interface Props {
+	name: string;
+	size?: number;
+	class?: string;
+}
+const { name, size = 16, class: className } = Astro.props;
+
+const icons = import.meta.glob<string>("../icons/*.svg", { query: "?raw", import: "default", eager: true });
+const raw = icons[`../icons/${name}.svg`];
+if (!raw) throw new Error(`Icon not in the house subset: ${name}`);
+const svg = raw.replace("<svg ", `<svg width="${size}" height="${size}" aria-hidden="true" focusable="false" `);
+---
+
+<span class:list={["inline-flex shrink-0", className]} set:html={svg} />

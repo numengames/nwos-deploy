@@ -27,6 +27,24 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.8.0",
+		date: "2026-09-29",
+		entries: [
+			{
+				type: "CHG",
+				text: "The site now looks like the rest of the Numen Games family, drawn the way numinia.org draws it. The top bar opens with the Numen Games wordmark instead of the typed word NWOS, and its entries are plain labels with a small icon; the one you are on is underlined.",
+			},
+			{
+				type: "CHG",
+				text: 'Cards and panels have the house\'s softer 8 px corners, buttons and fields 6 px. Buttons say what they do in normal sentence case: "Deploy workspace", "Browse workspace", "Go to the form".',
+			},
+			{
+				type: "CHG",
+				text: "The landing's architecture layers show proper icons instead of emoji, and page titles rise into view the same way they do on numinia.org. The stars stay at night; by day the Deploy page shows plain paper.",
+			},
+		],
+	},
+	{
 		version: "v0.7.0",
 		date: "2026-09-29",
 		entries: [

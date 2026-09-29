@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import Layout from "@/layouts/Layout.astro";
 import PageHero from "@/components/PageHero.astro";
+import Icon from "@/components/Icon.astro";
 
 const features = [
 	{
@@ -72,31 +73,31 @@ const layers = [
 		level: "L0",
 		name: "File Layer",
 		desc: "All data is markdown files with YAML frontmatter. No proprietary formats.",
-		icon: "📄",
+		icon: "file-text",
 	},
 	{
 		level: "L1",
 		name: "Version Layer",
 		desc: "Git provides full history, branching, and collaboration via PRs.",
-		icon: "🔀",
+		icon: "git-branch",
 	},
 	{
 		level: "L2",
 		name: "Agent Layer",
 		desc: "AI agents read and write files like any contributor.",
-		icon: "🤖",
+		icon: "robot",
 	},
 	{
 		level: "L3",
 		name: "Human Layer",
 		desc: "Oracles (humans) approve decisions, set direction, and audit agent work.",
-		icon: "🧬",
+		icon: "dna",
 	},
 	{
 		level: "L4",
 		name: "Narrative Layer",
 		desc: "Optional. Guilds, lore, and game mechanics that make the system engaging for humans.",
-		icon: "🎭",
+		icon: "mask-happy",
 	},
 ];
 
@@ -136,7 +137,7 @@ const principles = [
 			<!-- What it is -->
 			<div>
 				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">What it is</span>
+					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">What it is</span>
 					<span class="h-px flex-1 bg-border"></span>
 				</div>
 				<div class="grid gap-4 sm:grid-cols-3">
@@ -154,7 +155,7 @@ const principles = [
 							desc: "Designed from the start for AI agents to read, write, and operate within the same files as humans.",
 						},
 					].map((item) => (
-						<div class="rounded-xl border border-border bg-card p-5">
+						<div class="rounded-marco border border-border bg-card p-5">
 							<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-2">{item.label}</p>
 							<p class="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
 						</div>
@@ -165,19 +166,19 @@ const principles = [
 			<!-- Architecture layers -->
 			<div>
 				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Architecture</span>
+					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Architecture</span>
 					<span class="h-px flex-1 bg-border"></span>
 				</div>
 				<div class="space-y-2">
 					{layers.map((layer) => (
-						<div class="flex items-start gap-4 rounded-xl border border-border bg-card p-5">
+						<div class="flex items-start gap-4 rounded-marco border border-border bg-card p-5">
 							<span class="font-mono text-[0.65rem] text-muted-foreground w-6 flex-shrink-0 mt-0.5">{layer.level}</span>
-							<span class="text-lg flex-shrink-0">{layer.icon}</span>
+							<Icon name={layer.icon} size={20} class="mt-0.5 text-accent" />
 							<div class="flex-1">
 								<p class="font-semibold text-sm text-foreground mb-1">{layer.name}</p>
 								<p class="text-sm text-muted-foreground">{layer.desc}</p>
 							</div>
-							{layer.level === "L4" && <span class="font-mono text-[0.6rem] bg-accent/10 text-accent px-2 py-0.5 rounded-full flex-shrink-0">Optional</span>}
+							{layer.level === "L4" && <span class="font-mono text-[0.6rem] bg-accent/10 text-accent px-2 py-0.5 rounded-control flex-shrink-0">Optional</span>}
 						</div>
 					))}
 				</div>
@@ -187,17 +188,17 @@ const principles = [
 			<!-- Features -->
 			<div>
 				<div class="mb-6 flex items-center gap-3">
-					<span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Features</span>
+					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Features</span>
 					<span class="h-px flex-1 bg-border"></span>
 				</div>
 				<div class="space-y-4">
 					{features.map((f) => (
-						<div class="rounded-xl border border-border bg-card overflow-hidden">
+						<div class="rounded-marco border border-border bg-card overflow-hidden">
 							<div class="p-5 border-b border-border/50">
 								<div class="flex flex-wrap items-center gap-2 mb-3">
 									<span class="font-mono text-[0.6rem] text-muted-foreground">{f.id}</span>
-									<span class="inline-flex rounded-full bg-green/10 px-2.5 py-0.5 font-mono text-[0.6rem] text-green">Active</span>
-									<span class:list={["inline-flex rounded-full px-2.5 py-0.5 font-mono text-[0.6rem]", f.default === "on" ? "bg-accent/10 text-accent" : "bg-yellow/10 text-yellow"]}>{f.default === "on" ? "Default: on" : "Opt-in"}</span>
+									<span class="inline-flex rounded-control bg-green/10 px-2.5 py-0.5 font-mono text-[0.6rem] text-green">Active</span>
+									<span class:list={["inline-flex rounded-control px-2.5 py-0.5 font-mono text-[0.6rem]", f.default === "on" ? "bg-accent/10 text-accent" : "bg-yellow/10 text-yellow"]}>{f.default === "on" ? "Default: on" : "Opt-in"}</span>
 								</div>
 								<h3 class="font-display text-xl text-foreground mb-2">{f.name}</h3>
 								<p class="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
@@ -226,12 +227,12 @@ const principles = [
 			<!-- Design principles -->
 			<div>
 				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Design principles</span>
+					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Design principles</span>
 					<span class="h-px flex-1 bg-border"></span>
 				</div>
 				<div class="grid gap-3 sm:grid-cols-2">
 					{principles.map((p) => (
-						<div class="rounded-xl border border-border bg-card p-5">
+						<div class="rounded-marco border border-border bg-card p-5">
 							<p class="font-semibold text-sm text-foreground mb-2">{p.name}</p>
 							<p class="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
 						</div>
@@ -242,10 +243,10 @@ const principles = [
 			<!-- Implementation -->
 			<div>
 				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Implementation</span>
+					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Implementation</span>
 					<span class="h-px flex-1 bg-border"></span>
 				</div>
-				<div class="rounded-xl border border-border bg-card p-6">
+				<div class="rounded-marco border border-border bg-card p-6">
 					<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground mb-4">Requirements</p>
 					<div class="grid sm:grid-cols-3 gap-4 mb-6">
 						{[
@@ -263,7 +264,7 @@ const principles = [
 							},
 						].map((r) => (
 							<div class="flex items-start gap-3">
-								<span class="text-green mt-0.5 flex-shrink-0">✓</span>
+								<Icon name="check" size={16} class="mt-0.5 text-green" />
 								<div>
 									<p class="text-sm font-medium text-foreground">{r.req}</p>
 									<p class="text-xs text-muted-foreground">{r.note}</p>
@@ -287,7 +288,7 @@ const principles = [
 			</div>
 
 			<!-- Narrative layer note -->
-			<div class="rounded-xl border border-accent/20 bg-accent/5 p-6">
+			<div class="rounded-marco border border-accent/20 bg-accent/5 p-6">
 				<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-3">About the Narrative Layer</p>
 				<p class="text-sm text-muted-foreground leading-relaxed mb-3">
 					The NWOS was built alongside <strong class="text-foreground">Numinia</strong> — a narrative universe where guilds, missions, and archives are not metaphors but the actual vocabulary of work. The narrative layer is not required, but it changes how people relate to the system.

@@ -14,12 +14,11 @@ export const prerender = false;
 		<canvas id="stardust" class="absolute inset-0 h-full w-full"></canvas>
 
 		<div class="relative z-10 flex flex-col items-center gap-8 text-center px-6">
-			<p class="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent/80">NWOS · Numen Workspace OS</p>
+			<p class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">NWOS · Numen Workspace OS</p>
 			<p class="velo-cta">Cross the threshold where your organisation wakes up.</p>
 			<p class="max-w-md text-sm text-muted-foreground leading-relaxed">Deploy your organisation's documentation workspace in seconds. One click, a complete system with AI agents.</p>
 			<a href="#deploy" class="velo-btn">
-				{" "}
-				Deploy workspace ↓{" "}
+				Go to the form
 			</a>
 		</div>
 	</div>
@@ -29,7 +28,7 @@ export const prerender = false;
 		<div class="mx-auto max-w-[1100px] px-6">
 			<div class="text-center mb-10">
 				<p class="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent mb-3">Iteration 1</p>
-				<h2 class="font-display text-3xl sm:text-4xl text-foreground mb-3">Deploy Workspace</h2>
+				<h2 class="font-display text-3xl font-normal tracking-[-0.025em] sm:text-4xl text-foreground mb-3">Deploy a workspace</h2>
 				<p class="text-sm text-muted-foreground max-w-sm mx-auto">Creates a GitHub repository with your organisation's whole document structure, ready for the agents to fill in.</p>
 			</div>
 
@@ -58,38 +57,48 @@ export const prerender = false;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #14110f;
+		background: rgb(var(--bg));
 		overflow: hidden;
 	}
 
-	.velo-cta {
-		font-family: var(--font-display, Georgia, serif);
-		font-size: clamp(1.4rem, 3.5vw, 2.4rem);
-		color: rgba(249, 235, 220, 0.92);
-		letter-spacing: 0.01em;
-		line-height: 1.35;
-		max-width: 640px;
-		text-shadow: 0 0 40px rgba(1, 142, 161, 0.15);
+	/* The sky is Nocturno only (STD-023, the sky): by day the paper shows. */
+	:global(html[data-modo="diurno"]) #stardust {
+		display: none;
 	}
 
+	.velo-cta {
+		font-family: var(--font-display);
+		font-weight: 400;
+		font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+		color: rgb(var(--text));
+		letter-spacing: -0.025em;
+		line-height: 1.35;
+		max-width: 640px;
+	}
+
+	/* Ghost button (BLU-009 §7): the primary action is the form's own
+	   button below; this one only takes the reader there. */
 	.velo-btn {
-		font-family: var(--font-mono, monospace);
-		font-size: 0.7rem;
-		letter-spacing: 0.15em;
-		text-transform: uppercase;
-		color: rgba(166, 218, 213, 0.8);
-		border: 1px solid rgba(166, 218, 213, 0.25);
-		padding: 0.6rem 1.8rem;
-		border-radius: 999px;
-		transition: all 200ms cubic-bezier(0.2, 0, 0, 1);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 44px;
+		font-family: var(--font-sans);
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: rgb(var(--text-muted));
+		border: 1px solid rgb(var(--border));
+		padding: 0 1.5rem;
+		border-radius: var(--radius-control);
+		transition:
+			color 120ms var(--ciclo),
+			border-color 120ms var(--ciclo);
 		text-decoration: none;
 	}
 
 	.velo-btn:hover {
-		color: rgb(166, 218, 213);
-		border-color: rgba(166, 218, 213, 0.6);
-		box-shadow: 0 0 24px rgba(1, 142, 161, 0.12);
-		background: rgba(1, 142, 161, 0.05);
+		color: rgb(var(--accent));
+		border-color: rgb(var(--accent));
 	}
 </style>
 

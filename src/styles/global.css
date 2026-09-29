@@ -63,9 +63,11 @@
 	--color-ambar: rgb(var(--ambar));
 
 	/* §5 · dos radios: control 6px, marco 8px. */
+	/* The Tailwind steps are pinned to the two so a stray class cannot mint
+	   a third radius (sm used to compute to 4 px). */
 	--radius-lg: var(--radius);
-	--radius-md: calc(var(--radius) - 2px);
-	--radius-sm: calc(var(--radius) - 4px);
+	--radius-md: var(--radius-control);
+	--radius-sm: var(--radius-control);
 	--radius-marco: var(--radius);
 	--radius-control: var(--radius-control);
 
@@ -91,12 +93,12 @@
 	--shadow-cobre-sm: 0 0 12px rgba(184, 115, 51, 0.3);
 	--shadow-cobre-md: 0 0 24px rgba(184, 115, 51, 0.4);
 
-	--animate-slide-up: slideUp 0.6s ease-out both;
-	--animate-slide-up-1: slideUp 0.7s ease-out 0.1s both;
-	--animate-slide-up-2: slideUp 0.7s ease-out 0.2s both;
-	--animate-slide-up-3: slideUp 0.7s ease-out 0.3s both;
-	--animate-slide-up-4: slideUp 0.7s ease-out 0.4s both;
-	--animate-twinkle: twinkle 3s ease-in-out infinite;
+	/* The entrance (STD-023 §14): 600 ms on the house curve, 24 px of rise,
+	   the label, headline and line of a hero staggered 100 ms apart — as
+	   numinia.org plays it. Reduced motion makes it instant (rule below). */
+	--animate-entrada: entrada 600ms cubic-bezier(0.2, 0, 0, 1) both;
+	--animate-entrada-1: entrada 600ms cubic-bezier(0.2, 0, 0, 1) 100ms both;
+	--animate-entrada-2: entrada 600ms cubic-bezier(0.2, 0, 0, 1) 200ms both;
 }
 
 /* ── Dos defaults de Tailwind 3 que el reset de v4 retiró ─────────────────
@@ -214,7 +216,7 @@
 	}
 
 	/* ── Animations ──────────────────────────────────────────────────────── */
-	@keyframes slideUp {
+	@keyframes entrada {
 		from {
 			opacity: 0;
 			transform: translateY(24px);
@@ -241,26 +243,6 @@
 		}
 		to {
 			width: 3ch;
-		}
-	}
-
-	@keyframes twinkle {
-		0%,
-		100% {
-			opacity: 1;
-		}
-		50% {
-			opacity: 0.2;
-		}
-	}
-
-	@keyframes twinkle-slow {
-		0%,
-		100% {
-			opacity: 0.9;
-		}
-		50% {
-			opacity: 0.15;
 		}
 	}
 }

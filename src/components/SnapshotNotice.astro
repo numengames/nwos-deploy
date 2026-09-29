@@ -1,6 +1,7 @@
 ---
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
+import Icon from "@/components/Icon.astro";
 // Aviso de honestidad temporal: estas páginas describen el estado del sistema
 // en una fecha concreta y no se actualizan en tiempo real contra el repo canon.
 interface Props {
@@ -13,8 +14,8 @@ const repoLabel = lang === "en" ? "canon repo" : "repo canon";
 ---
 
 <div class="mx-auto max-w-[1100px] px-6 pt-6">
-	<div class="flex items-start gap-3 rounded-lg border border-yellow/30 bg-yellow/5 px-4 py-3">
-		<span class="text-sm leading-none pt-0.5">📸</span>
+	<div class="flex items-start gap-3 rounded-marco border border-yellow/30 bg-yellow/5 px-4 py-3">
+		<Icon name="warning" size={16} class="pt-0.5 text-yellow" />
 		<p class="font-mono text-[0.7rem] leading-relaxed text-yellow/90">
 			{texto}
 			<a href="https://github.com/numengames/numinia-digital-agents" target="_blank" rel="noopener noreferrer" class="underline hover:text-yellow transition-colors">

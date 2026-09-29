@@ -97,8 +97,8 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 			<div className="flex items-center justify-center py-32">
 				<div className="text-center space-y-3">
 					<p className="font-mono text-sm text-coral">{error}</p>
-					<a href="/velo" className="inline-block rounded-lg border border-border px-4 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-card transition-colors">
-						← Back to NWOS
+					<a href="/velo" className="inline-block rounded-control border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors duration-instante ease-ciclo hover:border-accent hover:text-accent">
+						Go back to NWOS
 					</a>
 				</div>
 			</div>
@@ -110,12 +110,12 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 			{/* Header */}
 			<div className="mb-8 space-y-2">
 				<p className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent">NWOS Workspace</p>
-				<h1 className="font-display text-4xl sm:text-5xl tracking-tight text-foreground">{slug}</h1>
+				<h1 className="font-display text-4xl font-normal tracking-[-0.025em] sm:text-5xl text-foreground">{slug}</h1>
 			</div>
 
 			{/* Status bar */}
 			{status && (
-				<div className="mb-8 rounded-lg border border-border/50 bg-card/50 p-4">
+				<div className="mb-8 rounded-marco border border-border/50 bg-card/50 p-4">
 					<div className="prose-invert text-sm text-muted-foreground [&_h1]:text-base [&_h1]:font-semibold [&_h1]:text-foreground [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-foreground [&_li]:text-sm [&_strong]:text-foreground" dangerouslySetInnerHTML={{ __html: markdownToHtml(status) }} />
 				</div>
 			)}
@@ -123,7 +123,7 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 			{/* Main layout: sidebar + content */}
 			<div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
 				{/* Sidebar */}
-				<nav className="space-y-1 rounded-lg border border-border bg-card p-4 h-fit lg:sticky lg:top-20">
+				<nav className="space-y-1 rounded-marco border border-border bg-card p-4 h-fit lg:sticky lg:top-20">
 					<p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim mb-3">Files</p>
 					<FileTree items={tree} onSelect={loadFile} selectedPath={selectedFile?.path} />
 				</nav>
@@ -140,17 +140,17 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 							</p>
 						</div>
 					) : selectedFile ? (
-						<div className="rounded-lg border border-border bg-card p-6 sm:p-8">
+						<div className="rounded-marco border border-border bg-card p-6 sm:p-8">
 							<p className="mb-4 font-mono text-[0.65rem] text-dim">{selectedFile.path}</p>
 							<div
-								className="prose-invert max-w-none text-sm leading-relaxed text-muted-foreground [&_h1]:text-2xl [&_h1]:font-display [&_h1]:text-foreground [&_h1]:mb-4 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mb-3 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-3 [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:text-foreground [&_a]:text-accent [&_a]:underline [&_code]:bg-background [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-accent [&_code]:text-xs [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_th]:bg-background [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-foreground [&_th]:text-xs [&_th]:font-semibold [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-xs [&_blockquote]:border-l-2 [&_blockquote]:border-accent [&_blockquote]:pl-4 [&_blockquote]:italic"
+								className="prose-invert max-w-none text-sm leading-relaxed text-muted-foreground [&_h1]:text-2xl [&_h1]:font-display [&_h1]:text-foreground [&_h1]:mb-4 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mb-3 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-3 [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:text-foreground [&_a]:text-accent [&_a]:underline [&_code]:bg-background [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-control [&_code]:text-accent [&_code]:text-xs [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_th]:bg-background [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-foreground [&_th]:text-xs [&_th]:font-semibold [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-xs [&_blockquote]:border-l-2 [&_blockquote]:border-accent [&_blockquote]:pl-4 [&_blockquote]:italic"
 								dangerouslySetInnerHTML={{
 									__html: markdownToHtml(selectedFile.content),
 								}}
 							/>
 						</div>
 					) : (
-						<div className="flex items-center justify-center py-20 rounded-lg border border-dashed border-border">
+						<div className="flex items-center justify-center py-20 rounded-marco border border-dashed border-border">
 							<p className="text-sm text-dim">Select a file from the sidebar to view its contents.</p>
 						</div>
 					)}
@@ -194,7 +194,7 @@ function FileTree({ items, onSelect, selectedPath, depth = 0 }: { items: RepoFil
 										[item.path]: !(prev[item.path] ?? defaults[item.path]),
 									}))
 								}
-								className="flex w-full items-center gap-1.5 rounded px-2 py-1 text-left font-mono text-[0.7rem] text-muted-foreground hover:bg-card-hover hover:text-foreground transition-colors"
+								className="flex w-full items-center gap-1.5 rounded-control px-2 py-1 text-left font-mono text-[0.7rem] text-muted-foreground hover:bg-card-hover hover:text-foreground transition-colors"
 							>
 								<span className="text-dim">{isExpanded ? "▾" : "▸"}</span>
 								<span>{item.name}/</span>
@@ -208,7 +208,7 @@ function FileTree({ items, onSelect, selectedPath, depth = 0 }: { items: RepoFil
 
 				const isSelected = selectedPath === item.path;
 				return (
-					<button key={item.path} onClick={() => onSelect(item.path)} className={`flex w-full items-center gap-1.5 rounded px-2 py-1 text-left font-mono text-[0.7rem] transition-colors ${isSelected ? "bg-accent/10 text-accent border border-accent/30" : "text-muted-foreground hover:bg-card-hover hover:text-foreground"}`}>
+					<button key={item.path} onClick={() => onSelect(item.path)} className={`flex w-full items-center gap-1.5 rounded-control px-2 py-1 text-left font-mono text-[0.7rem] transition-colors ${isSelected ? "bg-accent/10 text-accent border border-accent/30" : "text-muted-foreground hover:bg-card-hover hover:text-foreground"}`}>
 						<span className="text-dim">◇</span>
 						<span className="truncate">{item.name}</span>
 					</button>
@@ -248,8 +248,8 @@ function markdownToHtml(md: string): string {
 			return url ? `<a href="${url}">${text}</a>` : text;
 		})
 		.replace(/^---$/gm, "<hr/>")
-		.replace(/^- \[x\] (.+)$/gm, "<li>✅ $1</li>")
-		.replace(/^- \[ \] (.+)$/gm, "<li>⬜ $1</li>")
+		.replace(/^- \[x\] (.+)$/gm, "<li>[x] $1</li>")
+		.replace(/^- \[ \] (.+)$/gm, "<li>[ ] $1</li>")
 		.replace(/^- (.+)$/gm, "<li>$1</li>")
 		.replace(/^\|(.+)\|$/gm, (match) => {
 			const cells = match
@@ -268,7 +268,7 @@ function markdownToHtml(md: string): string {
 	html = html.replace(/(<li>[\s\S]*?<\/li>)(?=\s*(?:<li>|<\/p>|$))/g, "$1");
 	html = html.replace(/(?:<br\/>)*(<li>(?:[\s\S]*?<\/li>\s*(?:<br\/>)*)*<\/li>)/g, "<ul>$1</ul>");
 	html = html.replace(/(<tr>[\s\S]*?<\/tr>(?:\s*<tr>[\s\S]*?<\/tr>)*)/g, "<table>$1</table>");
-	html = html.replace(/%%NEEDS_REVIEW%%/g, '<span class="inline-block rounded border border-yellow/40 bg-yellow/10 px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-yellow">⚠ needs review</span>');
+	html = html.replace(/%%NEEDS_REVIEW%%/g, '<span class="inline-block rounded-control border border-yellow/40 bg-yellow/10 px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-yellow">needs review</span>');
 
 	return html;
 }

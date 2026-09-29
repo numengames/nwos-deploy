@@ -46,9 +46,23 @@ SPDX-FileCopyrightText = "2026 Numen Games S.L."
 SPDX-License-Identifier = "LicenseRef-Numen-AllRightsReserved"
 
 # --- Icons (Phosphor, vendored) → MIT ----------------------------------------
-# The day-and-night switch, copied from the house subset (numinia-archive
-# web/src/icons). Phosphor is MIT.
+# The house subset, copied file by file from numinia-archive web/src/icons:
+# the bar, the mode switch and the landing's icons. Phosphor is MIT.
 [[annotations]]
-path = ["src/icons/caret-down.svg", "src/icons/list.svg", "src/icons/moon-stars.svg", "src/icons/sun.svg"]
+path = [
+  "src/icons/check.svg",
+  "src/icons/dna.svg",
+  "src/icons/file-text.svg",
+  "src/icons/git-branch.svg",
+  "src/icons/lightning.svg",
+  "src/icons/list.svg",
+  "src/icons/mask-happy.svg",
+  "src/icons/moon-stars.svg",
+  "src/icons/package.svg",
+  "src/icons/robot.svg",
+  "src/icons/sun.svg",
+  "src/icons/warning.svg",
+  "src/icons/x.svg",
+]
 SPDX-FileCopyrightText = "Phosphor Icons (https://phosphoricons.com)"
 SPDX-License-Identifier = "MIT"

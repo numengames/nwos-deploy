@@ -9,3 +9,7 @@ public
 # prettier-plugin-astro cannot parse this template (pre-existing: the same
 # failure happens on the file as it was before any of our changes).
 src/components/Navigation.astro
+
+# Verbatim copies of the archive's legal masters: never reformatted here,
+# the archive is the source (test/legal.test.ts pins their sha256).
+src/content/legal

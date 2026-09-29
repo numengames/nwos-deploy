@@ -1,0 +1,123 @@
+---
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// /legal/notice · /legal/privacy · /legal/cookies · /legal/terms — the
+// archive's masters, copied verbatim into src/content/legal/. Only the
+// Markdown body is rendered: the frontmatter (the archive's review record)
+// never reaches the visitor. The texts say themselves what they apply to.
+import { getCollection, render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { LEGAL_PAGES, legalHref } from "@/data/legal";
+
+export function getStaticPaths() {
+	return LEGAL_PAGES.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const page = LEGAL_PAGES.find((p) => p.slug === Astro.params.slug)!;
+// Matched by the master's own id (its frontmatter), not by the loader's
+// slugified file name.
+const entry = (await getCollection("legal")).find((e) => (e.data as { id?: string }).id === page.id);
+if (!entry) throw new Error(`legal text missing: src/content/legal/${page.file}.md`);
+const { Content } = await render(entry);
+const data = entry.data as { title?: string; version?: string; updated?: string };
+const title = data.title ?? page.label;
+const updated = typeof data.updated === "string" ? data.updated.slice(0, 10) : "";
+---
+
+<Layout title={`${title} — NWOS`} description={`${page.label} of Numen Games S.L., which runs nwos.numen.games.`} canonicalPath={legalHref(page.slug)}>
+	<section class="pt-28 pb-20">
+		<div class="mx-auto max-w-[800px] px-6">
+			<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">
+				Version {data.version}
+				{updated && ` · ${updated}`}
+			</p>
+			<article class="legal mt-4" lang="en">
+				<Content />
+			</article>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.legal {
+		color: rgb(var(--text-muted));
+		font-size: 0.95rem;
+		line-height: 1.7;
+		overflow-wrap: anywhere;
+	}
+	.legal :global(h1) {
+		margin-bottom: 1.5rem;
+		font-family: var(--font-display);
+		font-size: 2rem;
+		line-height: 1.2;
+		color: rgb(var(--text));
+	}
+	.legal :global(h2) {
+		margin-top: 2.5rem;
+		margin-bottom: 0.75rem;
+		font-size: 1.25rem;
+		color: rgb(var(--text));
+	}
+	.legal :global(h3),
+	.legal :global(h4) {
+		margin-top: 1.75rem;
+		margin-bottom: 0.5rem;
+		font-size: 1.05rem;
+		color: rgb(var(--text));
+	}
+	.legal :global(p),
+	.legal :global(ul),
+	.legal :global(ol),
+	.legal :global(blockquote),
+	.legal :global(table) {
+		margin-bottom: 1rem;
+	}
+	.legal :global(ul) {
+		list-style: disc;
+		padding-left: 1.5rem;
+	}
+	.legal :global(ol) {
+		list-style: decimal;
+		padding-left: 1.5rem;
+	}
+	.legal :global(strong) {
+		color: rgb(var(--text));
+	}
+	.legal :global(a) {
+		color: rgb(var(--text));
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.legal :global(blockquote) {
+		border-left: 2px solid rgb(var(--border));
+		padding-left: 1rem;
+	}
+	.legal :global(code) {
+		font-family: var(--font-mono);
+		font-size: 0.85em;
+		color: rgb(var(--text));
+	}
+	/* Wide tables scroll inside themselves, never the page. */
+	.legal :global(table) {
+		display: block;
+		max-width: 100%;
+		overflow-x: auto;
+		border-collapse: collapse;
+		font-size: 0.85rem;
+	}
+	.legal :global(th),
+	.legal :global(td) {
+		border: 1px solid rgb(var(--border));
+		padding: 0.4rem 0.6rem;
+		vertical-align: top;
+		text-align: left;
+	}
+	.legal :global(th) {
+		color: rgb(var(--text));
+	}
+	.legal :global(hr) {
+		margin: 2rem 0;
+		border-color: rgb(var(--border));
+	}
+</style>

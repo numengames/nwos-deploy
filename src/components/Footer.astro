@@ -20,6 +20,7 @@
 import { navItems } from "@/data/navigation";
 import { socialLinks } from "@/data/social-links";
 import { HOUSE_LINKS, THIS_SITE } from "@/data/house-links";
+import { LEGAL_PAGES, legalHref } from "@/data/legal";
 import { VERSION, COMMIT_SHA, COMMIT_URL, LICENSE_URL } from "@/lib/build-info";
 // The scarab closes every piece, never opens it. Local copy of the mark
 // (reserved, see REUSE.toml) until a brand package exists to install from.
@@ -77,14 +78,15 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 			<div class="flex flex-col gap-2">
 				<nav aria-label="Legal" class="flex flex-col gap-2">
 					<span class={heading}>Legal</span>
-					<!-- This domain serves no legal texts yet; the company's apply
-					     (they name www.numen.games as their scope). See /updates. -->
-					<a href="https://numen.games/en/legal/terms" target="_blank" rel="noopener noreferrer" class={link}>
-						Terms and conditions
-					</a>
-					<a href="https://numen.games/en/legal/privacy" target="_blank" rel="noopener noreferrer" class={link}>
-						Privacy policy
-					</a>
+					{LEGAL_PAGES.map((p) => (
+						<a href={legalHref(p.slug)} class={link}>
+							{p.label}
+						</a>
+					))}
+					<!-- Reopens the cookie notice (src/components/CookieNotice.astro). -->
+					<button type="button" data-cookie-choice class={`${link} text-left`}>
+						Change my cookie choice
+					</button>
 				</nav>
 				{socialLinks.length > 0 && (
 					<nav aria-label="Social" class="mt-4 flex flex-col gap-2">

@@ -15,12 +15,12 @@ const root = path.resolve(__dirname, "..");
 const read = (rel: string) => fs.readFileSync(path.join(root, rel), "utf8");
 
 // The masters in numengames/numinia-archive legal/ (branch
-// legal/honest-texts-and-debt, PR #572): id, version, sha256 of the file.
+// legal/honest-texts-and-debt, PR #572, #573, #574): id, version, sha256 of the file.
 const PINS: Record<string, { version: string; sha256: string }> = {
 	"LEG-001": { version: "2.1.0", sha256: "d5be5a8479bc85183cbd4514d3784094286ba95dc57247c5b5ffd46fd0942781" },
 	"LEG-002": { version: "1.0.1", sha256: "678c752bf07bca40f351a201c1b6a6f27ab307291c0b1dd687c8bc4c6f484ffe" },
-	"LEG-003": { version: "2.0.0", sha256: "fd541e14b8808782d74eb3699590d203312d2d6b4726f1e8551fba0bf6494603" },
-	"LEG-004": { version: "0.1.0", sha256: "af32319072e36b51b608320202bf9c1d117446885f992739ac57d92c16fea20e" },
+	"LEG-003": { version: "2.1.0", sha256: "52487d60544871dfbefdac4577497fa84c4058d049342e06ee5a4439f06b76ab" },
+	"LEG-004": { version: "0.2.0", sha256: "c633c0ccfd46f9d15cf6f21b84e82683f78130156435e451bfb85883a807cab1" },
 };
 
 describe("legal copies", () => {
@@ -78,6 +78,25 @@ describe("footer and form link the local pages", () => {
 		const form = read("src/components/DeployForm.tsx");
 		expect(form).toContain('href="/legal/terms"');
 		expect(form).toContain('href="/legal/privacy"');
+	});
+	it("the form speaks the site's language: English, no Spanish left", () => {
+		for (const f of ["src/components/DeployForm.tsx", "src/pages/api/registro.ts"]) {
+			const visible = read(f)
+				.split("\n")
+				.filter((l) => !/^\s*(\/\/|\/\*|\*|\{\/\*)/.test(l))
+				.join("\n");
+			const strings = visible.match(/"[^"\n]*"|>[^<>{}\n]+</g) ?? [];
+			expect(strings.filter((t) => /[áéíóúñ¿¡]/i.test(t))).toEqual([]);
+		}
+		const form = read("src/components/DeployForm.tsx");
+		expect(form).toContain("I accept the");
+	});
+	it("says where the visitor sees the result that an AI model drafted it (AI Act art. 50, DBT-022 #32)", () => {
+		const form = read("src/components/DeployForm.tsx");
+		const success = form.slice(form.indexOf("Success state"), form.indexOf("Form state"));
+		expect(success).toContain("data-ai-notice");
+		expect(success).toContain("Written by an AI model.");
+		expect(success).toMatch(/artificial intelligence model \(Claude, by Anthropic\)/);
 	});
 });
 

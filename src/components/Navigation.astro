@@ -102,8 +102,8 @@ const numaniaActive = numaniaIds.includes(activeNav ?? "");
       type="button"
       data-mode-switch
       class="mode-switch flex h-11 w-11 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-card hover:text-foreground"
-      aria-label="Modo de color: día o noche"
-      title="Modo de color: día o noche"
+      aria-label="Colour mode: day or night"
+      title="Colour mode: day or night"
     >
       <span class="solo-diurno" set:html={moonStars} />
       <span class="solo-nocturno" set:html={sun} />
@@ -113,7 +113,7 @@ const numaniaActive = numaniaIds.includes(activeNav ?? "");
     <button
       id="mobile-menu-btn"
       class="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground sm:hidden"
-      aria-label="Abrir menú"
+      aria-label="Open menu"
       aria-expanded="false"
     >
       <span class="icon-18 inline-flex" set:html={list} />

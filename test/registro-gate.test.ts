@@ -48,7 +48,7 @@ describe("POST /api/registro refuses before touching the network", () => {
 	it("a body that is not JSON → 400", async () => {
 		const r = await post("{not json");
 		expect(r.status).toBe(400);
-		expect(r.json.error).toBe("Cuerpo de la petición no válido");
+		expect(r.json.error).toBe("Invalid request body");
 	});
 
 	it.each([
@@ -59,7 +59,7 @@ describe("POST /api/registro refuses before touching the network", () => {
 	])("a missing field (%s) → 400, every field is required", async (_what, body) => {
 		const r = await post(body);
 		expect(r.status).toBe(400);
-		expect(r.json.error).toBe("Todos los campos son obligatorios");
+		expect(r.json.error).toBe("All fields are required");
 	});
 
 	it.each([
@@ -73,30 +73,30 @@ describe("POST /api/registro refuses before touching the network", () => {
 	])("a company name with %s → 400: it is interpolated into prompts and committed content", async (_what, companyName) => {
 		const r = await post({ ...valid, companyName });
 		expect(r.status).toBe(400);
-		expect(r.json.error).toMatch(/^Nombre de organización no válido/);
+		expect(r.json.error).toMatch(/^Invalid organisation name/);
 	});
 
 	it.each([["Acme, S.L."], ["Numen Games S.L."], ["Éxito & Cía (Norte) + Sur"], ["東京 Corp"]])("a company name like %s passes the name rule", async (companyName) => {
 		const r = await post({ ...valid, companyName });
-		expect(r.json.error).not.toMatch(/^Nombre de organización/);
+		expect(r.json.error).not.toMatch(/^Invalid organisation name/);
 	});
 
 	it.each([["no-at.example"], ["a@b"], ["a b@c.de"], [`${"a".repeat(65)}@c.de`], [`a@${"b".repeat(250)}.de`]])("an email like %s → 400", async (email) => {
 		const r = await post({ ...valid, email });
 		expect(r.status).toBe(400);
-		expect(r.json.error).toBe("Email no válido");
+		expect(r.json.error).toBe("Invalid email");
 	});
 
 	it("a name whose slug has fewer than 2 alphanumerics → 400 (it would be the repository's name)", async () => {
 		const r = await post({ ...valid, companyName: "É.É" });
 		expect(r.status).toBe(400);
-		expect(r.json.error).toMatch(/al menos 2 caracteres alfanuméricos/);
+		expect(r.json.error).toMatch(/at least 2 alphanumeric characters/);
 	});
 
 	it("a valid request on a server missing its configuration → 500, and the client is told nothing about which key", async () => {
 		const r = await post(valid, { GITHUB_ORG: "numengames" });
 		expect(r.status).toBe(500);
-		expect(r.json.error).toBe("Configuración del servidor incompleta");
+		expect(r.json.error).toBe("Server configuration incomplete");
 		expect(JSON.stringify(r.json)).not.toMatch(/GITHUB_TOKEN|ANTHROPIC|TEMPLATE/);
 	});
 

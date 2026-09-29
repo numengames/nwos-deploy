@@ -194,27 +194,27 @@ export const POST: APIRoute = async ({ request }) => {
 		try {
 			body = (await request.json()) as DeployRequest;
 		} catch {
-			return new Response(JSON.stringify({ error: "Cuerpo de la petición no válido" }), { status: 400, headers: { "Content-Type": "application/json" } });
+			return new Response(JSON.stringify({ error: "Invalid request body" }), { status: 400, headers: { "Content-Type": "application/json" } });
 		}
 		const companyName = typeof body?.companyName === "string" ? body.companyName.trim() : "";
 		const email = typeof body?.email === "string" ? body.email.trim() : "";
 		const acceptedTerms = body?.acceptedTerms === true;
 
 		if (!companyName || !email || !acceptedTerms) {
-			return new Response(JSON.stringify({ error: "Todos los campos son obligatorios" }), { status: 400, headers: { "Content-Type": "application/json" } });
+			return new Response(JSON.stringify({ error: "All fields are required" }), { status: 400, headers: { "Content-Type": "application/json" } });
 		}
 
 		if (!COMPANY_NAME_RE.test(companyName)) {
 			return new Response(
 				JSON.stringify({
-					error: "Nombre de organización no válido: usa 2-60 caracteres (letras, números, espacios y . , & ' ( ) + -)",
+					error: "Invalid organisation name: use 2–60 characters (letters, numbers, spaces and . , & ' ( ) + -)",
 				}),
 				{ status: 400, headers: { "Content-Type": "application/json" } },
 			);
 		}
 
 		if (!EMAIL_RE.test(email) || email.length > 254) {
-			return new Response(JSON.stringify({ error: "Email no válido" }), {
+			return new Response(JSON.stringify({ error: "Invalid email" }), {
 				status: 400,
 				headers: { "Content-Type": "application/json" },
 			});
@@ -224,7 +224,7 @@ export const POST: APIRoute = async ({ request }) => {
 		if (slug.length < 2) {
 			return new Response(
 				JSON.stringify({
-					error: "El nombre debe contener al menos 2 caracteres alfanuméricos (a-z, 0-9)",
+					error: "The name must contain at least 2 alphanumeric characters (a-z, 0-9)",
 				}),
 				{ status: 400, headers: { "Content-Type": "application/json" } },
 			);
@@ -239,7 +239,7 @@ export const POST: APIRoute = async ({ request }) => {
 		if (!org || !templateRepo || !token || !anthropicKey) {
 			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY"].filter(Boolean).join(", ");
 			log.error("env.missing", { missing });
-			return new Response(JSON.stringify({ error: "Configuración del servidor incompleta" }), { status: 500, headers: { "Content-Type": "application/json" } });
+			return new Response(JSON.stringify({ error: "Server configuration incomplete" }), { status: 500, headers: { "Content-Type": "application/json" } });
 		}
 
 		const octokit = new Octokit({ auth: token });
@@ -259,7 +259,7 @@ export const POST: APIRoute = async ({ request }) => {
 			});
 		} catch (error) {
 			if (errorStatus(error) === 422) {
-				return new Response(JSON.stringify({ error: "Ya existe un workspace con ese nombre" }), { status: 422, headers: { "Content-Type": "application/json" } });
+				return new Response(JSON.stringify({ error: "A workspace with that name already exists" }), { status: 422, headers: { "Content-Type": "application/json" } });
 			}
 			throw error;
 		}
@@ -303,7 +303,7 @@ export const POST: APIRoute = async ({ request }) => {
 		if (!mouldSpec) {
 			return new Response(
 				JSON.stringify({
-					error: "El despliegue se ha abortado: la plantilla no declara sus artefactos de licencia. Se ha creado un repositorio parcial; contacta con el equipo antes de reintentar.",
+					error: "Deployment aborted: the template does not declare its licence files. A partial repository was created; contact the team before trying again.",
 				}),
 				{ status: 500, headers: { "Content-Type": "application/json" } },
 			);
@@ -354,7 +354,7 @@ export const POST: APIRoute = async ({ request }) => {
 					});
 					return new Response(
 						JSON.stringify({
-							error: "El despliegue se ha abortado: no se pudo preparar la licencia del workspace. Se ha creado un repositorio parcial; contacta con el equipo antes de reintentar.",
+							error: "Deployment aborted: the workspace licence could not be prepared. A partial repository was created; contact the team before trying again.",
 						}),
 						{ status: 500, headers: { "Content-Type": "application/json" } },
 					);
@@ -413,7 +413,7 @@ export const POST: APIRoute = async ({ request }) => {
 			});
 			return new Response(
 				JSON.stringify({
-					error: "El despliegue se ha abortado: no se pudo instalar la licencia del workspace. Se ha creado un repositorio parcial; contacta con el equipo antes de reintentar.",
+					error: "Deployment aborted: the workspace licence could not be installed. A partial repository was created; contact the team before trying again.",
 				}),
 				{ status: 500, headers: { "Content-Type": "application/json" } },
 			);
@@ -458,6 +458,6 @@ export const POST: APIRoute = async ({ request }) => {
 	} catch (error) {
 		log.error("deploy.failed", { error: errorMessage(error) });
 
-		return new Response(JSON.stringify({ error: "Error interno del servidor" }), { status: 500, headers: { "Content-Type": "application/json" } });
+		return new Response(JSON.stringify({ error: "Internal server error" }), { status: 500, headers: { "Content-Type": "application/json" } });
 	}
 };

@@ -27,6 +27,28 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.7.0",
+		date: "2026-09-29",
+		entries: [
+			{
+				type: "FIX",
+				text: "The workspace form is in English, like the rest of the site: the field names, the checkbox, the progress messages and the errors. The checkbox now says you accept the Terms and have read the Privacy Policy.",
+			},
+			{
+				type: "ADD",
+				text: "When your workspace is ready, a note next to it says plainly that its documents were written by an AI model (Claude, by Anthropic) from public sources, and that they are drafts to check before you rely on them. Provisional wording until the company's lawyers review it.",
+			},
+			{
+				type: "FIX",
+				text: "The cookie notice shows Accept all and Reject all side by side and the same size on every screen, as on the other three sites. They were stacked one above the other.",
+			},
+			{
+				type: "CHG",
+				text: "The legal notice (version 0.2.0) gives the company's entry in the Mercantile Registry of Madrid and the postal code of its registered address. The cookie policy is version 2.1.0, which adds a key numinia.org keeps; nothing changes on this site.",
+			},
+		],
+	},
+	{
 		version: "v0.6.0",
 		date: "2026-09-29",
 		entries: [

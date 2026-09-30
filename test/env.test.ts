@@ -30,6 +30,7 @@ describe("getEnv reads the Worker's `env` binding", () => {
 			GITHUB_TOKEN: "ghp_x",
 			GITHUB_TEMPLATE_REPO: "nwos-workspace-template",
 			ANTHROPIC_API_KEY: "sk-ant-x",
+			STRIPE_RESTRICTED_KEY: "rk_x",
 			WORKSPACE_KEY_SECRET: "hmac",
 		});
 		expect(getEnv()).toEqual({
@@ -37,6 +38,7 @@ describe("getEnv reads the Worker's `env` binding", () => {
 			GITHUB_TOKEN: "ghp_x",
 			GITHUB_TEMPLATE_REPO: "nwos-workspace-template",
 			ANTHROPIC_API_KEY: "sk-ant-x",
+			STRIPE_RESTRICTED_KEY: "rk_x",
 			WORKSPACE_KEY_SECRET: "hmac",
 		});
 	});

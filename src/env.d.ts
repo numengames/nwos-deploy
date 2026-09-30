@@ -7,6 +7,9 @@ type Env = {
 	GITHUB_TOKEN: string;
 	GITHUB_TEMPLATE_REPO: string;
 	ANTHROPIC_API_KEY: string;
+	// Clave restringida del procesador de pagos (Stripe): solo lectura de
+	// Checkout Sessions. Comprueba que la prueba está pagada (OPS-015).
+	STRIPE_RESTRICTED_KEY: string;
 	// Opcional: secreto para firmar las claves de acceso a los workspaces.
 	// Si falta, se deriva del GITHUB_TOKEN (ver src/lib/token.ts).
 	WORKSPACE_KEY_SECRET?: string;

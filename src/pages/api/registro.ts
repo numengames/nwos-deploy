@@ -7,6 +7,8 @@ import { getEnv } from "@/lib/env";
 import { keySecret, signWorkspaceKey } from "@/lib/token";
 import { buildInstallTree, parseMouldSpec } from "@/lib/mould";
 import { log, errorMessage, errorStatus } from "@/lib/log";
+import { TRIAL, trialOnSale, paymentUrl, encodeReference } from "@/data/trial";
+import { checkPaidSession } from "@/lib/payment";
 
 /** The subset of GitHub's contents payload this route reads. */
 interface GitHubContent {
@@ -22,7 +24,11 @@ interface DeployRequest {
 	companyName?: unknown;
 	email?: unknown;
 	acceptedTerms?: unknown;
+	/** The processor's Checkout Session id, once the buyer has paid. */
+	sessionId?: unknown;
 }
+
+const json = (body: unknown, status: number) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
 
 export function sanitize(name: string): string {
 	return name
@@ -196,9 +202,33 @@ export const POST: APIRoute = async ({ request }) => {
 		} catch {
 			return new Response(JSON.stringify({ error: "Invalid request body" }), { status: 400, headers: { "Content-Type": "application/json" } });
 		}
-		const companyName = typeof body?.companyName === "string" ? body.companyName.trim() : "";
-		const email = typeof body?.email === "string" ? body.email.trim() : "";
-		const acceptedTerms = body?.acceptedTerms === true;
+		const sessionId = typeof body?.sessionId === "string" ? body.sessionId.trim() : "";
+		let companyName = typeof body?.companyName === "string" ? body.companyName.trim() : "";
+		let email = typeof body?.email === "string" ? body.email.trim() : "";
+		let acceptedTerms = body?.acceptedTerms === true;
+
+		const env = getEnv();
+		const org = env.GITHUB_ORG;
+		const templateRepo = env.GITHUB_TEMPLATE_REPO;
+		const token = env.GITHUB_TOKEN;
+		const anthropicKey = env.ANTHROPIC_API_KEY;
+		const stripeKey = env.STRIPE_RESTRICTED_KEY;
+
+		// Step 2 — back from the processor with only the session id. The
+		// organisation's name and the email come from the paid session
+		// itself, never from the browser, so a payment buys exactly the
+		// workspace it was made for.
+		if (sessionId) {
+			if (!stripeKey || !trialOnSale()) return json({ error: "The trial is not on sale yet" }, 503);
+			const paid = await checkPaidSession(sessionId, TRIAL, stripeKey);
+			if (!paid.ok) {
+				log.warn("deploy.payment.refused", { reason: paid.reason });
+				return json({ error: "No completed payment for this workspace. If you paid, write to us and we will sort it out." }, 402);
+			}
+			companyName = paid.companyName;
+			email = paid.email;
+			acceptedTerms = true; // accepted on the form before paying
+		}
 
 		if (!companyName || !email || !acceptedTerms) {
 			return new Response(JSON.stringify({ error: "All fields are required" }), { status: 400, headers: { "Content-Type": "application/json" } });
@@ -230,19 +260,44 @@ export const POST: APIRoute = async ({ request }) => {
 			);
 		}
 
-		const env = getEnv();
-		const org = env.GITHUB_ORG;
-		const templateRepo = env.GITHUB_TEMPLATE_REPO;
-		const token = env.GITHUB_TOKEN;
-		const anthropicKey = env.ANTHROPIC_API_KEY;
-
-		if (!org || !templateRepo || !token || !anthropicKey) {
-			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY"].filter(Boolean).join(", ");
+		if (!org || !templateRepo || !token || !anthropicKey || !stripeKey) {
+			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY", !stripeKey && "STRIPE_RESTRICTED_KEY"].filter(Boolean).join(", ");
 			log.error("env.missing", { missing });
 			return new Response(JSON.stringify({ error: "Server configuration incomplete" }), { status: 500, headers: { "Content-Type": "application/json" } });
 		}
 
+		// The trial is paid (src/data/trial.ts): with no payment link nothing is on sale
+		// and no workspace is generated — the model is never called for free.
+		if (!trialOnSale()) {
+			return json({ error: "The trial is not on sale yet" }, 503);
+		}
+
 		const octokit = new Octokit({ auth: token });
+		let exists = false;
+		try {
+			await octokit.request("GET /repos/{owner}/{repo}", { owner: org, repo: slug });
+			exists = true;
+		} catch (e) {
+			if (errorStatus(e) !== 404) throw e;
+		}
+
+		// Step 1 — no payment yet: the name must be free, then the buyer goes
+		// to the processor. Nothing is created and no model is called.
+		if (!sessionId) {
+			if (exists) return json({ error: "A workspace with that name already exists" }, 422);
+			const reference = encodeReference(companyName);
+			if (reference.length > 200) return json({ error: "Invalid organisation name: too long to carry to the payment page" }, 400);
+			return json({ payUrl: paymentUrl(TRIAL, email, reference) }, 402);
+		}
+
+		// One payment, one workspace: coming back with the same payment (a
+		// reload, another tab) returns the workspace already made.
+		if (exists) {
+			const accessKey = await signWorkspaceKey(slug, keySecret(env));
+			return json({ success: true, slug, repoUrl: `https://github.com/${org}/${slug}`, accessKey, existing: true }, 200);
+		}
+		log.info("deploy.paid", { slug, session: sessionId });
+
 		const anthropic = new Anthropic({ apiKey: anthropicKey });
 
 		// Create repo from template. El 422 de "name already exists" solo puede

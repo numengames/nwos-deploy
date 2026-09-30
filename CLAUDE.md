@@ -74,7 +74,9 @@ lint fails.
 
 ## Environment
 
-`GITHUB_ORG`, `GITHUB_TOKEN`, `GITHUB_TEMPLATE_REPO`, `ANTHROPIC_API_KEY`
+`GITHUB_ORG`, `GITHUB_TOKEN`, `GITHUB_TEMPLATE_REPO`, `ANTHROPIC_API_KEY`,
+`STRIPE_RESTRICTED_KEY` (read-only on Checkout Sessions; the trial is paid,
+`src/data/trial.ts` holds its price and payment link)
 (see `.env.example`), read through `getEnv(locals)` (`src/lib/env.ts`):
 `locals.runtime.env` on Workers, `import.meta.env` in `npm run dev`. In
 production they are wrangler secrets. Without them `/velo` and

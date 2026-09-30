@@ -27,6 +27,24 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.9.0",
+		date: "2026-09-30",
+		entries: [
+			{
+				type: "CHG",
+				text: "The trial is paid: 29 € with VAT, one payment, one workspace. Every workspace costs us the AI model's work, so the form now shows the price before anything else, and its button says you are paying. If you then hire NWOS work, the 29 € comes off your first invoice; if the generation fails, we refund it in full.",
+			},
+			{
+				type: "ADD",
+				text: "Paying happens on Stripe's page and brings you back here. The server asks Stripe whether that payment exists and is for this workspace before the AI writes a single word; coming back with the same payment returns the same workspace, never a second one.",
+			},
+			{
+				type: "CHG",
+				text: 'Until the payment link exists the button says "Coming soon" and no workspace can be generated. The example workspace is still free to browse.',
+			},
+		],
+	},
+	{
 		version: "v0.8.0",
 		date: "2026-09-29",
 		entries: [

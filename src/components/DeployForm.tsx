@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 import { useEffect, useMemo, useState } from "react";
+import { TRIAL, trialOnSale } from "@/data/trial";
 
 /** What POST /api/registro returns when a workspace is created. */
 interface DeployResult {
@@ -9,11 +10,11 @@ interface DeployResult {
 	accessKey?: string;
 }
 
-export default function DeployForm() {
+export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolean }) {
 	const [companyName, setCompanyName] = useState("");
 	const [email, setEmail] = useState("");
 	const [acceptedTerms, setAcceptedTerms] = useState(false);
-	const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+	const [status, setStatus] = useState<"idle" | "paying" | "loading" | "success" | "error">("idle");
 	const [result, setResult] = useState<DeployResult | null>(null);
 	const [errorMsg, setErrorMsg] = useState("");
 	const [loadingStartedAt, setLoadingStartedAt] = useState<number | null>(null);
@@ -46,10 +47,17 @@ export default function DeployForm() {
 		return () => window.clearInterval(id);
 	}, [status]);
 
-	async function handleDeploy() {
-		if (!companyName || !email || !acceptedTerms) return;
+	// Back from the processor: ?session_id=cs_… in the address. The server
+	// reads the organisation and the email from the paid session; this tab
+	// keeps nothing while the buyer is away.
+	useEffect(() => {
+		const sessionId = new URLSearchParams(window.location.search).get("session_id");
+		if (sessionId) void deploy({ sessionId });
+	}, []);
 
-		setStatus("loading");
+	async function deploy(payload: { companyName: string; email: string; acceptedTerms: true } | { sessionId: string }) {
+		const sessionId = "sessionId" in payload ? payload.sessionId : undefined;
+		setStatus(sessionId ? "loading" : "paying");
 		setLoadingStartedAt(Date.now());
 		setErrorMsg("");
 
@@ -57,10 +65,16 @@ export default function DeployForm() {
 			const res = await fetch("/api/registro", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ companyName, email, acceptedTerms }),
+				body: JSON.stringify(payload),
 			});
 
 			const data = await res.json();
+
+			// Not paid yet: go to the processor, which brings the buyer back.
+			if (res.status === 402 && data.payUrl) {
+				window.location.assign(data.payUrl);
+				return;
+			}
 
 			if (!res.ok) {
 				setStatus("error");
@@ -68,6 +82,7 @@ export default function DeployForm() {
 				return;
 			}
 
+			window.history.replaceState(null, "", `${window.location.pathname}#deploy`);
 			setStatus("success");
 			setResult(data);
 		} catch {
@@ -75,6 +90,13 @@ export default function DeployForm() {
 			setErrorMsg("Connection error. Please try again.");
 		}
 	}
+
+	function handleDeploy() {
+		if (!companyName || !email || !acceptedTerms || !onSale) return;
+		void deploy({ companyName, email, acceptedTerms: true });
+	}
+
+	const busy = status === "loading" || status === "paying";
 
 	// ── Success state ──
 	if (status === "success" && result) {
@@ -107,18 +129,18 @@ export default function DeployForm() {
 			{/* Company name */}
 			<div className="space-y-1.5">
 				<label className="block font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim">Organisation name</label>
-				<input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Acme Corp" disabled={status === "loading"} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-50" />
+				<input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Acme Corp" disabled={busy} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-50" />
 			</div>
 
 			{/* Email */}
 			<div className="space-y-1.5">
 				<label className="block font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim">Email of the person responsible</label>
-				<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ceo@acme.com" disabled={status === "loading"} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-50" />
+				<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ceo@acme.com" disabled={busy} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-50" />
 			</div>
 
 			{/* Terms */}
 			<label className="flex items-start gap-3 cursor-pointer">
-				<input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} disabled={status === "loading"} className="mt-0.5 h-4 w-4 border-border bg-card accent-accent disabled:opacity-50" />
+				<input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} disabled={busy} className="mt-0.5 h-4 w-4 border-border bg-card accent-accent disabled:opacity-50" />
 				<span className="text-sm text-muted-foreground leading-relaxed">
 					I accept the <a href="/legal/terms" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
 						Terms and Conditions
@@ -131,8 +153,17 @@ export default function DeployForm() {
 			{/* Error */}
 			{status === "error" && <div className="rounded-marco border border-grana/30 bg-grana/10 p-3 text-sm text-coral">{errorMsg}</div>}
 
+			{/* Price — named before paying, VAT included */}
+			<div data-trial-price className="rounded-marco border border-border bg-card p-4">
+				<div className="flex items-baseline justify-between gap-3">
+					<span className="font-display text-3xl text-foreground">{TRIAL.priceEur} €</span>
+					<span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-dim">VAT included · one payment</span>
+				</div>
+				<p className="mt-2 text-sm text-muted-foreground leading-relaxed">One workspace and its four founding documents, drafted by an AI model. Each one costs us the model's work, so the trial is paid. If you then hire NWOS work, the {TRIAL.priceEur} € comes off your first invoice. If the generation fails, we refund it in full.</p>
+			</div>
+
 			{/* Submit */}
-			<button onClick={handleDeploy} disabled={!companyName || !email || !acceptedTerms || status === "loading"} className="w-full rounded-control bg-interactivo px-6 py-3 text-sm font-medium text-white transition-colors duration-instante ease-ciclo hover:bg-interactivo-hover active:bg-interactivo-activo disabled:opacity-50 disabled:cursor-not-allowed">
+			<button onClick={handleDeploy} disabled={!onSale || !companyName || !email || !acceptedTerms || busy} className="w-full rounded-control bg-interactivo px-6 py-3 text-sm font-medium text-white transition-colors duration-instante ease-ciclo hover:bg-interactivo-hover active:bg-interactivo-activo disabled:opacity-50 disabled:cursor-not-allowed">
 				{status === "loading" ? (
 					<span className="flex items-center justify-center gap-2">
 						<span>
@@ -142,10 +173,17 @@ export default function DeployForm() {
 							</span>
 						</span> <span className="font-mono text-[0.75rem] tracking-[0.15em]">{elapsedLabel}</span>
 					</span>
+				) : status === "paying" ? (
+					"Taking you to the payment page…"
+				) : onSale ? (
+					`Pay ${TRIAL.priceEur} € and create my workspace`
 				) : (
-					"Deploy workspace"
+					"Coming soon"
 				)}
 			</button>
+
+			{!onSale && <p className="text-center text-xs text-dim">Payments open shortly. Meanwhile, the example workspace below shows exactly what you get.</p>}
+			{onSale && <p className="text-center text-xs text-dim">You pay on Stripe's page and come back here; the workspace is created as soon as the payment is confirmed.</p>}
 
 			{status === "loading" && (
 				<div className="rounded-marco border border-border/50 bg-card/50 p-4">

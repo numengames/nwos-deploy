@@ -21,7 +21,7 @@ export interface Trial {
 export const TRIAL: Trial = {
 	priceEur: 29,
 	currency: "eur",
-	link: "",
+	link: "https://buy.stripe.com/test_6oU28s2OM1VC2eIekkdMI01",
 };
 
 /** On sale only with an https payment link. */

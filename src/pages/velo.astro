@@ -8,17 +8,17 @@ import { DEMO_WORKSPACE_SLUG } from "@/lib/demo";
 export const prerender = false;
 ---
 
-<Layout title="The Veil — NWOS" activeNav="velo">
+<Layout title="Try NWOS with your organisation · 29 € — Numen Games" description="Your organisation's NWOS workspace with four founding documents drafted by AI, in two minutes. 29 € with VAT, deducted if you then hire us." canonicalPath="/velo" activeNav="velo">
 	<!-- Star field hero -->
 	<div class="velo-hero">
 		<canvas id="stardust" class="absolute inset-0 h-full w-full"></canvas>
 
 		<div class="relative z-10 flex flex-col items-center gap-8 text-center px-6">
 			<p class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">NWOS · Numen Workspace OS</p>
-			<p class="velo-cta">Cross the threshold where your organisation wakes up.</p>
+			<p class="velo-cta">See your organisation in NWOS.</p>
 			<p class="max-w-md text-sm text-muted-foreground leading-relaxed">Your organisation's documentation workspace, with its founding documents drafted by AI from what is public about you. A paid trial: 29 € with VAT, deducted if you then hire us.</p>
 			<a href="#deploy" class="velo-btn">
-				Go to the form
+				Try it · 29 €
 			</a>
 		</div>
 	</div>
@@ -28,8 +28,12 @@ export const prerender = false;
 		<div class="mx-auto max-w-[1100px] px-6">
 			<div class="text-center mb-10">
 				<p class="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent mb-3">Paid trial · 29 €</p>
-				<h2 class="font-display text-3xl font-normal tracking-[-0.025em] sm:text-4xl text-foreground mb-3">Deploy a workspace</h2>
-				<p class="text-sm text-muted-foreground max-w-sm mx-auto">Creates a GitHub repository with your organisation's whole document structure, ready for the agents to fill in.</p>
+				<h2 class="font-display text-3xl font-normal tracking-[-0.025em] sm:text-4xl text-foreground mb-3">Try NWOS with your organisation</h2>
+				<p class="text-sm text-muted-foreground max-w-md mx-auto">
+					A private repository with the whole NWOS structure and four founding documents drafted by AI from what is public about you. Afterwards, run it on your own or <a href="/#plans" class="text-foreground underline underline-offset-4 hover:text-accent">
+						let us accompany you
+					</a>.
+				</p>
 			</div>
 
 			<DeployForm client:visible />

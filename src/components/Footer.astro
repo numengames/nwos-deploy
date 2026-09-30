@@ -29,7 +29,7 @@ import scarab from "@/brand/Khepri_Logo.svg?raw";
 
 // Navigation: the header's items plus the deploy page the header does not
 // list. Two columns once it is long.
-const nav = [{ label: "Home", href: "/", id: "home" }, ...navItems.filter((n) => n.href), { label: "Deploy workspace", href: "/velo", id: "velo" }];
+const nav = [{ label: "Home", href: "/", id: "home" }, { label: "How it works", href: "/how-it-works", id: "how" }, ...navItems.filter((n) => n.href), { label: "Try it", href: "/velo", id: "velo" }];
 const twoColumns = nav.length > 4;
 // Filled top-to-bottom so the header's order survives: down the first
 // column, then the second.

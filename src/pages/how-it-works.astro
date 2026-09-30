@@ -1,0 +1,331 @@
+---
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// How NWOS works, explained whole (the Oracle, 2026-09-30). Its heart is the
+// layer diagram the archive once drew (numinia-archive SYS-002, "How an
+// agent works", and SYS-006's L0–L4 stack): the person stands between the
+// agents and the organisation, and the shared memory runs through every
+// layer. Then the cycle an agent lives each session, the pieces a workspace
+// holds, what you need, and the principles. The sale is on the home page.
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import Icon from "@/components/Icon.astro";
+import { TRIAL } from "@/data/trial";
+
+// The stack, top to bottom, as the diagram draws it.
+const stack = [
+	{
+		id: "organisation",
+		label: "The organisation",
+		role: "Emerges",
+		icon: "buildings",
+		text: "Not a thing you install. It is what appears when people and agents work over the same memory, day after day: its culture is what they repeat, its knowledge is what they wrote down.",
+	},
+	{
+		id: "people",
+		label: "People",
+		role: "Decide",
+		icon: "users",
+		text: "They set direction, give the instructions and approve what leaves the house. They hold what no document holds: judgement, intuition, knowing when something is right but not now.",
+	},
+	{
+		id: "agents",
+		label: "AI agents",
+		role: "Do",
+		icon: "robot",
+		text: "Each has a name, a role and written rules. They research, draft, check and keep things up to date — inside the limits the people set.",
+	},
+	{
+		id: "infrastructure",
+		label: "Models and tools",
+		role: "Run",
+		icon: "lightning",
+		text: "The AI model you choose, the tools the agents may use, and who is allowed to do what. Replaceable: change the model and the memory stays.",
+	},
+];
+
+const cycle = [
+	{
+		step: "Read",
+		icon: "book-open",
+		text: "The agent starts by reading the workspace: who it is, its rules, what was decided, what is in progress. It does not start from zero.",
+		example: "Monday, 8:00. The agent reads last week's report and the open missions before writing a line.",
+	},
+	{
+		step: "Work",
+		icon: "lightning",
+		text: "A person gives an instruction; the agent does the work with its tools and hands the result back to be approved.",
+		example: '"Draft the onboarding for the new designers." A draft appears, a person corrects two points and approves it.',
+	},
+	{
+		step: "Write",
+		icon: "git-branch",
+		text: "What was done, decided and learned is written back into the workspace, with who did it and who approved it. The next session starts from there.",
+		example: "The onboarding goes in as a protocol. The next new designer is welcomed by it — and by an agent that has read it.",
+	},
+];
+
+const pieces = [
+	{ name: "Canon", icon: "book-open", text: "Who you are: mission, values, culture, structure, glossary. The four documents the trial drafts are its start." },
+	{ name: "Missions", icon: "check", text: "Each piece of work with what counts as done and what it taught you. Closing one leaves a trace, not just a ticked box." },
+	{ name: "Decisions", icon: "shield-check", text: "What was decided, why, and what was rejected. Never rewritten: a new decision replaces an old one, and both stay." },
+	{ name: "Protocols", icon: "arrows-clockwise", text: "How recurring things are done — from welcoming someone to closing the month — so they do not depend on one person." },
+	{ name: "Reports", icon: "calendar-blank", text: "Short daily and weekly summaries of what moved, written by people and agents. The meeting that no longer needs to happen." },
+	{ name: "Agents", icon: "robot", text: "Each agent's identity, rules and memory, in files anyone can read. You can see what an agent is allowed to do before it does it." },
+];
+
+const layers = [
+	{ level: "L0", name: "Files", desc: "Everything is plain text — Markdown with a short header. No proprietary format.", icon: "file-text" },
+	{ level: "L1", name: "History", desc: "Git keeps every change, who made it and when. Nothing is lost, everything can be reviewed.", icon: "git-branch" },
+	{ level: "L2", name: "Agents", desc: "AI agents read and write the same files as any person on the team.", icon: "robot" },
+	{ level: "L3", name: "People", desc: "Named people approve, direct and audit what the agents do.", icon: "dna" },
+	{ level: "L4", name: "Narrative", desc: "Optional. Names, roles and a story that make the system feel like yours.", icon: "mask-happy" },
+];
+
+const principles = [
+	{ name: "Files over apps", desc: "Your knowledge lives in files you own, not in a platform's database. If a tool disappears, the knowledge stays." },
+	{ name: "History is never rewritten", desc: "Decisions and reports are added, not edited afterwards. You can always see what was thought at the time." },
+	{ name: "Written, not remembered", desc: "Decisions, deviations and open questions are written down. Nothing important lives only in someone's head." },
+	{ name: "A person approves what goes out", desc: "Agents work on their own inside the house; anything that leaves it — an email, a publication, a release — waits for a person." },
+];
+---
+
+<Layout title="How NWOS works — Numen Games" description="People, AI agents and one shared memory: how NWOS works, layer by layer, and what a workspace holds." canonicalPath="/how-it-works" activeNav="how">
+	<PageHero label="NWOS · How it works" title="People decide. Agents do. The workspace remembers." description="NWOS is a way of organising work so that your people and your AI agents share one memory. This is how the pieces fit." />
+
+	<div class="mx-auto max-w-[960px] space-y-24 px-6 pb-24">
+		<!-- The diagram -->
+		<section aria-labelledby="stack-title">
+			<div class="mb-6 flex items-center gap-3">
+				<span id="stack-title" class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+					The whole system
+				</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+
+			<div class="stack" data-stack>
+				<div class="stack-rows">
+					{stack.map((row, i) => (
+						<>
+							<div class:list={["stack-row rounded-marco border bg-card p-5", row.id === "people" ? "border-accent/60" : "border-border", row.id === "organisation" ? "border-dashed" : ""]} data-layer={row.id}>
+								<div class="flex items-center gap-3">
+									<Icon name={row.icon} size={22} class="text-accent" />
+									<p class="font-display text-lg text-foreground">{row.label}</p>
+									<span class="ml-auto font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">{row.role}</span>
+								</div>
+								<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{row.text}</p>
+							</div>
+							{row.id === "people" && (
+								<div class="flow" aria-hidden="true">
+									<span>instruction ↓</span>
+									<span>↑ approval</span>
+								</div>
+							)}
+							{i === 0 && (
+								<div class="flow" aria-hidden="true">
+									<span>emerges from ↑</span>
+								</div>
+							)}
+							{row.id === "agents" && <div class="flow flow-plain" aria-hidden="true" />}
+						</>
+					))}
+				</div>
+
+				<div class="memory rounded-marco border border-accent/40 bg-accent/5 p-5" data-layer="memory">
+					<Icon name="archive" size={22} class="text-accent" />
+					<p class="mt-2 font-display text-lg text-foreground">The shared memory</p>
+					<p class="mt-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">Your workspace</p>
+					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">One repository every layer reads from and writes to: canon, missions, decisions, protocols, reports, and each agent's rules.</p>
+					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">It is neither above nor below. It crosses them all — that is why an agent on a new model, or a person on their first day, starts with the whole context.</p>
+				</div>
+			</div>
+
+			<p class="mt-5 text-sm leading-relaxed text-muted-foreground">The person stands between the agents and the organisation. Agents never act on the organisation directly: what they do passes through someone who can say "yes", "not like that" or "not now".</p>
+		</section>
+
+		<!-- The cycle -->
+		<section aria-labelledby="cycle-title">
+			<div class="mb-6 flex items-center gap-3">
+				<span id="cycle-title" class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+					What an agent does, every session
+				</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<ol class="grid gap-4 sm:grid-cols-3">
+				{cycle.map((c, i) => (
+					<li class="relative rounded-marco border border-border bg-card p-5">
+						<div class="flex items-center gap-2">
+							<span class="font-mono text-[0.7rem] text-dim">{String(i + 1).padStart(2, "0")}</span>
+							<Icon name={c.icon} size={18} class="text-accent" />
+							<p class="font-display text-lg text-foreground">{c.step}</p>
+						</div>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{c.text}</p>
+						<p class="mt-3 border-t border-border/60 pt-3 text-xs leading-relaxed text-dim">{c.example}</p>
+					</li>
+				))}
+			</ol>
+			<p class="mt-4 text-sm text-muted-foreground">Knowledge that is not written back is lost when the session ends. That is why the last step matters most.</p>
+		</section>
+
+		<!-- The pieces -->
+		<section aria-labelledby="pieces-title">
+			<div class="mb-6 flex items-center gap-3">
+				<span id="pieces-title" class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+					What a workspace holds
+				</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{pieces.map((p) => (
+					<div class="rounded-marco border border-border bg-card p-5">
+						<div class="flex items-center gap-2">
+							<Icon name={p.icon} size={18} class="text-accent" />
+							<p class="font-semibold text-sm text-foreground">{p.name}</p>
+						</div>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<!-- The layers underneath -->
+		<section aria-labelledby="layers-title">
+			<div class="mb-6 flex items-center gap-3">
+				<span id="layers-title" class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+					Built in layers
+				</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="space-y-2">
+				{[...layers].reverse().map((layer) => (
+					<div class="flex items-start gap-4 rounded-marco border border-border bg-card p-4">
+						<span class="mt-0.5 w-6 flex-shrink-0 font-mono text-[0.65rem] text-muted-foreground">{layer.level}</span>
+						<Icon name={layer.icon} size={20} class="mt-0.5 text-accent" />
+						<div class="flex-1">
+							<p class="mb-1 text-sm font-semibold text-foreground">{layer.name}</p>
+							<p class="text-sm text-muted-foreground">{layer.desc}</p>
+						</div>
+						{layer.level === "L4" && <span class="flex-shrink-0 rounded-control bg-accent/10 px-2 py-0.5 font-mono text-[0.6rem] text-accent">Optional</span>}
+					</div>
+				))}
+			</div>
+			<p class="mt-3 text-sm text-muted-foreground">Each layer can fail without taking the others down: without agents the files still work, without the narrative everything else does.</p>
+		</section>
+
+		<!-- Principles -->
+		<section aria-labelledby="principles-title">
+			<div class="mb-6 flex items-center gap-3">
+				<span id="principles-title" class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+					Principles
+				</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="grid gap-3 sm:grid-cols-2">
+				{principles.map((p) => (
+					<div class="rounded-marco border border-border bg-card p-5">
+						<p class="mb-2 text-sm font-semibold text-foreground">{p.name}</p>
+						<p class="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<!-- What you need -->
+		<section aria-labelledby="needs-title">
+			<div class="mb-6 flex items-center gap-3">
+				<span id="needs-title" class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">
+					What you need
+				</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="grid gap-4 sm:grid-cols-3">
+				{[
+					{ req: "A git repository", note: "GitHub, GitLab or your own. The trial creates one for you." },
+					{ req: "Something to read Markdown", note: "Any editor, or the viewer on this site." },
+					{ req: "An AI model", note: "Optional, and your choice. It switches the agent layer on." },
+				].map((r) => (
+					<div class="flex items-start gap-3 rounded-marco border border-border bg-card p-5">
+						<Icon name="check" size={16} class="mt-0.5 text-green" />
+						<div>
+							<p class="text-sm font-medium text-foreground">{r.req}</p>
+							<p class="text-sm text-muted-foreground">{r.note}</p>
+						</div>
+					</div>
+				))}
+			</div>
+			<p class="mt-4 text-sm text-muted-foreground">
+				The live example is our own company: every document of Numen Games, and the agents that write them, on <a href="https://numinia.org" target="_blank" rel="noopener noreferrer" class="text-foreground underline underline-offset-4 hover:text-accent">
+					numinia.org
+				</a>, from the repository <a href="https://github.com/numengames/numinia-archive" target="_blank" rel="noopener noreferrer" class="font-mono text-xs text-foreground underline underline-offset-4 hover:text-accent">
+					numengames/numinia-archive
+				</a>.
+			</p>
+		</section>
+
+		<!-- CTA -->
+		<section class="rounded-marco border border-border bg-card p-6 text-center sm:p-8">
+			<h2 class="font-display text-2xl text-foreground">See it with your own organisation.</h2>
+			<p class="mx-auto mt-2 max-w-md text-sm text-muted-foreground">Your workspace, with its first four documents, in two minutes — {TRIAL.priceEur} € with VAT.</p>
+			<div class="mt-5 flex flex-wrap justify-center gap-3">
+				<a href="/velo" class="inline-flex min-h-[44px] items-center rounded-control bg-interactivo px-6 text-sm font-medium text-white transition-colors hover:bg-interactivo-hover">
+					{" "}
+					Try it · {TRIAL.priceEur} €{" "}
+				</a>
+				<a href="/#plans" class="inline-flex min-h-[44px] items-center rounded-control border border-border px-6 text-sm font-medium text-muted-foreground transition-colors hover:border-accent hover:text-accent">
+					{" "}
+					See the ways to work with us{" "}
+				</a>
+			</div>
+		</section>
+	</div>
+</Layout>
+
+<style>
+	/* The diagram: the layers on the left, the shared memory crossing them
+	   on the right. On a phone the memory drops below the layers. */
+	.stack {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+	@media (min-width: 768px) {
+		.stack {
+			grid-template-columns: minmax(0, 1fr) 15rem;
+			align-items: stretch;
+		}
+		.memory {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			position: relative;
+		}
+		/* The ties from each layer into the memory. */
+		.stack-row {
+			position: relative;
+		}
+		.stack-row::after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			right: -1rem;
+			width: 1rem;
+			border-top: 1px dashed rgb(var(--accent) / 0.6);
+		}
+	}
+	.flow {
+		display: flex;
+		justify-content: center;
+		gap: 2rem;
+		padding: 0.35rem 0;
+		font-family: var(--font-mono);
+		font-size: 0.65rem;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: rgb(var(--text-dim));
+	}
+	.flow-plain {
+		height: 0.75rem;
+		padding: 0;
+	}
+</style>

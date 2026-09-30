@@ -1,300 +1,173 @@
 ---
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
+//
+// The home page sells (the Oracle, 2026-09-30): what NWOS does for an
+// organisation, the path of the sale — a paid trial, then on your own or
+// accompanied for 8 or 16 weeks — and the questions a buyer asks. How the
+// system works is on /how-it-works. The offer is read from src/data/offer.ts.
 import Layout from "@/layouts/Layout.astro";
-import PageHero from "@/components/PageHero.astro";
 import Icon from "@/components/Icon.astro";
+import { TRIAL } from "@/data/trial";
+import { PATH, PLANS, SPANS, FAQ, contactHref } from "@/data/offer";
+import { DEMO_WORKSPACE_SLUG } from "@/lib/demo";
 
-const features = [
-	{
-		id: "missions",
-		name: "Mission System",
-		status: "active",
-		default: "on",
-		description: "Each unit of work is a structured document with a unique ID, acceptance criteria, epistemic value, and pragmatic value. Missions are versioned in git.",
-		why: "Transforms tasks into documented knowledge. Closing a mission leaves a trace — what was done, why it diverged from the plan, and what was learned.",
-		compare: "Linear and Jira track completion. The Mission System tracks knowledge.",
-		fields: ["id", "title", "type (biological/digital/hybrid)", "priority", "effort", "status", "story", "acceptance criteria", "epistemic value", "pragmatic value", "execution reality"],
-	},
-	{
-		id: "blueprints",
-		name: "Blueprints (System Maps)",
-		status: "active",
-		default: "on",
-		description: "Living architecture documents that show the current state, target state, gap delta, and open questions for each subsystem.",
-		why: "Most organizations have architectural decisions in people's heads. Blueprints externalize that knowledge into auditable, updatable files.",
-		compare: "Architecture Decision Records (ADRs) capture one decision. Blueprints show the whole system at a glance.",
-		fields: ["id", "area", "status semaphore (green/yellow/red)", "current state", "target state", "related decisions", "gap → mission delta table", "open questions", "dependencies"],
-	},
-	{
-		id: "decisions",
-		name: "Decision Registry",
-		status: "active",
-		default: "on",
-		description: "Append-only log of architectural and strategic decisions. Each record captures context, the decision made, alternatives rejected, and pros/cons.",
-		why: "Decisions made without documentation get remade. The registry prevents wheel reinvention and makes the cost of changing direction explicit.",
-		compare: "Notion docs get edited and lose history. The Decision Registry is immutable — superseded by new decisions, never deleted.",
-		fields: ["id", "title", "date", "status (active/provisional/superseded)", "context", "decision", "why", "rejected alternatives", "pros/cons"],
-	},
-	{
-		id: "agents",
-		name: "Digital Agents (CAO)",
-		status: "active",
-		default: "opt-in",
-		description: "AI agents with persistent identity files (SOUL.md, OPERATOR.md, MEMORY.md) that operate within the system. Each agent has a guild, a role, and operational laws.",
-		why: "Agents are not chatbots. They are long-running collaborators with memory, responsibilities, and verifiable identity. They read and write the same files humans do.",
-		compare: "ChatGPT and Copilot are stateless. NWOS agents maintain state across sessions via the git repository.",
-		fields: ["SOUL.md (identity)", "OPERATOR.md (laws)", "MEMORY.md (persistent context)", "guild assignment", "mission assignments", "operation logs"],
-	},
-	{
-		id: "reports",
-		name: "Operational Reports",
-		status: "active",
-		default: "on",
-		description: "Daily and weekly markdown reports committed to the repository. Reports are append-only — closed reports are never modified.",
-		why: "Reports create accountability without overhead. A 5-minute daily summary in git is auditable, searchable, and doesn't require a BI tool.",
-		compare: "Slack summaries disappear. Email reports aren't searchable. Git reports are permanent and diffable.",
-		fields: ["id", "date", "agent", "model", "completed work", "epistemic value", "pragmatic value", "pending items requiring human input"],
-	},
-	{
-		id: "protocols",
-		name: "Protocols",
-		status: "active",
-		default: "on",
-		description: "Operational procedures written as markdown files. Protocols define how recurring tasks are executed — from briefing an agent to onboarding a new member.",
-		why: "Recurring tasks without protocols become dependent on specific people. Protocols make processes portable.",
-		compare: "SOPs in Confluence rot and go unread. Markdown protocols are lightweight, versioned, and executable by agents.",
-		fields: ["id", "title", "trigger", "steps", "owner", "version"],
-	},
-];
-
-const layers = [
-	{
-		level: "L0",
-		name: "File Layer",
-		desc: "All data is markdown files with YAML frontmatter. No proprietary formats.",
-		icon: "file-text",
-	},
-	{
-		level: "L1",
-		name: "Version Layer",
-		desc: "Git provides full history, branching, and collaboration via PRs.",
-		icon: "git-branch",
-	},
-	{
-		level: "L2",
-		name: "Agent Layer",
-		desc: "AI agents read and write files like any contributor.",
-		icon: "robot",
-	},
-	{
-		level: "L3",
-		name: "Human Layer",
-		desc: "Oracles (humans) approve decisions, set direction, and audit agent work.",
-		icon: "dna",
-	},
-	{
-		level: "L4",
-		name: "Narrative Layer",
-		desc: "Optional. Guilds, lore, and game mechanics that make the system engaging for humans.",
-		icon: "mask-happy",
-	},
-];
-
-const principles = [
-	{
-		name: "File over App",
-		desc: "Data lives in markdown files, not locked in a SaaS database. If the tool disappears, the knowledge survives.",
-	},
-	{
-		name: "Append-only history",
-		desc: "Decisions and reports are never edited retroactively. The record of what was thought and done at each moment is permanent.",
-	},
-	{
-		name: "Explicit over implicit",
-		desc: "Every architectural decision, every divergence from a plan, every open question is written down. Nothing lives only in someone's head.",
-	},
-	{
-		name: "Epistemic value as first-class citizen",
-		desc: "Every mission asks: what do we learn by doing this? Documentation that only records what was done is incomplete.",
-	},
-	{
-		name: "Human approval for external actions",
-		desc: "Agents execute internal work autonomously. Any action that leaves the system (email, publish, deploy) requires explicit human approval.",
-	},
-	{
-		name: "Layered architecture",
-		desc: "Each layer (files, version control, agents, humans, narrative) can fail without taking the others down. The system degrades gracefully.",
-	},
+const outcomes = [
+	{ icon: "archive", title: "It remembers", text: "Every decision, mission and report is written down where people and agents both read it. Nobody has to be in the meeting to know what was decided." },
+	{ icon: "robot", title: "Agents that know you", text: "AI agents start each session by reading your organisation — its rules, its history, its work in progress — instead of starting from zero." },
+	{ icon: "shield-check", title: "People decide", text: "Agents propose and do; a named person approves anything that leaves the house. Every change says who made it and who approved it." },
+	{ icon: "file-text", title: "Yours, in plain files", text: "Text files in a repository you own. No platform to rent, nothing locked in: if you leave, everything goes with you." },
 ];
 ---
 
-<Layout title="Narrative Work OS — Numen Games" description="A file-based operating system for organizations that need alignment, memory, and AI agent integration. No proprietary formats. No lock-in." canonicalPath="" activeNav="nwos">
-	<PageHero label="Numen Games · NWOS" title="Narrative Work OS" description="A structured, file-based operating system for organizations. Built on markdown, git, and AI agents. No proprietary formats. No lock-in." />
-
-	<section class="pb-20">
-		<div class="mx-auto max-w-[960px] px-6 space-y-20">
-			<!-- What it is -->
-			<div>
-				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">What it is</span>
-					<span class="h-px flex-1 bg-border"></span>
-				</div>
-				<div class="grid gap-4 sm:grid-cols-3">
-					{[
-						{
-							label: "For teams",
-							desc: "10–200 people who need shared memory, decision traceability, and async coordination.",
-						},
-						{
-							label: "Not a SaaS",
-							desc: "A set of structured conventions and file formats. You own your data. It runs anywhere git runs.",
-						},
-						{
-							label: "AI-native",
-							desc: "Designed from the start for AI agents to read, write, and operate within the same files as humans.",
-						},
-					].map((item) => (
-						<div class="rounded-marco border border-border bg-card p-5">
-							<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-2">{item.label}</p>
-							<p class="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<!-- Architecture layers -->
-			<div>
-				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Architecture</span>
-					<span class="h-px flex-1 bg-border"></span>
-				</div>
-				<div class="space-y-2">
-					{layers.map((layer) => (
-						<div class="flex items-start gap-4 rounded-marco border border-border bg-card p-5">
-							<span class="font-mono text-[0.65rem] text-muted-foreground w-6 flex-shrink-0 mt-0.5">{layer.level}</span>
-							<Icon name={layer.icon} size={20} class="mt-0.5 text-accent" />
-							<div class="flex-1">
-								<p class="font-semibold text-sm text-foreground mb-1">{layer.name}</p>
-								<p class="text-sm text-muted-foreground">{layer.desc}</p>
-							</div>
-							{layer.level === "L4" && <span class="font-mono text-[0.6rem] bg-accent/10 text-accent px-2 py-0.5 rounded-control flex-shrink-0">Optional</span>}
-						</div>
-					))}
-				</div>
-				<p class="font-mono text-[0.65rem] text-dim mt-3 italic">L4 (Narrative) is opt-in. The system works without it. It adds engagement and cultural coherence for teams that want it.</p>
-			</div>
-
-			<!-- Features -->
-			<div>
-				<div class="mb-6 flex items-center gap-3">
-					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Features</span>
-					<span class="h-px flex-1 bg-border"></span>
-				</div>
-				<div class="space-y-4">
-					{features.map((f) => (
-						<div class="rounded-marco border border-border bg-card overflow-hidden">
-							<div class="p-5 border-b border-border/50">
-								<div class="flex flex-wrap items-center gap-2 mb-3">
-									<span class="font-mono text-[0.6rem] text-muted-foreground">{f.id}</span>
-									<span class="inline-flex rounded-control bg-green/10 px-2.5 py-0.5 font-mono text-[0.6rem] text-green">Active</span>
-									<span class:list={["inline-flex rounded-control px-2.5 py-0.5 font-mono text-[0.6rem]", f.default === "on" ? "bg-accent/10 text-accent" : "bg-yellow/10 text-yellow"]}>{f.default === "on" ? "Default: on" : "Opt-in"}</span>
-								</div>
-								<h3 class="font-display text-xl text-foreground mb-2">{f.name}</h3>
-								<p class="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
-							</div>
-							<div class="grid sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-border/50">
-								<div class="p-4">
-									<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground mb-2">Why it matters</p>
-									<p class="text-xs text-muted-foreground leading-relaxed">{f.why}</p>
-								</div>
-								<div class="p-4">
-									<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-muted-foreground mb-2">vs. alternatives</p>
-									<p class="text-xs text-muted-foreground leading-relaxed">{f.compare}</p>
-								</div>
-							</div>
-							<div class="px-5 py-3 bg-card/50 border-t border-border/50">
-								<p class="font-mono text-[0.6rem] text-muted-foreground">
-									<span class="text-foreground/50 mr-2">Fields:</span>
-									{f.fields.join(" · ")}
-								</p>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<!-- Design principles -->
-			<div>
-				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Design principles</span>
-					<span class="h-px flex-1 bg-border"></span>
-				</div>
-				<div class="grid gap-3 sm:grid-cols-2">
-					{principles.map((p) => (
-						<div class="rounded-marco border border-border bg-card p-5">
-							<p class="font-semibold text-sm text-foreground mb-2">{p.name}</p>
-							<p class="text-xs text-muted-foreground leading-relaxed">{p.desc}</p>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<!-- Implementation -->
-			<div>
-				<div class="mb-4 flex items-center gap-3">
-					<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Implementation</span>
-					<span class="h-px flex-1 bg-border"></span>
-				</div>
-				<div class="rounded-marco border border-border bg-card p-6">
-					<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground mb-4">Requirements</p>
-					<div class="grid sm:grid-cols-3 gap-4 mb-6">
-						{[
-							{
-								req: "Git repository",
-								note: "GitHub, GitLab, or self-hosted",
-							},
-							{
-								req: "Markdown editor",
-								note: "Any editor that reads .md files",
-							},
-							{
-								req: "AI agent access",
-								note: "Optional. Unlocks the agent layer.",
-							},
-						].map((r) => (
-							<div class="flex items-start gap-3">
-								<Icon name="check" size={16} class="mt-0.5 text-green" />
-								<div>
-									<p class="text-sm font-medium text-foreground">{r.req}</p>
-									<p class="text-xs text-muted-foreground">{r.note}</p>
-								</div>
-							</div>
-						))}
-					</div>
-					<div class="border-t border-border pt-5">
-						<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted-foreground mb-3">Reference implementation</p>
-						<p class="text-sm text-muted-foreground mb-3">
-							The repository <code class="font-mono text-xs text-accent">numengames/numinia-archive</code> is the live reference implementation of the NWOS — Numen Games' own workspace, built in public.
-						</p>
-						<div class="flex flex-wrap gap-3">
-							<a href="https://github.com/numengames/numinia-archive" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.15em] text-accent hover:text-accent/80 transition-colors">
-								{" "}
-								View on GitHub →{" "}
-							</a>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Narrative layer note -->
-			<div class="rounded-marco border border-accent/20 bg-accent/5 p-6">
-				<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-accent mb-3">About the Narrative Layer</p>
-				<p class="text-sm text-muted-foreground leading-relaxed mb-3">
-					The NWOS was built alongside <strong class="text-foreground">Numinia</strong> — a narrative universe where guilds, missions, and archives are not metaphors but the actual vocabulary of work. The narrative layer is not required, but it changes how people relate to the system.
-				</p>
-				<p class="text-sm text-muted-foreground leading-relaxed">If you want the system without the narrative, it's still the same files, the same git workflow, the same agents. The narrative is an optional skin that makes the system feel alive.</p>
+<Layout title="NWOS — your organisation, ready for AI · Numen Games" description={`A workspace where your people and your AI agents share one memory. Try it for ${TRIAL.priceEur} €: your organisation's workspace in two minutes.`} canonicalPath="" activeNav="nwos">
+	<!-- Hero -->
+	<section class="pb-16 pt-16 sm:pt-24">
+		<div class="mx-auto max-w-[1100px] px-6">
+			<span class="mb-4 inline-block font-mono text-[0.7rem] font-medium uppercase tracking-[0.25em] text-accent opacity-0 animate-entrada">NWOS · by Numen Games</span>
+			<h1 class="max-w-3xl font-display text-4xl font-normal tracking-[-0.025em] text-foreground opacity-0 animate-entrada-1 sm:text-5xl lg:text-6xl">Your organisation, ready to work with AI.</h1>
+			<p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground opacity-0 animate-entrada-2">NWOS gives your people and your AI agents one shared memory: what you are, what you decided, what is in progress. Agents do the work; your people decide. Start by seeing your own.</p>
+			<div class="mt-8 flex flex-wrap items-center gap-3 opacity-0 animate-entrada-2">
+				<a href="/velo" class="inline-flex min-h-[44px] items-center gap-2 rounded-control bg-interactivo px-6 text-sm font-medium text-white transition-colors duration-instante ease-ciclo hover:bg-interactivo-hover active:bg-interactivo-activo">
+					Try it with your organisation · {TRIAL.priceEur} €
+				</a>
+				<a href={`/workspace/${DEMO_WORKSPACE_SLUG}`} class="inline-flex min-h-[44px] items-center gap-2 rounded-control border border-border px-6 text-sm font-medium text-muted-foreground transition-colors hover:border-accent hover:text-accent">
+					{" "}
+					See an example, free{" "}
+				</a>
 			</div>
 		</div>
 	</section>
+
+	<div class="mx-auto max-w-[1100px] space-y-24 px-6 pb-24">
+		<!-- What it does -->
+		<section>
+			<div class="mb-6 flex items-center gap-3">
+				<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">What it does for you</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="grid gap-4 sm:grid-cols-2">
+				{outcomes.map((o) => (
+					<div class="rounded-marco border border-border bg-card p-6">
+						<Icon name={o.icon} size={22} class="text-accent" />
+						<h2 class="mt-3 font-display text-xl text-foreground">{o.title}</h2>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{o.text}</p>
+					</div>
+				))}
+			</div>
+			<p class="mt-5 text-sm text-muted-foreground">
+				How the pieces fit — people, agents, the shared memory — is drawn on <a href="/how-it-works" class="text-foreground underline underline-offset-4 hover:text-accent">
+					How it works
+				</a>.
+			</p>
+		</section>
+
+		<!-- The path -->
+		<section id="path">
+			<div class="mb-6 flex items-center gap-3">
+				<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">How you start</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<ol class="grid gap-4 sm:grid-cols-3">
+				{PATH.map((s) => (
+					<li class="rounded-marco border border-border bg-card p-6">
+						<span class="font-mono text-[0.7rem] tracking-[0.2em] text-dim">{s.n}</span>
+						<h3 class="mt-2 font-display text-lg text-foreground">{s.title}</h3>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+					</li>
+				))}
+			</ol>
+		</section>
+
+		<!-- Two ways on -->
+		<section id="plans">
+			<div class="mb-6 flex items-center gap-3">
+				<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">After the trial: two ways on</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="grid gap-4 md:grid-cols-2">
+				{PLANS.map((p) => (
+					<div data-plan={p.id} class:list={["flex flex-col rounded-marco border bg-card p-6", p.id === "accompanied" ? "border-accent/50" : "border-border"]}>
+						<div class="flex items-center gap-2">
+							<Icon name={p.id === "own" ? "user" : "users"} size={20} class="text-accent" />
+							<h3 class="font-display text-2xl text-foreground">{p.name}</h3>
+						</div>
+						<p class="mt-2 text-sm leading-relaxed text-muted-foreground">{p.forWhom}</p>
+						<p class="mt-5 font-display text-2xl text-foreground">
+							{p.price} <span class="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-dim">{p.priceNote}</span>
+						</p>
+						<ul class="mt-4 flex-1 space-y-2">
+							{p.includes.map((i) => (
+								<li class="flex items-start gap-2 text-sm text-muted-foreground">
+									<Icon name="check" size={16} class="mt-0.5 text-green" />
+									<span>{i}</span>
+								</li>
+							))}
+						</ul>
+						<a href={p.cta.href} class:list={["mt-6 inline-flex min-h-[44px] items-center justify-center rounded-control px-6 text-sm font-medium transition-colors", p.id === "own" ? "bg-interactivo text-white hover:bg-interactivo-hover" : "border border-border text-foreground hover:border-accent hover:text-accent"]}>
+							{p.cta.label}
+						</a>
+					</div>
+				))}
+			</div>
+
+			<!-- 8 or 16 weeks -->
+			<div class="mt-4 grid gap-4 sm:grid-cols-2">
+				{SPANS.map((s) => (
+					<div class="flex gap-4 rounded-marco border border-border/60 p-5">
+						<div class="flex-shrink-0 text-center">
+							<p class="font-display text-3xl text-foreground">{s.weeks}</p>
+							<p class="font-mono text-[0.6rem] uppercase tracking-[0.15em] text-dim">weeks</p>
+						</div>
+						<div>
+							<p class="text-sm font-semibold text-foreground">{s.title}</p>
+							<p class="mt-1 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+						</div>
+					</div>
+				))}
+			</div>
+		</section>
+
+		<!-- Proof -->
+		<section class="rounded-marco border border-border bg-card p-6 sm:p-8">
+			<p class="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-accent">We run on it</p>
+			<p class="mt-3 max-w-3xl text-base leading-relaxed text-foreground">
+				Numen Games is run this way, in public: every decision, standard, mission and report of the company, and the agents that write them, are on <a href="https://numinia.org" target="_blank" rel="noopener noreferrer" class="underline underline-offset-4 hover:text-accent">
+					numinia.org
+				</a>. What we sell is what we use.
+			</p>
+		</section>
+
+		<!-- FAQ -->
+		<section>
+			<div class="mb-6 flex items-center gap-3">
+				<span class="font-mono text-[0.7rem] uppercase tracking-[0.25em] text-accent">Questions</span>
+				<span class="h-px flex-1 bg-border"></span>
+			</div>
+			<div class="divide-y divide-border rounded-marco border border-border">
+				{FAQ.map((f) => (
+					<details class="group p-5">
+						<summary class="cursor-pointer list-none text-sm font-medium text-foreground">{f.q}</summary>
+						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{f.a}</p>
+					</details>
+				))}
+			</div>
+		</section>
+
+		<!-- Closing CTA -->
+		<section class="text-center">
+			<h2 class="font-display text-3xl text-foreground">See your organisation in NWOS.</h2>
+			<p class="mx-auto mt-3 max-w-md text-sm text-muted-foreground">Two minutes, {TRIAL.priceEur} € with VAT, and the workspace is yours.</p>
+			<div class="mt-6 flex flex-wrap justify-center gap-3">
+				<a href="/velo" class="inline-flex min-h-[44px] items-center rounded-control bg-interactivo px-6 text-sm font-medium text-white transition-colors hover:bg-interactivo-hover">
+					{" "}
+					Try it · {TRIAL.priceEur} €{" "}
+				</a>
+				<a href={contactHref("NWOS")} class="inline-flex min-h-[44px] items-center rounded-control border border-border px-6 text-sm font-medium text-muted-foreground transition-colors hover:border-accent hover:text-accent">
+					{" "}
+					Talk to us first{" "}
+				</a>
+			</div>
+		</section>
+	</div>
 </Layout>

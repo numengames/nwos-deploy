@@ -51,6 +51,7 @@ SPDX-License-Identifier = "LicenseRef-Numen-AllRightsReserved"
 [[annotations]]
 path = [
   "src/icons/check.svg",
+  "src/icons/coffee.svg",
   "src/icons/dna.svg",
   "src/icons/file-text.svg",
   "src/icons/git-branch.svg",

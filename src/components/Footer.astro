@@ -17,6 +17,7 @@
 // software under AGPL-3.0-only, declared per path in REUSE.toml (C-005) —
 // a blanket reservation contradicted the licence it had already granted.
 // The signature is brand voice and is never translated.
+import Icon from "@/components/Icon.astro";
 import { navItems } from "@/data/navigation";
 import { socialLinks } from "@/data/social-links";
 import { HOUSE_LINKS, THIS_SITE } from "@/data/house-links";
@@ -46,6 +47,11 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 					Narrative Work OS
 				</a>
 				<p class="mx-auto mt-2 max-w-xs text-sm text-muted-foreground sm:mx-0">The service: a workspace for your organisation, generated from the NWOS mould. Markdown, git and agents — nothing proprietary.</p>
+				<!-- STD-037 SIT-001: every house footer invites support in plain sight.
+				     Sold on numinia.com only (OPS-014), so it opens there. -->
+				<a href="https://numinia.com/support/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex min-h-[44px] items-center gap-2 rounded-[6px] border border-accent px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent/10 sm:min-h-[40px]">
+					<Icon name="coffee" size={18} /> Support Numinia
+				</a>
 			</div>
 
 			<nav aria-label="Navigation" class="flex flex-col gap-2">

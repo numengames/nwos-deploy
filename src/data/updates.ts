@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.10.0",
+		date: "2026-09-30",
+		entries: [
+			{
+				type: "ADD",
+				text: "The footer carries a button with a coffee cup, Support Numinia, under the line that says what this site is. It opens numinia.com/support, where you can buy Numinia a coffee. The same button is in the footer of all four sites.",
+			},
+		],
+	},
+	{
 		version: "v0.9.0",
 		date: "2026-09-30",
 		entries: [

@@ -9,7 +9,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { TRIAL } from "@/data/trial";
-import { PATH, PLANS, SPANS, FAQ, contactHref, CONTACT_EMAIL } from "@/data/offer";
+import { PATH, PLANS, PACKAGES, NO_LOCK_IN, FAQ, QUARTER_PLAN, QUARTER_WEEKS, contactHref, CONTACT_EMAIL, instalments } from "@/data/offer";
 
 const read = (p: string) => readFileSync(path.resolve(__dirname, "..", p), "utf8");
 
@@ -24,8 +24,47 @@ describe("the offer", () => {
 		expect(PLANS.find((p) => p.id === "accompanied")!.includes.join(" ")).toMatch(/contact person/);
 	});
 
-	it("the accompanied service comes in 8 or 16 weeks", () => {
-		expect(SPANS.map((s) => s.weeks)).toEqual([8, 16]);
+	it("the accompaniment comes by the quarter, in two packages: 1 + 1 and 3 + 1", () => {
+		expect(PACKAGES.map((p) => [p.build, p.follow])).toEqual([
+			[1, 1],
+			[3, 1],
+		]);
+	});
+
+	it("80 % before the first quarter, 20 % before the follow-up, adding up to the price", () => {
+		for (const p of PACKAGES) {
+			const { upfront, followUp } = instalments(p);
+			expect(upfront + followUp).toBe(p.priceEur);
+			expect(upfront / p.priceEur).toBeCloseTo(0.8, 2);
+		}
+		expect(instalments(PACKAGES[0]!)).toEqual({ upfront: 12000, followUp: 3000 });
+	});
+
+	it("each package names its hours of training, implementation and follow-up", () => {
+		for (const p of PACKAGES) for (const h of Object.values(p.hours)) expect(h).toBeGreaterThan(0);
+		// three build quarters buy three times the training and implementation of one
+		expect(PACKAGES[1]!.hours.training).toBe(PACKAGES[0]!.hours.training * 3);
+		expect(PACKAGES[1]!.hours.implementation).toBe(PACKAGES[0]!.hours.implementation * 3);
+	});
+
+	it("a quarter: kick-off, analysis, then at least two build → test → feedback cycles, inside 13 weeks", () => {
+		for (const ph of QUARTER_PLAN) {
+			expect(ph.from).toBeGreaterThanOrEqual(1);
+			expect(ph.to).toBeLessThanOrEqual(QUARTER_WEEKS);
+			expect(ph.to).toBeGreaterThanOrEqual(ph.from);
+		}
+		const kinds = QUARTER_PLAN.map((p) => p.kind);
+		expect(kinds[0]).toBe("meet");
+		expect(kinds).toContain("analysis");
+		for (const k of ["build", "test", "feedback"] as const) expect(kinds.filter((x) => x === k).length).toBeGreaterThanOrEqual(2);
+		const analysis = QUARTER_PLAN.find((p) => p.kind === "analysis")!;
+		const firstBuild = QUARTER_PLAN.find((p) => p.kind === "build")!;
+		expect(firstBuild.from).toBeGreaterThan(analysis.to);
+	});
+
+	it("says there is no lock-in", () => {
+		expect(NO_LOCK_IN.length).toBeGreaterThanOrEqual(3);
+		expect(NO_LOCK_IN.map((n) => n.text).join(" ")).toMatch(/you own/);
 	});
 
 	it("says the trial is deducted and refunded if it fails", () => {
@@ -48,6 +87,8 @@ describe("the pages", () => {
 		expect(home).toMatch(/from "@\/data\/offer"/);
 		expect(home).not.toMatch(/\b29\s*€/);
 		expect(home).toMatch(/id="plans"/);
+		expect(home).toMatch(/id="no-lock-in"/);
+		expect(home).not.toMatch(/15[.,]000|40[.,]000/);
 	});
 
 	it("how it works draws the organisation, people, agents, models and the shared memory", () => {

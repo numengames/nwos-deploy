@@ -27,6 +27,24 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.12.0",
+		date: "2026-09-30",
+		entries: [
+			{
+				type: "CHG",
+				text: "The accompanied plan comes by the quarter, in two packages. 1 + 1 is a quarter of implementation and one of follow-up, 15,000 € + VAT. 3 + 1 is three quarters and one of follow-up, 40,000 € + VAT. 80 % is paid before starting and 20 % before the follow-up. Each package names its hours of training, implementation and follow-up.",
+			},
+			{
+				type: "ADD",
+				text: "How a quarter runs, drawn week by week: a kick-off, three weeks of analysis with your departments and people, then two cycles of build, test and feedback — because in three months something always stops working or changes — and a quarter review. The lighter follow-up quarter comes after.",
+			},
+			{
+				type: "ADD",
+				text: "Zero lock-in: your files in your repository, your team trained, your models your choice, and nothing to renew. We accompany you so that you stop needing us.",
+			},
+		],
+	},
+	{
 		version: "v0.11.0",
 		date: "2026-09-30",
 		entries: [

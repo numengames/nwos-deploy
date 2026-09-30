@@ -28,8 +28,8 @@ describe("the archive's name", () => {
 		expect(lock).not.toContain(OLD);
 	});
 
-	it("the landing page links the archive by its current name", () => {
-		const page = readFileSync("src/pages/index.astro", "utf8");
+	it("the page that explains the system links the archive by its current name", () => {
+		const page = readFileSync("src/pages/how-it-works.astro", "utf8");
 		expect(page).toContain(NEW);
 		expect(page).not.toContain(OLD);
 	});

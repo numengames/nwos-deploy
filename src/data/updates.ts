@@ -27,6 +27,28 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.11.0",
+		date: "2026-09-30",
+		entries: [
+			{
+				type: "CHG",
+				text: "The home page now sells. It says what NWOS does for an organisation — it remembers, agents that know you, people decide, yours in plain files — and how you start: a trial for 29 €, then two ways on. On your own, or accompanied for 8 or 16 weeks by a contact person with Christian, María and Pablo behind them. The 29 € comes off the first invoice.",
+			},
+			{
+				type: "ADD",
+				text: "How it works (/how-it-works) explains the whole system. It draws the organisation, the people, the agents and the models as layers, with the person between the agents and the organisation and the shared memory crossing every layer. Then the three steps an agent takes each session, what a workspace holds, the layers underneath and the principles. The old technical home page lives here now, rewritten in plain words.",
+			},
+			{
+				type: "CHG",
+				text: "The bar has four entries: NWOS, How it works, Plans, and Try it · 29 €. On a tablet or a phone they open from the menu button.",
+			},
+			{
+				type: "ADD",
+				text: "The trial can be paid, in Stripe's test mode for now: the button reads \"Pay 29 € and create my workspace\" and takes you to Stripe's page.",
+			},
+		],
+	},
+	{
 		version: "v0.10.0",
 		date: "2026-09-30",
 		entries: [

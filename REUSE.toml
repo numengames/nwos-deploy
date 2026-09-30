@@ -50,6 +50,11 @@ SPDX-License-Identifier = "LicenseRef-Numen-AllRightsReserved"
 # the bar, the mode switch and the landing's icons. Phosphor is MIT.
 [[annotations]]
 path = [
+  "src/icons/archive.svg",
+  "src/icons/arrows-clockwise.svg",
+  "src/icons/book-open.svg",
+  "src/icons/buildings.svg",
+  "src/icons/calendar-blank.svg",
   "src/icons/check.svg",
   "src/icons/coffee.svg",
   "src/icons/dna.svg",
@@ -61,7 +66,10 @@ path = [
   "src/icons/moon-stars.svg",
   "src/icons/package.svg",
   "src/icons/robot.svg",
+  "src/icons/shield-check.svg",
   "src/icons/sun.svg",
+  "src/icons/user.svg",
+  "src/icons/users.svg",
   "src/icons/warning.svg",
   "src/icons/x.svg",
 ]

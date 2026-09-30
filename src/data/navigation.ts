@@ -8,6 +8,6 @@ export type NavChild = {
 
 export type NavItem = { label: string; href: string; id: string; children?: never } | { label: string; href?: never; id: string; children: NavChild[] };
 
-// El header ya enlaza "/" (logo) y "/velo" (Try NWOS) de forma fija;
+// El header ya enlaza "/", "/how-it-works", "/#plans" y "/velo" de forma fija;
 // aquí solo van entradas adicionales.
 export const navItems: NavItem[] = [];

@@ -22,7 +22,9 @@ const { activeNav } = Astro.props;
 
 const entries = [
 	{ id: "nwos", label: "NWOS", href: "/", icon: "package" },
-	{ id: "velo", label: "Deploy", href: "/velo", icon: "lightning" },
+	{ id: "how", label: "How it works", href: "/how-it-works", icon: "book-open" },
+	{ id: "plans", label: "Plans", href: "/#plans", icon: "users" },
+	{ id: "velo", label: "Try it · 29 €", href: "/velo", icon: "lightning" },
 ];
 
 // The bar's own text style: Mono, uppercase, tracked — type.etiqueta.
@@ -34,7 +36,7 @@ const etiqueta = "font-mono text-[0.7rem] uppercase tracking-[0.15em]";
 		<a href="/" aria-label="Numen Games" class="wordmark flex min-h-[44px] items-center text-foreground transition-colors hover:text-accent" set:html={wordmark} />
 
 		<div class="flex items-center gap-1">
-			<div class="hidden items-center gap-1 sm:flex">
+			<div class="hidden items-center gap-1 md:flex">
 				{
 					entries.map((e) => (
 						<a href={e.href} aria-current={activeNav === e.id ? "page" : undefined} class:list={["flex min-h-[44px] items-center gap-2 px-3 transition-colors", etiqueta, activeNav === e.id ? "border-b-2 border-teal text-foreground" : "border-b-2 border-transparent text-muted-foreground hover:text-foreground"]}>
@@ -46,13 +48,13 @@ const etiqueta = "font-mono text-[0.7rem] uppercase tracking-[0.15em]";
 
 			<!-- The mode switch (DSN-016): the icon shows where a tap leads —
 			     moon with stars to the night, sun to the day. -->
-			<button type="button" data-mode-switch class="flex h-11 w-11 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-card hover:text-foreground sm:ml-1" aria-label="Colour mode: day or night" title="Colour mode: day or night">
+			<button type="button" data-mode-switch class="flex h-11 w-11 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-card hover:text-foreground md:ml-1" aria-label="Colour mode: day or night" title="Colour mode: day or night">
 				<span class="solo-diurno"><Icon name="moon-stars" size={18} /></span>
 				<span class="solo-nocturno"><Icon name="sun" size={18} /></span>
 			</button>
 
 			<!-- Mobile: the button that opens the full-screen panel -->
-			<button id="mobile-menu-btn" class="flex h-11 w-11 items-center justify-center rounded-control border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground sm:hidden" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
+			<button id="mobile-menu-btn" class="flex h-11 w-11 items-center justify-center rounded-control border border-border text-muted-foreground transition-colors hover:bg-card hover:text-foreground md:hidden" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
 				<span data-icon-open><Icon name="list" size={18} /></span>
 				<span data-icon-close class="hidden"><Icon name="x" size={18} /></span>
 			</button>
@@ -63,7 +65,7 @@ const etiqueta = "font-mono text-[0.7rem] uppercase tracking-[0.15em]";
 <!-- Outside <nav> on purpose: the bar's backdrop-filter makes it the
      containing block of any position:fixed child, which would collapse
      this panel to the bar's height. -->
-<div id="mobile-menu" class="fixed inset-x-0 bottom-0 top-14 z-40 hidden overflow-y-auto bg-background/95 backdrop-blur-xl sm:hidden">
+<div id="mobile-menu" class="fixed inset-x-0 bottom-0 top-14 z-40 hidden overflow-y-auto bg-background/95 backdrop-blur-xl md:hidden">
 	<div class="mx-auto flex max-w-[1100px] flex-col gap-1 px-6 py-4">
 		{
 			entries.map((e) => (

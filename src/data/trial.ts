@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// The paid trial, as numinia-archive's record says it (operations/OPS-015
-// NWOS paid trial — the offer; STD-033 PAY-003: the site reads the price
-// from the record). Change the record first, then this file.
+// The paid trial — the one place its terms live. Every workspace costs the
+// house an AI model's work, so the trial is sold: 29 EUR with VAT, one
+// payment, one workspace; deducted from a later NWOS contract; refunded in
+// full (by hand) if generation fails. The form and the route read it here.
 //
 // `link` is the processor's payment link an Oracle creates (PRO-020 step 5).
 // A payment link is not a key. Empty means nothing is on sale: the form
@@ -15,15 +16,12 @@ export interface Trial {
 	readonly currency: "eur";
 	/** https://buy.stripe.com/… — empty until an Oracle creates it. */
 	readonly link: string;
-	/** The offer record in numinia-archive. */
-	readonly record: string;
 }
 
 export const TRIAL: Trial = {
 	priceEur: 29,
 	currency: "eur",
 	link: "",
-	record: "https://numinia.org/operations/ops-015-nwos-paid-trial-the-offer",
 };
 
 /** On sale only with an https payment link. */

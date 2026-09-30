@@ -217,7 +217,7 @@ export const POST: APIRoute = async ({ request }) => {
 		// Step 2 — back from the processor with only the session id. The
 		// organisation's name and the email come from the paid session
 		// itself, never from the browser, so a payment buys exactly the
-		// workspace it was made for (OPS-015).
+		// workspace it was made for.
 		if (sessionId) {
 			if (!stripeKey || !trialOnSale()) return json({ error: "The trial is not on sale yet" }, 503);
 			const paid = await checkPaidSession(sessionId, TRIAL, stripeKey);
@@ -266,7 +266,7 @@ export const POST: APIRoute = async ({ request }) => {
 			return new Response(JSON.stringify({ error: "Server configuration incomplete" }), { status: 500, headers: { "Content-Type": "application/json" } });
 		}
 
-		// The trial is paid (OPS-015): with no payment link nothing is on sale
+		// The trial is paid (src/data/trial.ts): with no payment link nothing is on sale
 		// and no workspace is generated — the model is never called for free.
 		if (!trialOnSale()) {
 			return json({ error: "The trial is not on sale yet" }, 503);

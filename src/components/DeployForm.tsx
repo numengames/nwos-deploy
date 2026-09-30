@@ -153,7 +153,7 @@ export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolea
 			{/* Error */}
 			{status === "error" && <div className="rounded-marco border border-grana/30 bg-grana/10 p-3 text-sm text-coral">{errorMsg}</div>}
 
-			{/* Price — OPS-015: named before paying, VAT included */}
+			{/* Price — named before paying, VAT included */}
 			<div data-trial-price className="rounded-marco border border-border bg-card p-4">
 				<div className="flex items-baseline justify-between gap-3">
 					<span className="font-display text-3xl text-foreground">{TRIAL.priceEur} €</span>

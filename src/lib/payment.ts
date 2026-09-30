@@ -10,7 +10,7 @@
 // carries the organisation's name (client_reference_id, set by the form
 // before paying) and the payer's email: the workspace is built from those,
 // not from anything the browser sends back. The model is called only after
-// this says yes (OPS-015 §2).
+// this says yes.
 
 import { decodeReference, type Trial } from "@/data/trial";
 

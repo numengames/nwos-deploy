@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// The paid trial (numinia-archive OPS-015). The model is called only after
+// The paid trial (src/data/trial.ts). The model is called only after
 // the processor itself says the workspace was paid for; everything before
 // that point is pinned here with doubles for Stripe and GitHub.
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -19,7 +19,7 @@ function session(over: Record<string, unknown> = {}) {
 const stripeAnswer = (body: unknown, status = 200) => vi.fn(async () => new Response(JSON.stringify(body), { status })) as unknown as typeof fetch;
 
 describe("the trial record", () => {
-	it("costs 29 EUR with VAT, as OPS-015 says", () => {
+	it("costs 29 EUR with VAT", () => {
 		expect(TRIAL.priceEur).toBe(29);
 		expect(TRIAL.currency).toBe("eur");
 	});

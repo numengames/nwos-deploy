@@ -70,7 +70,7 @@ export const PLANS: readonly Plan[] = [
 		forWhom: "For organisations that want help bringing AI into how they work, designed for them.",
 		price: "By the quarter",
 		priceNote: "two packages below",
-		includes: ["One contact person who carries the day-to-day with you", "The team behind them — Christian, María and Pablo — on the implementation", "We train your team, learn your processes and find where AI adds most value: what to improve, what to automate, which tools to use", "We build the specific pieces — agents, protocols, documents — and leave the work flowing", "Weekly progress you can read in your own workspace"],
+		includes: ["One contact person who carries the day-to-day with you", "Our team behind them on the implementation", "We train your team, learn your processes and find where AI adds most value: what to improve, what to automate, which tools to use", "We build the specific pieces — agents, protocols, documents — and leave the work flowing", "Weekly progress you can read in your own workspace"],
 		cta: { label: "Talk to us", href: contactHref("NWOS — accompanied") },
 	},
 ];

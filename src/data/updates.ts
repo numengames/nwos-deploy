@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.13.0",
+		date: "2026-09-30",
+		entries: [
+			{
+				type: "CHG",
+				text: "The accompanied plan no longer names people: one contact person, with our team behind them on the implementation.",
+			},
+		],
+	},
+	{
 		version: "v0.12.0",
 		date: "2026-09-30",
 		entries: [

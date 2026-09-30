@@ -34,7 +34,7 @@ function network(opts: { repoExists: boolean; session?: Record<string, unknown> 
 		const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
 		calls.push(url);
 		const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
-		if (url.startsWith("https://api.stripe.com/")) return reply(opts.session ?? {}, opts.session ? 200 : 404);
+		if (new URL(url).hostname === "api.stripe.com") return reply(opts.session ?? {}, opts.session ? 200 : 404);
 		if (/api\.github\.com\/repos\/org\/acme-s-l$/.test(url)) return opts.repoExists ? reply({ name: "acme-s-l" }) : reply({ message: "Not Found" }, 404);
 		return reply({ message: "unexpected in this test" }, 418);
 	});
@@ -49,8 +49,9 @@ async function post(body: unknown) {
 
 const paid = { id: SID, status: "complete", payment_status: "paid", amount_total: 2900, currency: "eur", client_reference_id: encodeReference("Acme, S.L."), customer_details: { email: "ana@acme.example" } };
 const neverModelOrCreate = (calls: string[]) => {
-	expect(calls.some((u) => u.includes("anthropic.com"))).toBe(false);
-	expect(calls.some((u) => u.includes("/generate"))).toBe(false);
+	const urls = calls.map((u) => new URL(u));
+	expect(urls.some((u) => u.hostname === "api.anthropic.com")).toBe(false);
+	expect(urls.some((u) => u.pathname.endsWith("/generate"))).toBe(false);
 };
 
 afterEach(() => {

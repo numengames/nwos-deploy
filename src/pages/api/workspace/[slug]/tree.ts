@@ -2,10 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import type { APIRoute } from "astro";
 import { errorStatus } from "@/lib/log";
-import { Octokit } from "octokit";
-import { getEnv } from "@/lib/env";
-import { keySecret, verifyWorkspaceKey } from "@/lib/token";
-import { isDemoWorkspace } from "@/lib/demo";
+import { apiJson, workspaceAccess } from "@/lib/workspace-access";
 
 export const prerender = false;
 
@@ -17,34 +14,9 @@ interface TreeItem {
 }
 
 export const GET: APIRoute = async ({ params, url }) => {
-	const { slug } = params;
-	const env = getEnv();
-	const org = env.GITHUB_ORG;
-	const token = env.GITHUB_TOKEN;
-
-	if (!org || !token) {
-		return new Response(JSON.stringify({ error: "Missing configuration" }), {
-			status: 500,
-			headers: { "Content-Type": "application/json" },
-		});
-	}
-
-	if (!slug || !/^[a-z0-9][a-z0-9-]{0,99}$/.test(slug)) {
-		return new Response(JSON.stringify({ error: "Workspace not found" }), {
-			status: 404,
-			headers: { "Content-Type": "application/json" },
-		});
-	}
-
-	const key = url.searchParams.get("key");
-	if (!isDemoWorkspace(slug) && !(await verifyWorkspaceKey(slug, key, keySecret(env)))) {
-		return new Response(JSON.stringify({ error: "Access denied" }), {
-			status: 403,
-			headers: { "Content-Type": "application/json" },
-		});
-	}
-
-	const octokit = new Octokit({ auth: token });
+	const access = await workspaceAccess(params.slug, url.searchParams.get("key"), "Workspace not found");
+	if (!access.ok) return access.response;
+	const { octokit, org, slug } = access;
 
 	try {
 		const { data } = await octokit.request("GET /repos/{owner}/{repo}/git/trees/{tree_sha}", {
@@ -56,15 +28,9 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 		const tree = buildTree(data.tree as Array<{ path?: string; type?: string }>);
 
-		return new Response(JSON.stringify({ tree }), {
-			status: 200,
-			headers: { "Content-Type": "application/json" },
-		});
+		return apiJson({ tree }, 200);
 	} catch (error) {
-		return new Response(JSON.stringify({ error: "Workspace not found" }), {
-			status: errorStatus(error) ?? 500,
-			headers: { "Content-Type": "application/json" },
-		});
+		return apiJson({ error: "Workspace not found" }, errorStatus(error) ?? 500);
 	}
 };
 

@@ -3,13 +3,19 @@
 // Clave de acceso por workspace: HMAC-SHA256(slug) con un secreto del
 // servidor. Se emite una sola vez en /api/registro y las rutas de lectura
 // (/api/workspace/*) la exigen — sin ella los repos privados no son legibles.
-// Si no hay WORKSPACE_KEY_SECRET configurado se deriva del GITHUB_TOKEN para
-// no requerir un secret adicional.
+//
+// El secreto es WORKSPACE_KEY_SECRET y solo él. Auditoría 2026-10-02: el
+// antiguo fallback al GITHUB_TOKEN ataba la clave del visor a la credencial
+// que escribe toda la organización y seguía funcionando en silencio si el
+// secreto propio nunca se configuraba. Sin él, las rutas responden
+// "Missing configuration: WORKSPACE_KEY_SECRET" y no firman ni verifican nada.
 
 const encoder = new TextEncoder();
 
-export function keySecret(env: Env): string {
-	return env.WORKSPACE_KEY_SECRET || env.GITHUB_TOKEN;
+export const MISSING_SIGNING_SECRET = "Missing configuration: WORKSPACE_KEY_SECRET";
+
+export function keySecret(env: Env): string | null {
+	return env.WORKSPACE_KEY_SECRET || null;
 }
 
 export async function signWorkspaceKey(slug: string, secret: string): Promise<string> {

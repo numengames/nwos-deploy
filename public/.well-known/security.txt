@@ -1,0 +1,6 @@
+Contact: https://github.com/numengames/nwos-deploy/security/advisories/new
+Contact: mailto:hello@numen.games
+Expires: 2027-10-02T00:00:00.000Z
+Preferred-Languages: en, es
+Canonical: https://nwos.numen.games/.well-known/security.txt
+Policy: https://github.com/numengames/nwos-deploy/blob/main/SECURITY.md

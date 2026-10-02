@@ -30,7 +30,13 @@ self-hosted. Path alias `@/*` → `src/*`. Nocturno only.
   documents with the Anthropic API, commits them, updates `STATUS.md`. The
   result is browsed at `/workspace/[slug]?key=<hmac>` — `WorkspaceViewer.tsx`
   calls `/api/workspace/[slug]/tree` and `/file`, both gated by the
-  per-workspace key (`src/lib/token.ts`) returned once at deploy time.
+  per-workspace key (`src/lib/token.ts`) returned once at deploy time AND
+  by the repository topic `nwos-workspace` the deploy sets
+  (`src/lib/workspace-marker.ts`, `src/lib/workspace-access.ts`); a
+  second topic names the purchase, so only that payment gets the key back.
+  The demo `faro-austral` is served with neither.
+- **Security headers**: `src/middleware.ts` on what the Worker renders,
+  `public/_headers` on the static files; a test keeps both in step.
 - **Design**: the kit is installed as `@numengames/design-kit` (source
   `packages/design-kit/` in numinia-nwos; its agent instruction is
   `node_modules/@numengames/design-kit/sistema.prompt.txt`).
@@ -76,7 +82,8 @@ lint fails.
 
 `GITHUB_ORG`, `GITHUB_TOKEN`, `GITHUB_TEMPLATE_REPO`, `ANTHROPIC_API_KEY`,
 `STRIPE_RESTRICTED_KEY` (read-only on Checkout Sessions; the trial is paid,
-`src/data/trial.ts` holds its price and payment link)
+`src/data/trial.ts` holds its price and payment link), `WORKSPACE_KEY_SECRET`
+(signs the viewer keys; its own secret, no fallback to `GITHUB_TOKEN`)
 (see `.env.example`), read through `getEnv(locals)` (`src/lib/env.ts`):
 `locals.runtime.env` on Workers, `import.meta.env` in `npm run dev`. In
 production they are wrangler secrets. Without them `/velo` and

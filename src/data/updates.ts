@@ -27,6 +27,24 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.14.0",
+		date: "2026-10-02",
+		entries: [
+			{
+				type: "FIX",
+				text: "A payment only ever opens the workspace it created. Paying with the name of a repository that already exists is refused, and the viewer opens only repositories made by the deploy (the public example excepted).",
+			},
+			{
+				type: "FIX",
+				text: "Workspace access keys are signed with their own secret; the server refuses to run without it instead of borrowing another credential.",
+			},
+			{
+				type: "ADD",
+				text: "Security headers on every page and answer (HTTPS only, no framing, a content policy, no referrer from the workspace viewer), and a security.txt that says where to report a vulnerability.",
+			},
+		],
+	},
+	{
 		version: "v0.13.0",
 		date: "2026-09-30",
 		entries: [

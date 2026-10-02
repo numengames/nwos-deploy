@@ -37,7 +37,7 @@
   //   ANTHROPIC_API_KEY     — canon doc generation in /api/registro
   //   STRIPE_RESTRICTED_KEY — Stripe restricted key, Checkout Sessions: read;
   //                           checks the paid trial before any generation
-  // Optional:
-  //   WORKSPACE_KEY_SECRET  — HMAC secret for workspace access keys
-  //                           (falls back to GITHUB_TOKEN if unset)
+  //   WORKSPACE_KEY_SECRET  — HMAC secret for workspace access keys; its own
+  //                           secret, never GITHUB_TOKEN (no fallback: the
+  //                           workspace routes answer 500 without it)
 }

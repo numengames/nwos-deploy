@@ -5,6 +5,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { Octokit } from "octokit";
 import { getEnv } from "@/lib/env";
 import { keySecret, signWorkspaceKey } from "@/lib/token";
+import { WORKSPACE_TOPIC, isReservedSlug, madeByPurchase, purchaseTopic } from "@/lib/workspace-marker";
 import { buildInstallTree, parseMouldSpec } from "@/lib/mould";
 import { log, errorMessage, errorStatus } from "@/lib/log";
 import { TRIAL, trialOnSale, paymentUrl, encodeReference } from "@/data/trial";
@@ -28,7 +29,7 @@ interface DeployRequest {
 	sessionId?: unknown;
 }
 
-const json = (body: unknown, status: number) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+const json = (body: unknown, status: number) => new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" } });
 
 export function sanitize(name: string): string {
 	return name
@@ -213,6 +214,7 @@ export const POST: APIRoute = async ({ request }) => {
 		const token = env.GITHUB_TOKEN;
 		const anthropicKey = env.ANTHROPIC_API_KEY;
 		const stripeKey = env.STRIPE_RESTRICTED_KEY;
+		const secret = keySecret(env);
 
 		// Step 2 — back from the processor with only the session id. The
 		// organisation's name and the email come from the paid session
@@ -260,8 +262,8 @@ export const POST: APIRoute = async ({ request }) => {
 			);
 		}
 
-		if (!org || !templateRepo || !token || !anthropicKey || !stripeKey) {
-			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY", !stripeKey && "STRIPE_RESTRICTED_KEY"].filter(Boolean).join(", ");
+		if (!org || !templateRepo || !token || !anthropicKey || !stripeKey || !secret) {
+			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY", !stripeKey && "STRIPE_RESTRICTED_KEY", !secret && "WORKSPACE_KEY_SECRET"].filter(Boolean).join(", ");
 			log.error("env.missing", { missing });
 			return new Response(JSON.stringify({ error: "Server configuration incomplete" }), { status: 500, headers: { "Content-Type": "application/json" } });
 		}
@@ -273,12 +275,19 @@ export const POST: APIRoute = async ({ request }) => {
 		}
 
 		const octokit = new Octokit({ auth: token });
-		let exists = false;
-		try {
-			await octokit.request("GET /repos/{owner}/{repo}", { owner: org, repo: slug });
-			exists = true;
-		} catch (e) {
-			if (errorStatus(e) !== 404) throw e;
+		// The demo and the template are never for sale: treated as taken
+		// without asking GitHub.
+		const reserved = isReservedSlug(slug, templateRepo);
+		let exists = reserved;
+		let topics: string[] | undefined;
+		if (!reserved) {
+			try {
+				const { data } = await octokit.request("GET /repos/{owner}/{repo}", { owner: org, repo: slug });
+				exists = true;
+				topics = (data as { topics?: string[] }).topics;
+			} catch (e) {
+				if (errorStatus(e) !== 404) throw e;
+			}
 		}
 
 		// Step 1 — no payment yet: the name must be free, then the buyer goes
@@ -291,10 +300,18 @@ export const POST: APIRoute = async ({ request }) => {
 		}
 
 		// One payment, one workspace: coming back with the same payment (a
-		// reload, another tab) returns the workspace already made.
+		// reload, another tab) returns the workspace already made — and only
+		// then. The name comes from the payment's client_reference_id, which
+		// the buyer can write by hand in the link (audit 2026-10-02): a paid
+		// session naming any other repository in the organisation — another
+		// client's workspace, a private repo of the house — gets no key.
 		if (exists) {
-			const accessKey = await signWorkspaceKey(slug, keySecret(env));
-			return json({ success: true, slug, repoUrl: `https://github.com/${org}/${slug}`, accessKey, existing: true }, 200);
+			if (!reserved && (await madeByPurchase(topics, sessionId))) {
+				const accessKey = await signWorkspaceKey(slug, secret);
+				return json({ success: true, slug, repoUrl: `https://github.com/${org}/${slug}`, accessKey, existing: true }, 200);
+			}
+			log.warn("deploy.name.collision", { slug, reserved });
+			return json({ error: "A workspace with that name already exists. If you paid for it, write to us and we will sort it out." }, 409);
 		}
 		log.info("deploy.paid", { slug, session: sessionId });
 
@@ -317,6 +334,17 @@ export const POST: APIRoute = async ({ request }) => {
 				return new Response(JSON.stringify({ error: "A workspace with that name already exists" }), { status: 422, headers: { "Content-Type": "application/json" } });
 			}
 			throw error;
+		}
+
+		// Mark the repository before anything else: it is a workspace, made
+		// by this purchase. The viewer reads only marked repositories, and
+		// only this session gets the key back on a reload. Without the
+		// marker the workspace could never be opened: abort.
+		try {
+			await octokit.request("PUT /repos/{owner}/{repo}/topics", { owner: org, repo: slug, names: [WORKSPACE_TOPIC, await purchaseTopic(sessionId)] });
+		} catch (e) {
+			log.error("deploy.abort", { repo: `${org}/${slug}`, reason: "cannot mark the repository as a workspace", error: errorMessage(e) });
+			return json({ error: "Deployment aborted: the workspace could not be registered. A partial repository was created; contact the team before trying again." }, 500);
 		}
 
 		// Wait for GitHub to finish copying files
@@ -507,7 +535,7 @@ export const POST: APIRoute = async ({ request }) => {
 		}
 
 		const repoUrl = `https://github.com/${org}/${slug}`;
-		const accessKey = await signWorkspaceKey(slug, keySecret(env));
+		const accessKey = await signWorkspaceKey(slug, secret);
 
 		return new Response(JSON.stringify({ success: true, slug, repoUrl, accessKey }), { status: 200, headers: { "Content-Type": "application/json" } });
 	} catch (error) {

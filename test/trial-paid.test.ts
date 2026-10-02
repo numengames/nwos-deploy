@@ -16,8 +16,9 @@ vi.mock("@/data/trial", async (orig) => {
 
 const { POST } = await import("@/pages/api/registro");
 const { encodeReference } = await import("@/data/trial");
+const { WORKSPACE_TOPIC, purchaseTopic } = await import("@/lib/workspace-marker");
 
-const FULL = { GITHUB_ORG: "org", GITHUB_TOKEN: "ghp_x", GITHUB_TEMPLATE_REPO: "tpl", ANTHROPIC_API_KEY: "sk-ant-x", STRIPE_RESTRICTED_KEY: "rk_x" };
+const FULL = { GITHUB_ORG: "org", GITHUB_TOKEN: "ghp_x", GITHUB_TEMPLATE_REPO: "tpl", ANTHROPIC_API_KEY: "sk-ant-x", STRIPE_RESTRICTED_KEY: "rk_x", WORKSPACE_KEY_SECRET: "wks_x" };
 const valid = { companyName: "Acme, S.L.", email: "ana@acme.example", acceptedTerms: true };
 const SID = "cs_test_a1B2c3D4e5F6g7H8";
 
@@ -28,14 +29,14 @@ function setEnv(env: Record<string, string> = {}) {
 }
 
 /** fetch double: answers by URL; records every URL asked. */
-function network(opts: { repoExists: boolean; session?: Record<string, unknown> }) {
+function network(opts: { repoExists: boolean; session?: Record<string, unknown>; topics?: string[] }) {
 	const calls: string[] = [];
 	const spy = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
 		const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
 		calls.push(url);
 		const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 		if (new URL(url).hostname === "api.stripe.com") return reply(opts.session ?? {}, opts.session ? 200 : 404);
-		if (/api\.github\.com\/repos\/org\/acme-s-l$/.test(url)) return opts.repoExists ? reply({ name: "acme-s-l" }) : reply({ message: "Not Found" }, 404);
+		if (/api\.github\.com\/repos\/org\/acme-s-l$/.test(url)) return opts.repoExists ? reply({ name: "acme-s-l", topics: opts.topics ?? [] }) : reply({ message: "Not Found" }, 404);
 		return reply({ message: "unexpected in this test" }, 418);
 	});
 	return { calls, spy };
@@ -102,7 +103,7 @@ describe("step 2 — back from the processor", () => {
 
 	it("the workspace is the one PAID for: a name sent by the browser beside the session is ignored", async () => {
 		setEnv(FULL);
-		const { calls } = network({ repoExists: true, session: paid });
+		const { calls } = network({ repoExists: true, session: paid, topics: [WORKSPACE_TOPIC, await purchaseTopic(SID)] });
 		const r = await post({ companyName: "Someone Else", email: "x@y.example", acceptedTerms: true, sessionId: SID });
 		expect(r.json.slug).toBe("acme-s-l");
 		neverModelOrCreate(calls);
@@ -110,11 +111,67 @@ describe("step 2 — back from the processor", () => {
 
 	it("the same payment again (a reload) → the workspace already made, the model not paid twice", async () => {
 		setEnv(FULL);
-		const { calls } = network({ repoExists: true, session: paid });
+		const { calls } = network({ repoExists: true, session: paid, topics: [WORKSPACE_TOPIC, await purchaseTopic(SID)] });
 		const r = await post({ sessionId: SID });
 		expect(r.status).toBe(200);
 		expect(r.json).toMatchObject({ success: true, slug: "acme-s-l", existing: true });
 		expect(typeof r.json.accessKey).toBe("string");
+		neverModelOrCreate(calls);
+	});
+});
+
+// Audit 2026-10-02: the organisation's name travels in the payment link's
+// client_reference_id, which the buyer writes. A paid session naming a
+// repository that already exists in the organisation must never buy a key
+// to it — only the purchase that created a workspace may get its key back.
+describe("step 2 — a paid session naming a repository it did not create", () => {
+	it("an existing repository with no workspace marker (any other repo in the org) → 409, no key", async () => {
+		setEnv(FULL);
+		const { calls } = network({ repoExists: true, session: paid, topics: [] });
+		const r = await post({ sessionId: SID });
+		expect(r.status).toBe(409);
+		expect(r.json.accessKey).toBeUndefined();
+		expect(r.json.success).toBeUndefined();
+		neverModelOrCreate(calls);
+	});
+
+	it("another buyer's workspace (marked, but by another payment) → 409, no key", async () => {
+		setEnv(FULL);
+		const { calls } = network({ repoExists: true, session: paid, topics: [WORKSPACE_TOPIC, await purchaseTopic("cs_test_SomeoneElse0001")] });
+		const r = await post({ sessionId: SID });
+		expect(r.status).toBe(409);
+		expect(r.json.accessKey).toBeUndefined();
+		neverModelOrCreate(calls);
+	});
+
+	it("the purchase marker alone, without the workspace topic, is not enough → 409", async () => {
+		setEnv(FULL);
+		network({ repoExists: true, session: paid, topics: [await purchaseTopic(SID)] });
+		const r = await post({ sessionId: SID });
+		expect(r.status).toBe(409);
+		expect(r.json.accessKey).toBeUndefined();
+	});
+
+	it("a name that is the template or the public demo → refused before GitHub is asked", async () => {
+		for (const name of ["tpl", "Faro Austral"]) {
+			setEnv(FULL);
+			const { calls } = network({ repoExists: false, session: { ...paid, client_reference_id: encodeReference(name) } });
+			const r = await post({ sessionId: SID });
+			expect(r.status).toBe(409);
+			expect(r.json.accessKey).toBeUndefined();
+			neverModelOrCreate(calls);
+			vi.restoreAllMocks();
+		}
+	});
+
+	it("no WORKSPACE_KEY_SECRET on the server → 500 before any repository is created", async () => {
+		const { WORKSPACE_KEY_SECRET: _drop, ...noSecret } = FULL;
+		void _drop;
+		setEnv(noSecret);
+		const { calls } = network({ repoExists: false, session: paid });
+		const r = await post({ sessionId: SID });
+		expect(r.status).toBe(500);
+		expect(r.json.accessKey).toBeUndefined();
 		neverModelOrCreate(calls);
 	});
 });

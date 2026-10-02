@@ -12,6 +12,13 @@ updates:
     open-pull-requests-limit: 10
     commit-message:
       prefix: "chore(deps)"
+    # The one exception to "latest": `astro check` (@astrojs/check) does not
+    # support TypeScript 7 yet, so a TS major turns type-check red and stalls
+    # the whole dev-tooling group (PR #66). Lift this when @astrojs/check
+    # declares TS 7 support.
+    ignore:
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
     groups:
       astro:
         patterns: ["astro", "@astrojs/*"]

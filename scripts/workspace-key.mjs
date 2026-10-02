@@ -19,7 +19,13 @@ const env = Object.fromEntries(
 		.map((l) => [l.slice(0, l.indexOf("=")), l.slice(l.indexOf("=") + 1).trim()]),
 );
 
-const secret = env.WORKSPACE_KEY_SECRET || env.GITHUB_TOKEN;
+// Solo WORKSPACE_KEY_SECRET: el servidor ya no acepta claves firmadas con el
+// GITHUB_TOKEN (src/lib/token.ts).
+const secret = env.WORKSPACE_KEY_SECRET;
+if (!secret) {
+	console.error("Missing configuration: WORKSPACE_KEY_SECRET (.env)");
+	process.exit(1);
+}
 const key = crypto.createHmac("sha256", secret).update(`nwos-workspace:${slug}`).digest("hex");
 
 console.log(`https://nwos.numen.games/workspace/${slug}?key=${key}`);

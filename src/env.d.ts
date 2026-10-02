@@ -10,8 +10,9 @@ type Env = {
 	// Clave restringida del procesador de pagos (Stripe): solo lectura de
 	// Checkout Sessions. Comprueba que la prueba está pagada (OPS-015).
 	STRIPE_RESTRICTED_KEY: string;
-	// Opcional: secreto para firmar las claves de acceso a los workspaces.
-	// Si falta, se deriva del GITHUB_TOKEN (ver src/lib/token.ts).
+	// Secreto propio para firmar las claves de acceso a los workspaces.
+	// Obligatorio: sin él /api/registro y /api/workspace/* responden 500
+	// (ver src/lib/token.ts). Nunca se deriva del GITHUB_TOKEN.
 	WORKSPACE_KEY_SECRET?: string;
 };
 

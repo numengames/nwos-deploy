@@ -21,7 +21,7 @@ function setEnv(env: Record<string, string> = {}) {
 	for (const key of Object.keys(binding)) delete binding[key];
 	Object.assign(binding, env);
 }
-const FULL = { GITHUB_ORG: "org", GITHUB_TOKEN: "ghp_x", GITHUB_TEMPLATE_REPO: "tpl", ANTHROPIC_API_KEY: "sk-ant-x", STRIPE_RESTRICTED_KEY: "rk_x" };
+const FULL = { GITHUB_ORG: "org", GITHUB_TOKEN: "ghp_x", GITHUB_TEMPLATE_REPO: "tpl", ANTHROPIC_API_KEY: "sk-ant-x", STRIPE_RESTRICTED_KEY: "rk_x", WORKSPACE_KEY_SECRET: "wks_x" };
 const valid = { companyName: "Acme, S.L.", email: "ana@acme.example", acceptedTerms: true };
 
 async function post(body: unknown) {

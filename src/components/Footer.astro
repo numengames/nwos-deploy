@@ -10,8 +10,14 @@
 //   brand + one line    Navigation    Numen Games       Legal
 //                                     (the four sites)  Social
 //   ────────────────────────────────────────────────────────────
-//   scarab  by Numen Games — we build for a better future.
+//   scarab  by Numen Games — we build for a better future.        skull
 //           licence · telemetry · version · commit
+//
+// The skull at the end of the closing line keeps the epitaph: the
+// manifesto closes on it (canon CAN-002), so every page does too. Hover,
+// focus or a tap shows it; Escape closes it. English everywhere, like the
+// signature, and never "fixed": "did not let us alone" is literal on
+// purpose.
 //
 // No copyright line and no "all rights reserved": this service is free
 // software under AGPL-3.0-only, declared per path in REUSE.toml (C-005) —
@@ -26,6 +32,11 @@ import { VERSION, COMMIT_SHA, COMMIT_URL, LICENSE_URL } from "@/lib/build-info";
 // The scarab closes every piece, never opens it. Local copy of the mark
 // (reserved, see REUSE.toml) until a brand package exists to install from.
 import scarab from "@/brand/Khepri_Logo.svg?raw";
+
+// Phosphor "skull", regular weight (MIT), exactly as STD-037 gives it.
+const skull = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M92,104a28,28,0,1,0,28,28A28,28,0,0,0,92,104Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,92,144Zm72-40a28,28,0,1,0,28,28A28,28,0,0,0,164,104Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,164,144ZM128,16C70.65,16,24,60.86,24,116c0,34.1,18.27,66,48,84.28V216a16,16,0,0,0,16,16h80a16,16,0,0,0,16-16V200.28C213.73,182,232,150.1,232,116,232,60.86,185.35,16,128,16Zm44.12,172.69a8,8,0,0,0-4.12,7V216H152V192a8,8,0,0,0-16,0v24H120V192a8,8,0,0,0-16,0v24H88V195.69a8,8,0,0,0-4.12-7C56.81,173.69,40,145.84,40,116c0-46.32,39.48-84,88-84s88,37.68,88,84C216,145.83,199.19,173.69,172.12,188.69Z"/></svg>`;
+// Canon CAN-002: the manifesto closes on this epitaph.
+const EPITAPH = "They dreamed and experimented life, they imagined and took action. They were part of the fight to change the model, they did not let us alone, they built a game with which to create a better world.";
 
 // Navigation: the header's items plus the deploy page the header does not
 // list. Two columns once it is long.
@@ -47,10 +58,10 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 					Narrative Work OS
 				</a>
 				<p class="mx-auto mt-2 max-w-xs text-sm text-muted-foreground sm:mx-0">The service: a workspace for your organisation, generated from the NWOS mould. Markdown, git and agents — nothing proprietary.</p>
-				<!-- STD-037 SIT-001: every house footer invites support in plain sight.
-				     Sold on numinia.com only (OPS-014), so it opens there. -->
-				<a href="https://numinia.com/support/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex min-h-[44px] items-center gap-2 rounded-[6px] border border-accent px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent/10 sm:min-h-[40px]">
-					<Icon name="coffee" size={18} /> Support Numinia
+				<!-- STD-037 SIT-001: every house footer invites patronage in plain sight.
+				     Sold on numinia.com only (OPS-014), so it opens there, at /back. -->
+				<a href="https://numinia.com/back/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex min-h-[44px] items-center gap-2 rounded-[6px] border border-accent px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent/10 sm:min-h-[40px]">
+					<Icon name="coffee" size={18} /> Back Numinia
 				</a>
 			</div>
 
@@ -137,14 +148,77 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 					)}
 				</p>
 			</div>
+			<div class="epitafio relative sm:ml-auto" data-epitaph>
+				<button type="button" aria-label="Epitaph" aria-expanded="false" aria-describedby="footer-epitaph" class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[6px] text-dim transition-colors hover:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:min-h-[32px] sm:min-w-[32px]" data-epitaph-toggle>
+					<span class="calavera inline-flex" aria-hidden="true" set:html={skull} />
+				</button>
+				<p id="footer-epitaph" role="tooltip" class="epitafio-texto absolute bottom-full left-1/2 z-10 mb-2 w-max max-w-[32ch] -translate-x-1/2 rounded-[8px] border border-border bg-card px-3 py-2 text-left text-sm italic text-card-foreground shadow-lg sm:left-auto sm:right-0 sm:translate-x-0">
+					{EPITAPH}
+				</p>
+			</div>
 		</div>
 	</div>
 </footer>
+
+<script>
+	// The epitaph (CAN-002): hover or focus shows it (CSS), a click or tap
+	// pins it open or closed, Escape closes it. No navigation.
+	for (const box of document.querySelectorAll<HTMLElement>("[data-epitaph]")) {
+		const btn = box.querySelector<HTMLButtonElement>("[data-epitaph-toggle]");
+		if (!btn) continue;
+		const set = (open: boolean) => {
+			btn.setAttribute("aria-expanded", String(open));
+			box.toggleAttribute("data-open", open);
+		};
+		btn.addEventListener("click", () => {
+			box.removeAttribute("data-dismissed");
+			set(btn.getAttribute("aria-expanded") !== "true");
+		});
+		box.addEventListener("keydown", (event) => {
+			if (event.key !== "Escape") return;
+			set(false);
+			box.setAttribute("data-dismissed", "");
+		});
+		box.addEventListener("mouseleave", () => box.removeAttribute("data-dismissed"));
+		btn.addEventListener("blur", () => box.removeAttribute("data-dismissed"));
+	}
+</script>
 
 <style>
 	/* The mark in muted ink, 28px, never in colour. */
 	.escarabajo :global(svg) {
 		width: 28px;
 		height: 28px;
+	}
+
+	/* The skull in the same muted ink, 20px, never in colour. */
+	.calavera :global(svg) {
+		width: 20px;
+		height: 20px;
+	}
+
+	/* The epitaph: hidden until hover, keyboard focus or a tap pins it.
+	   Escape dismisses it even while hovered or focused. */
+	.epitafio-texto {
+		visibility: hidden;
+		opacity: 0;
+		transition:
+			opacity 150ms ease,
+			visibility 150ms;
+	}
+	.epitafio:hover .epitafio-texto,
+	.epitafio:has(button:focus-visible) .epitafio-texto,
+	.epitafio[data-open] .epitafio-texto {
+		visibility: visible;
+		opacity: 1;
+	}
+	.epitafio[data-dismissed]:not([data-open]) .epitafio-texto {
+		visibility: hidden;
+		opacity: 0;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.epitafio-texto {
+			transition: none;
+		}
 	}
 </style>

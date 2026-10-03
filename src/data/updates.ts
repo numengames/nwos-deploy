@@ -27,6 +27,24 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.15.0",
+		date: "2026-10-03",
+		entries: [
+			{
+				type: "ADD",
+				text: "A small skull closes the footer, at the end of the line with the scarab and the build. Point at it, focus it or tap it and it shows the epitaph the manifesto ends on. Escape closes it. The same skull is on all four sites.",
+			},
+			{
+				type: "CHG",
+				text: "The coffee button in the footer now reads Back Numinia and opens numinia.com/back, where the patronage moved.",
+			},
+			{
+				type: "ADD",
+				text: "Discord in the footer's Social column: the Numinia server, after GitHub.",
+			},
+		],
+	},
+	{
 		version: "v0.14.0",
 		date: "2026-10-02",
 		entries: [
@@ -259,7 +277,7 @@ export const UPDATES: readonly UpdateVersion[] = [
 ];
 
 export const PENDING: readonly PendingItem[] = [
-	{ status: "blocked", text: "Company accounts on X and Discord for the Social column — waiting on the Oracle." },
+	{ status: "blocked", text: "The company account on X for the Social column — waiting on the Oracle." },
 	{ status: "planned", text: "Real telemetry of the service: workspaces generated, time to first deploy. Today /telemetry says only version and commit." },
 ];
 

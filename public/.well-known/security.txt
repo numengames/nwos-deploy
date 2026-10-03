@@ -1,5 +1,5 @@
 Contact: https://github.com/numengames/nwos-deploy/security/advisories/new
-Contact: mailto:hello@numen.games
+Contact: mailto:hola@numengames.com
 Expires: 2027-10-02T00:00:00.000Z
 Preferred-Languages: en, es
 Canonical: https://nwos.numen.games/.well-known/security.txt

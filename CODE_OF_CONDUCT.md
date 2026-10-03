@@ -28,7 +28,7 @@ Every project space — repository, issues, pull requests, discussions — and w
 
 ## Enforcement
 
-Report unacceptable behaviour to **hello@numen.games**. Reports are reviewed promptly and kept confidential with respect to the reporter. Maintainers may edit or remove contributions that do not follow this Code, and may ban a contributor temporarily or permanently. Enforcement is proportionate: correction, warning, temporary ban, permanent ban.
+Report unacceptable behaviour to **hola@numengames.com**. Reports are reviewed promptly and kept confidential with respect to the reporter. Maintainers may edit or remove contributions that do not follow this Code, and may ban a contributor temporarily or permanently. Enforcement is proportionate: correction, warning, temporary ban, permanent ban.
 
 ## Attribution
 

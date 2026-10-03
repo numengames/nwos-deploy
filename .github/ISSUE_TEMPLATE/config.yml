@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/numengames/nwos-deploy/security/advisories/new
     about: Never report a security problem in a public issue. Use private reporting.
   - name: Anything else
-    url: mailto:hello@numen.games
+    url: mailto:hola@numengames.com
     about: Questions, partnerships, or anything that is not a bug or a request.

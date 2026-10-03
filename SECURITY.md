@@ -16,7 +16,7 @@ The service holds credentials that create repositories in a GitHub organization.
 **Do not open a public issue for a security problem.**
 
 - Preferred: [GitHub private vulnerability reporting](https://github.com/numengames/nwos-deploy/security/advisories/new).
-- Alternative: email **hello@numen.games** with `SECURITY` in the subject.
+- Alternative: email **hola@numengames.com** with `SECURITY` in the subject.
 
 Include what you found, how to reproduce it, the impact, and any suggested fix.
 

@@ -259,17 +259,44 @@ const NEEDS_REVIEW_TOKEN = "%%NEEDS_REVIEW%%";
 const REVIEW_NOTE_OPEN = "%%REVIEW_NOTE%%";
 const REVIEW_NOTE_CLOSE = "%%/REVIEW_NOTE%%";
 
+/**
+ * Comments are read by position, never by a `<!--…-->` regex: a regex
+ * strip can leave a `<!--` behind and CodeQL fails the build on it
+ * (incomplete multi-character sanitization). Two marks the model leaves
+ * for the reader survive as tokens — a bare "NEEDS REVIEW" (a badge) and
+ * "NEEDS REVIEW: why" (the badge plus the note, kept: the old renderer
+ * dropped every comment with text, so the model's reasons never reached
+ * the reader; panel 2026-10-04). Every other comment is dropped; an
+ * unclosed one is dropped to the end of the text. The result is still
+ * HTML-escaped before any markup is drawn.
+ */
+export function liftReviewMarks(md: string): string {
+	const OPEN = "<!--";
+	const CLOSE = "-->";
+	let out = "";
+	let at = 0;
+	for (;;) {
+		const start = md.indexOf(OPEN, at);
+		if (start === -1) {
+			out += md.slice(at);
+			break;
+		}
+		out += md.slice(at, start);
+		const end = md.indexOf(CLOSE, start + OPEN.length);
+		if (end === -1) break;
+		const inner = md.slice(start + OPEN.length, end).trim();
+		const mark = /^NEEDS REVIEW(?:\s*:\s*([\s\S]*))?$/i.exec(inner);
+		if (mark) {
+			const note = (mark[1] ?? "").replace(/\s+/g, " ").trim();
+			out += note ? `${REVIEW_NOTE_OPEN}${note}${REVIEW_NOTE_CLOSE}` : NEEDS_REVIEW_TOKEN;
+		}
+		at = end + CLOSE.length;
+	}
+	return out;
+}
+
 function markdownToHtml(md: string): string {
-	// Two marks the model leaves for the reader: a bare "NEEDS REVIEW" (a
-	// badge) and "NEEDS REVIEW: why" (the badge plus the note, kept — the
-	// old renderer dropped every comment with text, so the model's reasons
-	// never reached the reader; panel 2026-10-04).
-	let html = escapeHtml(
-		md
-			.replace(/<!--\s*NEEDS REVIEW\s*:\s*([\s\S]*?)-->/gi, (_m, note: string) => `${REVIEW_NOTE_OPEN}${note.replace(/\s+/g, " ").trim()}${REVIEW_NOTE_CLOSE}`)
-			.replace(/<!--\s*NEEDS REVIEW\s*-->/gi, NEEDS_REVIEW_TOKEN)
-			.replace(/<!--[\s\S]*?-->/g, ""),
-	)
+	let html = escapeHtml(liftReviewMarks(md))
 		// Document headings sit one level below the page's own H1 (the
 		// workspace name), so every page keeps a single H1 (STD-034).
 		.replace(/^### (.+)$/gm, "<h4>$1</h4>")

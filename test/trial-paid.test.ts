@@ -164,13 +164,13 @@ describe("step 2 — a paid session naming a repository it did not create", () =
 		}
 	});
 
-	it("no WORKSPACE_KEY_SECRET on the server → 500 before any repository is created", async () => {
+	it("no WORKSPACE_KEY_SECRET on the server → 503 (paused) before any repository is created", async () => {
 		const { WORKSPACE_KEY_SECRET: _drop, ...noSecret } = FULL;
 		void _drop;
 		setEnv(noSecret);
 		const { calls } = network({ repoExists: false, session: paid });
 		const r = await post({ sessionId: SID });
-		expect(r.status).toBe(500);
+		expect(r.status).toBe(503);
 		expect(r.json.accessKey).toBeUndefined();
 		neverModelOrCreate(calls);
 	});

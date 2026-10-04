@@ -25,7 +25,7 @@ const title = data.title ?? page.label;
 const updated = typeof data.updated === "string" ? data.updated.slice(0, 10) : "";
 ---
 
-<Layout title={`${title} — NWOS`} description={`${page.label} of Numen Games S.L., which runs nwos.numen.games.`} canonicalPath={legalHref(page.slug)}>
+<Layout title={`${title} · NWOS · Numen Games`} description={`${page.label} of Numen Games S.L., which runs nwos.numen.games.`} canonicalPath={legalHref(page.slug)}>
 	<section class="pt-28 pb-20">
 		<div class="mx-auto max-w-[800px] px-6">
 			<p class="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-dim">

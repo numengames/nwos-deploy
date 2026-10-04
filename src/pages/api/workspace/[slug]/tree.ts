@@ -3,6 +3,7 @@
 import type { APIRoute } from "astro";
 import { errorStatus } from "@/lib/log";
 import { apiJson, workspaceAccess } from "@/lib/workspace-access";
+import { demoTree, isDemoWorkspace } from "@/lib/demo";
 
 export const prerender = false;
 
@@ -14,6 +15,10 @@ interface TreeItem {
 }
 
 export const GET: APIRoute = async ({ params, url }) => {
+	// The public example is served from this repository: no key, no token,
+	// no network — so a missing secret never takes the free example down.
+	if (isDemoWorkspace(params.slug)) return apiJson({ tree: demoTree(), demo: true }, 200);
+
 	const access = await workspaceAccess(params.slug, url.searchParams.get("key"), "Workspace not found");
 	if (!access.ok) return access.response;
 	const { octokit, org, slug } = access;

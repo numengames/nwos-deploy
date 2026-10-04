@@ -1,0 +1,38 @@
+---
+// SPDX-FileCopyrightText: 2026 Numen Games S.L.
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// The site's own 404. Until now this address answered with Astro's default
+// page — a pink-and-purple gradient with no bar, no footer and no way back
+// (QA 2026-10-03). Modelled on numinia.org's: say what happened in one
+// line, and offer the three doors that always work.
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/PageHero.astro";
+import { DEMO_WORKSPACE_SLUG } from "@/lib/demo";
+---
+
+<Layout title="This address answers nothing · NWOS · Numen Games" description="The page you asked for is not here." canonicalPath="/404">
+	<PageHero label="404" title="This address answers nothing" description="The page you asked for was moved, renamed, or never existed. Nothing is broken on your side." />
+	<div class="mx-auto max-w-[1100px] px-6 pb-24">
+		<ul class="grid gap-4 sm:grid-cols-3">
+			<li class="rounded-marco border border-border bg-card p-6">
+				<a href="/" class="font-display text-lg text-foreground underline underline-offset-4 hover:text-accent">
+					What NWOS is
+				</a>
+				<p class="mt-2 text-sm leading-relaxed text-muted-foreground">The home page: what it does for an organisation, and what it costs.</p>
+			</li>
+			<li class="rounded-marco border border-border bg-card p-6">
+				<a href="/how-it-works" class="font-display text-lg text-foreground underline underline-offset-4 hover:text-accent">
+					How it works
+				</a>
+				<p class="mt-2 text-sm leading-relaxed text-muted-foreground">The people, the agents and the shared memory, drawn as layers.</p>
+			</li>
+			<li class="rounded-marco border border-border bg-card p-6">
+				<a href={`/workspace/${DEMO_WORKSPACE_SLUG}`} class="font-display text-lg text-foreground underline underline-offset-4 hover:text-accent">
+					The example workspace
+				</a>
+				<p class="mt-2 text-sm leading-relaxed text-muted-foreground">An invented organisation, written the way yours would be.</p>
+			</li>
+		</ul>
+	</div>
+</Layout>

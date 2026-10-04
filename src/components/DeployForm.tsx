@@ -8,6 +8,18 @@ interface DeployResult {
 	slug: string;
 	repoUrl: string;
 	accessKey?: string;
+	/** Which of the four founding documents were actually written. */
+	written?: string[];
+	expected?: number;
+}
+
+/** The same rule the server applies, so the reader sees the name early. */
+function toSlug(name: string): string {
+	return name
+		.toLowerCase()
+		.replace(/[^a-z0-9-]/g, "-")
+		.replace(/-+/g, "-")
+		.replace(/^-|-$/g, "");
 }
 
 export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolean }) {
@@ -19,6 +31,7 @@ export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolea
 	const [errorMsg, setErrorMsg] = useState("");
 	const [loadingStartedAt, setLoadingStartedAt] = useState<number | null>(null);
 	const [now, setNow] = useState<number>(() => Date.now());
+	const slug = useMemo(() => toSlug(companyName), [companyName]);
 
 	const elapsedMs = useMemo(() => {
 		if (status !== "loading" || !loadingStartedAt) return 0;
@@ -100,24 +113,23 @@ export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolea
 
 	// ── Success state ──
 	if (status === "success" && result) {
+		const written = result.written?.length ?? 0;
+		const expected = result.expected ?? 0;
+		const partial = expected > 0 && written < expected;
 		return (
 			<div className="mx-auto max-w-md space-y-6 text-center">
-				<div className="rounded-marco border border-green/30 bg-green/10 p-8">
-					<p className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-green">Workspace deployed</p>
-					<h3 className="mt-3 font-display text-2xl text-foreground">{result.slug}</h3>
-					<p className="mt-2 text-sm text-muted-foreground">Your workspace is ready on GitHub.</p>
+				<div className={`rounded-marco border p-8 ${partial ? "border-amber/40 bg-amber/10" : "border-green/30 bg-green/10"}`}>
+					<p className={`font-mono text-[0.7rem] uppercase tracking-[0.2em] ${partial ? "text-amber" : "text-green"}`}>{partial ? "Workspace created, partly written" : "Your workspace is ready"}</p>
+					<h3 className="mt-3 font-display text-2xl text-foreground">{companyName || result.slug}</h3>
+					<p className="mt-2 text-sm text-muted-foreground">{partial ? `We wrote ${written} of ${expected} founding documents. We finish the rest by hand within a day and write to you; if we cannot, you get the ${TRIAL.priceEur} € back in full.` : "Four founding documents, written from what is public about you. Every part the model had to infer is marked for your review."}</p>
 					<a href={`/workspace/${result.slug}?key=${encodeURIComponent(result.accessKey ?? "")}`} className="mt-6 inline-flex items-center gap-2 rounded-control bg-interactivo px-6 py-2.5 text-sm font-medium text-white transition-colors duration-instante ease-ciclo hover:bg-interactivo-hover active:bg-interactivo-activo">
-						Browse workspace
+						Read your workspace
 					</a>
-					<a href={result.repoUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-2 rounded-control border border-border px-6 py-2.5 text-sm font-medium text-muted-foreground transition-colors duration-instante ease-ciclo hover:border-accent hover:text-accent">
-						View on GitHub
-					</a>
-					<p className="mt-4 text-sm text-muted-foreground">The agent has finished researching and filling in the workspace. STATUS.md in the repository shows the progress and the history.</p>
 					{/* AI Act art. 50 (DBT-022 #32). Provisional wording until counsel (ATH21) reviews it. */}
 					<p data-ai-notice className="mt-4 rounded-marco border border-border bg-card p-3 text-left text-sm text-muted-foreground">
 						<strong className="text-foreground">Written by an AI model.</strong> The documents in this workspace were drafted by an artificial intelligence model (Claude, by Anthropic) from public sources about your organisation. They are drafts: check them before relying on them or sharing them.
 					</p>
-					<p className="mt-3 text-xs text-dim">Keep the "Browse workspace" link: it carries your private access key and is the only way to see the workspace on the web.</p>
+					<p className="mt-3 text-xs text-dim">Keep this page's link: it carries your private access key and is, for now, the only way to open the workspace.</p>
 				</div>
 			</div>
 		);
@@ -126,16 +138,33 @@ export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolea
 	// ── Form state ──
 	return (
 		<div className="mx-auto max-w-md space-y-5">
-			{/* Company name */}
+			{/* Company name — the label is tied to the field (accessibility
+			    audit 2026-10-04: neither input had an accessible name), and
+			    the slug is shown live so nobody is surprised by it later. */}
 			<div className="space-y-1.5">
-				<label className="block font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim">Organisation name</label>
-				<input type="text" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Acme Corp" disabled={busy} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-50" />
+				<label htmlFor="nwos-company" className="block font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim">
+					Organisation name
+				</label>
+				<input id="nwos-company" name="organisation" type="text" autoComplete="organization" aria-describedby="nwos-company-help" value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Acme Corp" disabled={busy} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent disabled:opacity-50" />
+				<p id="nwos-company-help" className="text-xs text-dim">
+					As it appears on your website.{slug && (
+						<>
+							{" "}
+							Your workspace: <span className="font-mono text-muted-foreground">{slug}</span>
+						</>
+					)}
+				</p>
 			</div>
 
 			{/* Email */}
 			<div className="space-y-1.5">
-				<label className="block font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim">Email of the person responsible</label>
-				<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ceo@acme.com" disabled={busy} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-50" />
+				<label htmlFor="nwos-email" className="block font-mono text-[0.7rem] uppercase tracking-[0.15em] text-dim">
+					Email of the person responsible
+				</label>
+				<input id="nwos-email" name="email" type="email" autoComplete="email" aria-describedby="nwos-email-help" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="ceo@acme.com" disabled={busy} className="w-full rounded-control border border-border bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-dim transition-colors focus:border-accent disabled:opacity-50" />
+				<p id="nwos-email-help" className="text-xs text-dim">
+					The receipt goes here. Keep the link we show you: it is how you open the workspace.
+				</p>
 			</div>
 
 			{/* Terms */}
@@ -150,8 +179,13 @@ export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolea
 				</span>
 			</label>
 
-			{/* Error */}
-			{status === "error" && <div className="rounded-marco border border-grana/30 bg-grana/10 p-3 text-sm text-coral">{errorMsg}</div>}
+			{/* Error — announced, and never in server words (QA 2026-10-03:
+			    the page showed "Server configuration incomplete"). */}
+			{status === "error" && (
+				<div role="alert" className="rounded-marco border border-grana/30 bg-grana/10 p-3 text-sm text-coral">
+					{errorMsg}
+				</div>
+			)}
 
 			{/* Price — named before paying, VAT included */}
 			<div data-trial-price className="rounded-marco border border-border bg-card p-4">

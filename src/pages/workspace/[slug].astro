@@ -1,15 +1,32 @@
 ---
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
+//
+// The workspace reader. The public example is named and introduced as what
+// it is — an invented organisation — so that nobody reads it as a real
+// client's (panel, 2026-10-04).
 import Layout from "@/layouts/Layout.astro";
 import WorkspaceViewer from "@/components/WorkspaceViewer";
+import { DEMO_WORKSPACE_NAME, isDemoWorkspace } from "@/lib/demo";
 
 export const prerender = false;
 
 const { slug } = Astro.params;
 const accessKey = Astro.url.searchParams.get("key") ?? "";
+const isDemo = isDemoWorkspace(slug);
+const name = isDemo ? DEMO_WORKSPACE_NAME : undefined;
 ---
 
-<Layout title={`${slug} — NWOS Workspace`} activeNav="velo" canonicalPath={`/workspace/${slug}`}>
-	<WorkspaceViewer slug={slug!} accessKey={accessKey} client:load />
+<Layout title={`${name ?? slug} · NWOS · Numen Games`} description={isDemo ? "The public example of an NWOS workspace: an invented organisation, written the way yours would be." : "An NWOS workspace."} activeNav="velo" canonicalPath={`/workspace/${slug}`}>
+	{isDemo && (
+		<div class="mx-auto max-w-[1100px] px-6 pt-6">
+			<p class="rounded-marco border border-accent/30 bg-accent/5 p-4 text-sm leading-relaxed text-muted-foreground">
+				<strong class="text-foreground">This is the public example.</strong> {DEMO_WORKSPACE_NAME} is an invented organisation — no real client's workspace is ever shown here. Yours would look exactly like this, written from what is public about you.
+				<a href="/velo" class="ml-1 text-foreground underline underline-offset-4 hover:text-accent">
+					Try it with your organisation
+				</a>
+			</p>
+		</div>
+	)}
+	<WorkspaceViewer slug={slug!} accessKey={accessKey} title={name} demo={isDemo} client:load />
 </Layout>

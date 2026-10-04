@@ -48,10 +48,10 @@ describe("POST /api/registro while the trial is not on sale", () => {
 		expect(spy).not.toHaveBeenCalled();
 	});
 
-	it("a server without the processor key is misconfigured → 500, naming no key", async () => {
+	it("a server without the processor key is paused → 503, naming no key", async () => {
 		setEnv({ ...FULL, STRIPE_RESTRICTED_KEY: "" });
 		const r = await post(valid);
-		expect(r.status).toBe(500);
+		expect(r.status).toBe(503);
 		expect(JSON.stringify(r.json)).not.toMatch(/STRIPE/);
 	});
 });

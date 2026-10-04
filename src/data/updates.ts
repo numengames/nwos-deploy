@@ -27,6 +27,52 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.16.0",
+		date: "2026-10-04",
+		entries: [
+			{
+				type: "ADD",
+				text: "Take it home. Under every workspace, three ways to hold it, lightest first: download the whole workspace as a .zip with no account; clone it with git — we invite your GitHub user to the repository, history included; or transfer the repository to your own GitHub account, after which we keep no copy and the web page stops working. On the example only the download works, and the page says so.",
+			},
+			{
+				type: "CHG",
+				text: 'The workspace opens on its first founding document instead of an empty pane, and the notes the model leaves for your review — "needs review: why" — now show beside the text instead of being dropped.',
+			},
+			{
+				type: "FIX",
+				text: "The free example works again, and always will: the example workspace now lives inside this site instead of being read from a repository, so it opens with no payment, no key and nothing configured. It is an invented organisation, Faro Austral, and the page says so — a real client's workspace is never shown to a visitor.",
+			},
+			{
+				type: "CHG",
+				text: 'When the trial is paused, the page says so in plain words — "nothing was charged", where to write, and that the example is open — instead of the old red "Server configuration incomplete".',
+			},
+			{
+				type: "FIX",
+				text: "The workspace no longer greets you as finished when it is not. If a founding document could not be written, the page and the workspace's own status file say how many are missing and what happens next.",
+			},
+			{
+				type: "CHG",
+				text: "The trial page opens on its form: the full-screen star hero that repeated the home page is gone, with its second animated sky. The page now has a proper heading, and the example is offered beside the form.",
+			},
+			{
+				type: "FIX",
+				text: 'Accessibility: the site declares English, which is what it is written in; every field has a label a screen reader announces; errors are read out when they appear; the first key press offers "Skip to content"; and the focus ring is back on the form fields.',
+			},
+			{
+				type: "ADD",
+				text: "A page of our own when an address answers nothing, with the three doors that always work, instead of the framework's default 404.",
+			},
+			{
+				type: "CHG",
+				text: "One name for the product — NWOS, the Narrative Work OS — and one ending for every tab title. The sky's star colours come from the house palette instead of four colours that were not in it.",
+			},
+			{
+				type: "ADD",
+				text: "A health page for the house (/api/health) that says which settings are missing and whether payments are in test mode, without ever printing a value.",
+			},
+		],
+	},
+	{
 		version: "v0.15.0",
 		date: "2026-10-03",
 		entries: [

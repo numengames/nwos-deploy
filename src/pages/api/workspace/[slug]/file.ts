@@ -3,6 +3,7 @@
 import type { APIRoute } from "astro";
 import { errorStatus } from "@/lib/log";
 import { apiJson, workspaceAccess } from "@/lib/workspace-access";
+import { demoFile, isDemoWorkspace } from "@/lib/demo";
 
 /** The subset of GitHub's contents payload this route reads. */
 interface GitHubFile {
@@ -18,6 +19,12 @@ export const GET: APIRoute = async ({ params, url }) => {
 
 	if (!filePath || filePath.includes("..") || filePath.startsWith("/")) {
 		return apiJson({ error: "path parameter required" }, 400);
+	}
+
+	// The public example, from this repository (see src/lib/demo.ts).
+	if (isDemoWorkspace(params.slug)) {
+		const demo = demoFile(filePath);
+		return demo ? apiJson(demo, 200) : apiJson({ error: "File not found" }, 404);
 	}
 
 	const access = await workspaceAccess(params.slug, url.searchParams.get("key"), "File not found");

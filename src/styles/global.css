@@ -215,6 +215,29 @@
 		outline-offset: 2px;
 	}
 
+	/* STD-034 · "Skip to content": first stop of the keyboard, invisible
+	   until it takes the focus. Before it, every page made a keyboard
+	   reader walk the whole bar (accessibility audit 2026-10-04). */
+	.skip-link {
+		position: absolute;
+		left: 0.75rem;
+		top: -3rem;
+		z-index: 50;
+		display: inline-flex;
+		min-height: 44px;
+		align-items: center;
+		border-radius: var(--radius-control);
+		background: rgb(var(--card));
+		border: 1px solid rgb(var(--border));
+		color: rgb(var(--text));
+		padding: 0 1rem;
+		font-size: 0.875rem;
+		transition: top 120ms var(--ciclo);
+	}
+	.skip-link:focus {
+		top: 0.75rem;
+	}
+
 	/* ── Animations ──────────────────────────────────────────────────────── */
 	@keyframes entrada {
 		from {

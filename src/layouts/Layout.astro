@@ -19,7 +19,10 @@ interface Props {
 // STD-023 §19 — this site's row: the same name and line the footer's Numen
 // Games column, the share card (scripts/share-card.mjs) and this head read.
 // This is the service; numinia.org is the archive.
-const { title = "NWOS for your organisation — Numen Games", description = "A file-based operating system for organisations. Markdown, git, AI agents. Adopt it.", canonicalPath = "", ogImage, activeNav } = Astro.props;
+// One name for the product and one suffix for every tab (QA 2026-10-03:
+// five suffixes and two names were live).
+const SITE_SUFFIX = "NWOS · Numen Games";
+const { title = `NWOS — your organisation, ready for AI · ${SITE_SUFFIX}`, description = "A workspace where your people and your AI agents share one memory. Plain files you own.", canonicalPath = "", ogImage, activeNav } = Astro.props;
 
 const siteUrl = "https://nwos.numen.games";
 const canonical = `${siteUrl}${canonicalPath}`;
@@ -27,7 +30,7 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-card.png`;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<script is:inline>
@@ -57,7 +60,7 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-card.png`;
 		<meta property="og:url" content={canonical} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
-		<meta property="og:locale" content="es_ES" />
+		<meta property="og:locale" content="en_GB" />
 		<meta property="og:image" content={resolvedOgImage} />
 
 		<!-- Twitter Card -->
@@ -76,6 +79,10 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-card.png`;
 		<!-- MMO Starfield background -->
 		<canvas id="starfield" class="pointer-events-none fixed inset-0 -z-10" aria-hidden="true"></canvas>
 
+		<a href="#main" class="skip-link">
+			Skip to content
+		</a>
+
 		<Navigation activeNav={activeNav} />
 
 		<main id="main">
@@ -93,13 +100,17 @@ const resolvedOgImage = ogImage ?? `${siteUrl}/og-card.png`;
 				const ctx = canvas.getContext("2d");
 				if (!ctx) return;
 
-				// MMO Rarity tiers — mantener colores
+				// The sky uses the house's rarity scale (STD-023), read from
+				// the generated tokens — never a hand-written hex. Before
+				// this it painted Tailwind's green, blue, purple and orange,
+				// which are not in the palette (design audit 2026-10-04).
+				const rareza = (name) => getComputedStyle(document.documentElement).getPropertyValue(`--rareza-${name}`).trim().replaceAll(" ", ",");
 				const TIERS = [
-					{ color: "255,255,255", weight: 60, minR: 0.3, maxR: 1.2 }, // Common — blanco
-					{ color: "34,197,94", weight: 25, minR: 0.5, maxR: 1.5 }, // Uncommon — verde
-					{ color: "59,130,246", weight: 10, minR: 0.6, maxR: 1.8 }, // Rare — azul
-					{ color: "168,85,247", weight: 4, minR: 0.8, maxR: 2.5 }, // Epic — morado
-					{ color: "249,115,22", weight: 1, minR: 1.0, maxR: 3.0 }, // Legendary — naranja
+					{ color: rareza("comun"), weight: 60, minR: 0.3, maxR: 1.2 },
+					{ color: rareza("poco-comun"), weight: 25, minR: 0.5, maxR: 1.5 },
+					{ color: rareza("raro"), weight: 10, minR: 0.6, maxR: 1.8 },
+					{ color: rareza("epico"), weight: 4, minR: 0.8, maxR: 2.5 },
+					{ color: rareza("legendario"), weight: 1, minR: 1.0, maxR: 3.0 },
 				];
 
 				// Weighted pool

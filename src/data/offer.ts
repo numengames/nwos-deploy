@@ -35,7 +35,7 @@ export const PATH: readonly Step[] = [
 	{
 		n: "02",
 		title: "Read it with your team",
-		text: "Correct what the AI inferred, keep what fits. The workspace is yours from the first minute, whatever you decide next.",
+		text: "Correct what the AI inferred, keep what fits. Download it, clone it with git, or move the repository to your own GitHub: it is yours from the first minute, whatever you decide next.",
 	},
 	{
 		n: "03",
@@ -178,7 +178,7 @@ export interface Question {
 export const FAQ: readonly Question[] = [
 	{
 		q: "Whose is the workspace?",
-		a: "Yours. It is a private repository with your licence, and the drafts are yours from the moment they are written. If you stop working with us, it stays with you.",
+		a: "Yours. It is a private repository with your licence, and the drafts are yours from the moment they are written. From the first minute you can download it whole, clone it with git, or transfer the repository to your own GitHub account — after a transfer we keep no copy.",
 	},
 	{
 		q: "What exactly does the AI write in the trial?",

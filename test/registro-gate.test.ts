@@ -93,10 +93,11 @@ describe("POST /api/registro refuses before touching the network", () => {
 		expect(r.json.error).toMatch(/at least 2 alphanumeric characters/);
 	});
 
-	it("a valid request on a server missing its configuration → 500, and the client is told nothing about which key", async () => {
+	it("a valid request on a server missing its configuration → 503 'paused, nothing charged', and the client is told nothing about which key", async () => {
 		const r = await post(valid, { GITHUB_ORG: "numengames" });
-		expect(r.status).toBe(500);
-		expect(r.json.error).toBe("Server configuration incomplete");
+		expect(r.status).toBe(503);
+		expect(r.json.error).toMatch(/paused/);
+		expect(r.json.error).toMatch(/nothing was charged/);
 		expect(JSON.stringify(r.json)).not.toMatch(/GITHUB_TOKEN|ANTHROPIC|TEMPLATE/);
 	});
 

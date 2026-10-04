@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.17.0",
+		date: "2026-10-04",
+		entries: [
+			{
+				type: "CHG",
+				text: "The day and night switch shows the mode you are in: the moon with stars at night, the sun by day. It showed the other way round until now.",
+			},
+		],
+	},
+	{
 		version: "v0.16.0",
 		date: "2026-10-04",
 		entries: [

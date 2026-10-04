@@ -172,9 +172,17 @@ async function updateStatus(octokit: Octokit, org: string, repo: string, complet
 		})
 		.join("\n");
 
+	// STATUS.md must not say "Complete" when documents are missing: the
+	// loop below swallows a failed document and carries on, and the old
+	// code called this with isFinished = true whatever happened, so a
+	// workspace with 0 of 4 documents greeted its owner as finished
+	// (platform review 2026-10-04).
+	const missing = allDocs.length - completedDocs.length;
+	const state = !isFinished ? "🔄 Populating..." : missing === 0 ? "✅ Complete" : `⚠️ Incomplete — ${missing} of ${allDocs.length} documents could not be written. The team has been told; write to hola@numengames.com if nobody has written to you.`;
+
 	const statusContent = `# Workspace Status
 
-- **Agent status:** ${isFinished ? "✅ Complete" : "🔄 Populating..."}
+- **Agent status:** ${state}
 - **Last updated:** ${new Date().toISOString()}
 
 ## Progress
@@ -265,7 +273,12 @@ export const POST: APIRoute = async ({ request }) => {
 		if (!org || !templateRepo || !token || !anthropicKey || !stripeKey || !secret) {
 			const missing = [!org && "GITHUB_ORG", !templateRepo && "GITHUB_TEMPLATE_REPO", !token && "GITHUB_TOKEN", !anthropicKey && "ANTHROPIC_API_KEY", !stripeKey && "STRIPE_RESTRICTED_KEY", !secret && "WORKSPACE_KEY_SECRET"].filter(Boolean).join(", ");
 			log.error("env.missing", { missing });
-			return new Response(JSON.stringify({ error: "Server configuration incomplete" }), { status: 500, headers: { "Content-Type": "application/json" } });
+			// Said in the buyer's words, and before any charge: the old
+			// answer was "Server configuration incomplete", which reads as
+			// the buyer's fault and tells nobody what to do (QA
+			// 2026-10-03). Which setting is missing is answered, without
+			// values, by GET /api/health.
+			return json({ error: "The trial is paused right now, so nothing was charged. The example workspace is open, and you can write to hola@numengames.com — we will tell you the moment it reopens." }, 503);
 		}
 
 		// The trial is paid (src/data/trial.ts): with no payment link nothing is on sale
@@ -537,7 +550,14 @@ export const POST: APIRoute = async ({ request }) => {
 		const repoUrl = `https://github.com/${org}/${slug}`;
 		const accessKey = await signWorkspaceKey(slug, secret);
 
-		return new Response(JSON.stringify({ success: true, slug, repoUrl, accessKey }), { status: 200, headers: { "Content-Type": "application/json" } });
+		// The answer says how many documents were actually written: the
+		// generation loop tolerates a failure per document, and the page
+		// used to greet every outcome as a finished workspace.
+		if (completedPaths.length < allPaths.length) {
+			log.error("deploy.incomplete", { repo: `${org}/${slug}`, written: completedPaths.length, expected: allPaths.length });
+		}
+
+		return new Response(JSON.stringify({ success: true, slug, repoUrl, accessKey, written: completedPaths, expected: allPaths.length }), { status: 200, headers: { "Content-Type": "application/json" } });
 	} catch (error) {
 		log.error("deploy.failed", { error: errorMessage(error) });
 

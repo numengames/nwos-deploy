@@ -23,7 +23,7 @@ export const API_HEADERS = {
 
 export const apiJson = (body: unknown, status: number) => new Response(JSON.stringify(body), { status, headers: API_HEADERS });
 
-export type Access = { ok: true; octokit: Octokit; org: string; slug: string } | { ok: false; response: Response };
+export type Access = { ok: true; octokit: Octokit; org: string; slug: string; token: string } | { ok: false; response: Response };
 
 export async function workspaceAccess(slug: string | undefined, key: string | null, notFound: string): Promise<Access> {
 	const env = getEnv();
@@ -35,7 +35,7 @@ export async function workspaceAccess(slug: string | undefined, key: string | nu
 	if (!slug || !/^[a-z0-9][a-z0-9-]{0,99}$/.test(slug)) return { ok: false, response: apiJson({ error: notFound }, 404) };
 
 	const octokit = new Octokit({ auth: token });
-	if (isDemoWorkspace(slug)) return { ok: true, octokit, org, slug };
+	if (isDemoWorkspace(slug)) return { ok: true, octokit, org, slug, token };
 
 	const secret = keySecret(env);
 	if (!secret) return { ok: false, response: apiJson({ error: MISSING_SIGNING_SECRET }, 500) };
@@ -49,5 +49,5 @@ export async function workspaceAccess(slug: string | undefined, key: string | nu
 		const status = errorStatus(error);
 		return { ok: false, response: apiJson({ error: notFound }, status === 404 ? 404 : 502) };
 	}
-	return { ok: true, octokit, org, slug };
+	return { ok: true, octokit, org, slug, token };
 }

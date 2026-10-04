@@ -13,15 +13,28 @@ what is actually there first.
 
 ## What this is
 
-Astro 5, `output: "static"` with the Cloudflare Workers adapter
-(`@astrojs/cloudflare`, config in `wrangler.jsonc`); React 19 islands only
-where a `client:` directive is used; Tailwind 3; Geist and Geist Mono
-self-hosted. Path alias `@/*` → `src/*`. Nocturno only.
+Astro 7, `output: "static"` with the Cloudflare Workers adapter
+(`@astrojs/cloudflare` v14 over Cloudflare's Vite plugin, config in
+`wrangler.jsonc`); React 19 islands only where a `client:` directive is
+used; Tailwind 4; Geist and Geist Mono self-hosted. Path alias `@/*` →
+`src/*`. Day and night (the switch in the bar, stored as `numinia-modo`).
 
-- **Routes**: `/` (product landing, static), `/velo` (deploy form, SSR),
-  `/workspace/[slug]` (workspace browser, SSR), `/updates`, `/telemetry`,
-  and the API under `src/pages/api/`. SSR routes carry
+- **Routes**: `/` (product landing, static), `/how-it-works`, `/velo` (the
+  paid trial, SSR), `/workspace/[slug]` (workspace reader, SSR), `/updates`,
+  `/telemetry`, `/404`, and the API under `src/pages/api/`. SSR routes carry
   `export const prerender = false`.
+- **The public example** `faro-austral` is NOT a repository: its files live
+  in `src/content/demo/**` and are bundled at build (`src/lib/demo.ts`), so
+  the free example works with no secret and no network. The organisation in
+  it is invented on purpose.
+- **Taking a workspace home** (`src/lib/take-home.ts`): `GET
+/api/workspace/[slug]/download` (GitHub's zip of the repository; the
+  example is zipped in the Worker by `src/lib/zip.ts`), `POST .../invite`
+  (collaborator with write access, for `git clone`), `POST .../transfer`
+  (GitHub repository transfer to the client's user; they accept by email).
+  All three need the workspace key; the example answers 409 to the last two.
+- **`GET /api/health`**: which settings are missing and whether the
+  processor is in test mode, never a value. Read it before blaming code.
 - **The deploy flow**: `/velo` → `DeployForm.tsx` → `POST /api/registro`
   creates a private GitHub repository from `nwos-workspace-template`,
   personalises the placeholders, installs the client's reserved `LICENSE`
@@ -54,8 +67,14 @@ self-hosted. Path alias `@/*` → `src/*`. Nocturno only.
 npm ci
 npm run dev          # http://localhost:4321
 npm run type-check && npm run lint && npm test && npm run build   # what CI runs
-npm run preview      # wrangler dev, reads .dev.vars
+npm run preview      # wrangler dev --upstream-protocol https, reads .dev.vars
 ```
+
+`npm run preview` needs `--upstream-protocol https` (set in the script):
+wrangler emulates the custom domain by handing the Worker
+`http://nwos.numen.games/...`, and the middleware's http→https redirect
+then loops on every SSR route. After `npm run build`, restart the preview:
+it keeps the old asset manifest and answers 404 for the new `_astro/` files.
 
 Node ≥ 22.12. `npm run build` runs `scripts/license-check.mjs` as
 `postbuild`: it inspects `dist/` module paths and parses `LEGAL_DEBT.md`

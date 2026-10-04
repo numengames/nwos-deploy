@@ -17,7 +17,7 @@
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "preview": "wrangler dev",
+    "preview": "wrangler dev --upstream-protocol https",
     "astro": "astro",
     "design-tokens": "node scripts/design-tokens.mjs"
   },

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 import { useEffect, useMemo, useState } from "react";
 import { errorMessage } from "@/lib/log";
+import TakeHome from "@/components/TakeHome";
 
 interface RepoFile {
 	name: string;
@@ -16,7 +17,7 @@ interface FileContent {
 	path: string;
 }
 
-export default function WorkspaceViewer({ slug, accessKey }: { slug: string; accessKey: string }) {
+export default function WorkspaceViewer({ slug, accessKey, title, demo = false }: { slug: string; accessKey: string; title?: string; demo?: boolean }) {
 	const [tree, setTree] = useState<RepoFile[]>([]);
 	const [selectedFile, setSelectedFile] = useState<FileContent | null>(null);
 	const [status, setStatus] = useState<string | null>(null);
@@ -29,11 +30,17 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 	async function loadTree() {
 		try {
 			const res = await fetch(`/api/workspace/${slug}/tree?${keyParam}`);
-			if (res.status === 403) throw new Error("Access denied — this workspace requires its private access link.");
+			if (res.status === 403) throw new Error("This link has no key, or the key is wrong. Open the workspace from the link you were shown after paying.");
 			if (!res.ok) throw new Error("Workspace not found");
 			const data = await res.json();
-			setTree(Array.isArray(data.tree) ? data.tree : []);
+			const items: RepoFile[] = Array.isArray(data.tree) ? data.tree : [];
+			setTree(items);
 			setLoading(false);
+			// The first thing a reader sees is their organisation written,
+			// not a file list: open the first founding document (panel,
+			// 2026-10-04). Falls back to the first Markdown file there is.
+			const first = firstDocument(items);
+			if (first) void loadFile(first);
 		} catch (e) {
 			setError(errorMessage(e));
 			setLoading(false);
@@ -109,14 +116,14 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 		<div className="mx-auto max-w-[1100px] px-6 py-12">
 			{/* Header */}
 			<div className="mb-8 space-y-2">
-				<p className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent">NWOS Workspace</p>
-				<h1 className="font-display text-4xl font-normal tracking-[-0.025em] sm:text-5xl text-foreground">{slug}</h1>
+				<p className="font-mono text-[0.75rem] uppercase tracking-[0.2em] text-accent">{demo ? "The public example" : "Your workspace"}</p>
+				<h1 className="font-display text-4xl font-normal tracking-[-0.025em] sm:text-5xl text-foreground">{title ?? slug}</h1>
 			</div>
 
 			{/* Status bar */}
 			{status && (
 				<div className="mb-8 rounded-marco border border-border/50 bg-card/50 p-4">
-					<div className="prose-invert text-sm text-muted-foreground [&_h1]:text-base [&_h1]:font-semibold [&_h1]:text-foreground [&_h2]:text-sm [&_h2]:font-semibold [&_h2]:text-foreground [&_li]:text-sm [&_strong]:text-foreground" dangerouslySetInnerHTML={{ __html: markdownToHtml(status) }} />
+					<div className="prose-invert text-sm text-muted-foreground [&_h2]:text-base [&_h2]:font-semibold [&_h2]:text-foreground [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:text-foreground [&_li]:text-sm [&_strong]:text-foreground" dangerouslySetInnerHTML={{ __html: markdownToHtml(status) }} />
 				</div>
 			)}
 
@@ -143,7 +150,7 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 						<div className="rounded-marco border border-border bg-card p-6 sm:p-8">
 							<p className="mb-4 font-mono text-[0.65rem] text-dim">{selectedFile.path}</p>
 							<div
-								className="prose-invert max-w-none text-sm leading-relaxed text-muted-foreground [&_h1]:text-2xl [&_h1]:font-display [&_h1]:text-foreground [&_h1]:mb-4 [&_h1]:mt-6 [&_h2]:text-lg [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mb-3 [&_h2]:mt-5 [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mb-2 [&_h3]:mt-4 [&_p]:mb-3 [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:text-foreground [&_a]:text-accent [&_a]:underline [&_code]:bg-background [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-control [&_code]:text-accent [&_code]:text-xs [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_th]:bg-background [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-foreground [&_th]:text-xs [&_th]:font-semibold [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-xs [&_blockquote]:border-l-2 [&_blockquote]:border-accent [&_blockquote]:pl-4 [&_blockquote]:italic"
+								className="prose-invert max-w-none text-sm leading-relaxed text-muted-foreground [&_h2]:text-2xl [&_h2]:font-display [&_h2]:text-foreground [&_h2]:mb-4 [&_h2]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mb-3 [&_h3]:mt-5 [&_h4]:text-base [&_h4]:font-semibold [&_h4]:text-foreground [&_h4]:mb-2 [&_h4]:mt-4 [&_p]:mb-3 [&_ul]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_strong]:text-foreground [&_a]:text-accent [&_a]:underline [&_code]:bg-background [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-control [&_code]:text-accent [&_code]:text-xs [&_table]:w-full [&_table]:border-collapse [&_th]:border [&_th]:border-border [&_th]:bg-background [&_th]:px-3 [&_th]:py-2 [&_th]:text-left [&_th]:text-foreground [&_th]:text-xs [&_th]:font-semibold [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2 [&_td]:text-xs [&_blockquote]:border-l-2 [&_blockquote]:border-accent [&_blockquote]:pl-4 [&_blockquote]:italic"
 								dangerouslySetInnerHTML={{
 									__html: markdownToHtml(selectedFile.content),
 								}}
@@ -156,8 +163,24 @@ export default function WorkspaceViewer({ slug, accessKey }: { slug: string; acc
 					)}
 				</main>
 			</div>
+
+			<TakeHome slug={slug} accessKey={accessKey} demo={demo} />
 		</div>
 	);
+}
+
+/** The first founding document, or the first Markdown file: what opens on arrival. */
+function firstDocument(items: RepoFile[]): string | null {
+	const flat: string[] = [];
+	const walk = (list: RepoFile[]) => {
+		for (const item of list) {
+			if (item.type === "file" && item.name.endsWith(".md")) flat.push(item.path);
+			if (item.children) walk(item.children);
+		}
+	};
+	walk(items);
+	flat.sort();
+	return flat.find((p) => /^(canon|principles)\//.test(p)) ?? flat.find((p) => p !== "STATUS.md") ?? flat[0] ?? null;
 }
 
 function FileTree({ items, onSelect, selectedPath, depth = 0 }: { items: RepoFile[]; onSelect: (path: string) => void; selectedPath?: string; depth?: number }) {
@@ -233,12 +256,52 @@ function safeHref(href: string): string | null {
 }
 
 const NEEDS_REVIEW_TOKEN = "%%NEEDS_REVIEW%%";
+const REVIEW_NOTE_OPEN = "%%REVIEW_NOTE%%";
+const REVIEW_NOTE_CLOSE = "%%/REVIEW_NOTE%%";
+
+/**
+ * Comments are read by position, never by a `<!--…-->` regex: a regex
+ * strip can leave a `<!--` behind and CodeQL fails the build on it
+ * (incomplete multi-character sanitization). Two marks the model leaves
+ * for the reader survive as tokens — a bare "NEEDS REVIEW" (a badge) and
+ * "NEEDS REVIEW: why" (the badge plus the note, kept: the old renderer
+ * dropped every comment with text, so the model's reasons never reached
+ * the reader; panel 2026-10-04). Every other comment is dropped; an
+ * unclosed one is dropped to the end of the text. The result is still
+ * HTML-escaped before any markup is drawn.
+ */
+export function liftReviewMarks(md: string): string {
+	const OPEN = "<!--";
+	const CLOSE = "-->";
+	let out = "";
+	let at = 0;
+	for (;;) {
+		const start = md.indexOf(OPEN, at);
+		if (start === -1) {
+			out += md.slice(at);
+			break;
+		}
+		out += md.slice(at, start);
+		const end = md.indexOf(CLOSE, start + OPEN.length);
+		if (end === -1) break;
+		const inner = md.slice(start + OPEN.length, end).trim();
+		const mark = /^NEEDS REVIEW(?:\s*:\s*([\s\S]*))?$/i.exec(inner);
+		if (mark) {
+			const note = (mark[1] ?? "").replace(/\s+/g, " ").trim();
+			out += note ? `${REVIEW_NOTE_OPEN}${note}${REVIEW_NOTE_CLOSE}` : NEEDS_REVIEW_TOKEN;
+		}
+		at = end + CLOSE.length;
+	}
+	return out;
+}
 
 function markdownToHtml(md: string): string {
-	let html = escapeHtml(md.replace(/<!--\s*NEEDS REVIEW\s*-->/gi, NEEDS_REVIEW_TOKEN).replace(/<!--[\s\S]*?-->/g, ""))
-		.replace(/^### (.+)$/gm, "<h3>$1</h3>")
-		.replace(/^## (.+)$/gm, "<h2>$1</h2>")
-		.replace(/^# (.+)$/gm, "<h1>$1</h1>")
+	let html = escapeHtml(liftReviewMarks(md))
+		// Document headings sit one level below the page's own H1 (the
+		// workspace name), so every page keeps a single H1 (STD-034).
+		.replace(/^### (.+)$/gm, "<h4>$1</h4>")
+		.replace(/^## (.+)$/gm, "<h3>$1</h3>")
+		.replace(/^# (.+)$/gm, "<h2>$1</h2>")
 		.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
 		.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
 		.replace(/\*(.+?)\*/g, "<em>$1</em>")
@@ -269,6 +332,7 @@ function markdownToHtml(md: string): string {
 	html = html.replace(/(?:<br\/>)*(<li>(?:[\s\S]*?<\/li>\s*(?:<br\/>)*)*<\/li>)/g, "<ul>$1</ul>");
 	html = html.replace(/(<tr>[\s\S]*?<\/tr>(?:\s*<tr>[\s\S]*?<\/tr>)*)/g, "<table>$1</table>");
 	html = html.replace(/%%NEEDS_REVIEW%%/g, '<span class="inline-block rounded-control border border-yellow/40 bg-yellow/10 px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-yellow">needs review</span>');
+	html = html.replace(/(?:<p>)?%%REVIEW_NOTE%%([\s\S]*?)%%\/REVIEW_NOTE%%(?:<\/p>)?/g, '<aside class="my-3 rounded-marco border border-yellow/40 bg-yellow/10 p-3 text-sm text-foreground"><span class="mr-2 inline-block rounded-control border border-yellow/40 px-1.5 py-0.5 font-mono text-[0.6rem] uppercase tracking-wider text-yellow">needs review</span>$1</aside>');
 
 	return html;
 }

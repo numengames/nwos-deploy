@@ -22,7 +22,7 @@
     "design-tokens": "node scripts/design-tokens.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.86.0",
+    "@anthropic-ai/sdk": "^0.131.0",
     "@astrojs/cloudflare": "^14.3.3",
     "@astrojs/react": "^7.0.0",
     "@astrojs/sitemap": "^3.7.4",

@@ -1,0 +1,52 @@
+# SPDX-FileCopyrightText: 2026 Numen Games S.L.
+# SPDX-License-Identifier: AGPL-3.0-only
+#
+# Code scanning (STD-015): CodeQL reads the JavaScript and TypeScript of the
+# site and its Worker API and posts what it finds to the repository's
+# Security tab. `build-mode: none` analyses the source as written, so no
+# install and no secret is needed.
+#
+# Seen, not enforced: this is not part of the required `build` check
+# (ci.yml). An alert is read in Security → Code scanning, not in the
+# merge box.
+#
+# The action pin is the same CodeQL release scorecard.yml uses to upload
+# its SARIF; Dependabot moves both together.
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "27 4 * * 3"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analyze:
+    name: Analyze (javascript-typescript)
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          languages: javascript-typescript
+          build-mode: none
+
+      - uses: github/codeql-action/analyze@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
+        with:
+          category: /language:javascript-typescript

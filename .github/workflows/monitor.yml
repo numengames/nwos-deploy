@@ -1,29 +1,17 @@
 # SPDX-FileCopyrightText: 2026 Numen Games S.L.
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: MIT
 #
-# Night watch: a probe of the LIVE site every six hours, modelled on
-# numinia-web's monitor.yml. On failure it opens (or comments on) a
-# "night-watch" issue — GitHub turns that into push and email for the
-# operator; on recovery it closes the alarm itself.
-#
-# The paths are static, public pages (prerendered, no secret behind them):
-# a red here means the publication or the domain is down, not a setting.
-# `/velo` and `/workspace` are SSR and need secrets; `/api/health` says
-# which ones are missing — read it when this goes red.
-#
-# Diagnosis first: from Spain, Cloudflare ranges can be blocked during
-# football matches (curl 000 from a home network). This runs on GitHub's
-# runners, outside that block; still, check from another network before
-# blaming the site.
+# Night watch for nwos.numen.games: a probe of the live site on a schedule. On failure
+# it opens a `night-watch` issue here; on recovery it closes it. The job lives
+# once, in numengames/.github; this file says when and what to probe.
 name: Night watch
 
 on:
   schedule:
-    - cron: "23 */6 * * *" # every six hours, off the :00 stampede
+    - cron: "23 */6 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
   group: night-watch
@@ -31,54 +19,13 @@ concurrency:
 
 jobs:
   probe:
-    name: Probe the live site
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
+    uses: numengames/.github/.github/workflows/monitor.yml@c87e85e17306324752a59426f899e48059d42609
     permissions:
       issues: write
-    steps:
-      - name: Probe
-        id: probe
-        run: |
-          fails=""
-          check() {
-            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "https://nwos.numen.games$1" || echo 000)
-            echo "GET $1 -> $code (want $2)"
-            [ "$code" = "$2" ] || fails="$fails $1→$code(want:$2)"
-          }
-          check /              200
-          check /how-it-works/ 200
-          check /updates/      200
-          if [ -n "$fails" ]; then
-            echo "fails=$fails" >> "$GITHUB_OUTPUT"
-            echo "::error::Probes failing:$fails"
-            exit 1
-          fi
-      - name: Raise the alarm
-        if: failure()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          FAILS: ${{ steps.probe.outputs.fails }}
-        run: |
-          gh label create night-watch --repo "$GITHUB_REPOSITORY" --color D33440 \
-            --description "Live-site alarm raised by the monitor" 2>/dev/null || true
-          open=$(gh issue list --repo "$GITHUB_REPOSITORY" --label night-watch --state open --json number --jq '.[0].number // empty')
-          body="Probes failing: \`$FAILS\` · $(date -u +%FT%TZ) · [run](https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
-          if [ -n "$open" ]; then
-            gh issue comment "$open" --repo "$GITHUB_REPOSITORY" --body "Still failing — $body"
-          else
-            full=$(printf 'The night watch found the site dark. %s\n\nDiagnosis: verify from OUTSIDE Spain-on-match-day networks first; then read https://nwos.numen.games/api/health.' "$body")
-            gh issue create --repo "$GITHUB_REPOSITORY" --label night-watch \
-              --title "nwos.numen.games is failing its probes" \
-              --body "$full"
-          fi
-      - name: Stand down on recovery
-        if: success()
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          open=$(gh issue list --repo "$GITHUB_REPOSITORY" --label night-watch --state open --json number --jq '.[0].number // empty')
-          if [ -n "$open" ]; then
-            gh issue close "$open" --repo "$GITHUB_REPOSITORY" \
-              --comment "The site answers again — probes green at $(date -u +%FT%TZ). Standing down."
-          fi
+    with:
+      site: nwos.numen.games
+      follow-redirects: false
+      checks: |
+        / 200
+        /how-it-works/ 200
+        /updates/ 200

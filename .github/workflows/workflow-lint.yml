@@ -1,26 +1,19 @@
 # SPDX-FileCopyrightText: 2026 Numen Games S.L.
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: MIT
 #
-# The workflows checked as code (STD-015 SEC-007/SEC-008): actionlint reads
-# every workflow for syntax, expression and shell mistakes; zizmor reads them
-# for security mistakes (unpinned actions, template injection, credentials
-# left in the checkout, permissions wider than needed).
-#
-# Seen, not enforced: each tool's findings are printed in the log and in the
-# job summary, and the job exits 0 while STD-015 is draft (ENG-067). It is
-# not part of the required `build` check (ci.yml). Fix a finding in the
-# workflow, never by silencing the tool.
-#
-# Both tools are pinned: actionlint is the release binary verified against
-# its published checksum; zizmor is installed from PyPI at a fixed version.
+# Workflow lint (STD-015 SEC-007/SEC-008): actionlint and zizmor over this
+# repository's workflows. Seen, not enforced. The job lives once, in
+# numengames/.github.
 name: workflow-lint
 
 on:
   pull_request:
-    paths: [".github/workflows/**"]
+    paths:
+      - ".github/workflows/**"
   push:
     branches: [main]
-    paths: [".github/workflows/**"]
+    paths:
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
@@ -28,55 +21,6 @@ permissions:
 
 jobs:
   lint:
-    name: actionlint + zizmor (reports, does not block)
-    runs-on: ubuntu-latest
-    env:
-      ACTIONLINT_VERSION: 1.7.12
-      ZIZMOR_VERSION: 1.30.1
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
-          persist-credentials: false
-
-      - name: install actionlint (checksum verified)
-        run: |
-          base="https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}"
-          tarball="actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
-          curl -sSfL -o "$tarball" "$base/$tarball"
-          curl -sSfL -o checksums.txt "$base/actionlint_${ACTIONLINT_VERSION}_checksums.txt"
-          grep " $tarball\$" checksums.txt | sha256sum -c -
-          tar xzf "$tarball" actionlint
-          ./actionlint -version
-
-      - name: actionlint
-        continue-on-error: true
-        run: |
-          set +e
-          out="$(./actionlint -no-color 2>&1)"; status=$?
-          set -e
-          echo "$out"
-          {
-            echo "### actionlint — seen, not enforced (STD-015 draft, ENG-067)"
-            echo
-            if [ "$status" -eq 0 ]; then echo "clean"; else echo '```'; echo "$out"; echo '```'; fi
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit "$status"
-
-      - name: install zizmor
-        run: pipx install "zizmor==${ZIZMOR_VERSION}"
-
-      - name: zizmor
-        continue-on-error: true
-        run: |
-          set +e
-          out="$(zizmor --format plain .github/workflows 2>&1)"; status=$?
-          set -e
-          echo "$out"
-          {
-            echo "### zizmor — seen, not enforced (STD-015 draft, ENG-067)"
-            echo
-            echo '```'
-            echo "$out"
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit "$status"
+    uses: numengames/.github/.github/workflows/workflow-lint.yml@c87e85e17306324752a59426f899e48059d42609
+    permissions:
+      contents: read

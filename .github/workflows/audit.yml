@@ -1,15 +1,9 @@
 # SPDX-FileCopyrightText: 2026 Numen Games S.L.
-# SPDX-License-Identifier: AGPL-3.0-only
+# SPDX-License-Identifier: MIT
 #
-# Dependency audit (STD-015): the production dependencies — what the Worker
-# and the pages actually ship — checked against the npm advisory database,
-# high severity and above. Dev tooling is left out: it never reaches a
-# visitor, and Dependabot (dependabot.yml) already keeps it moving.
-#
-# Seen, not enforced: the findings go to the log and the job summary; the
-# job exits 0 while STD-015 is draft (ENG-067). Not part of the required
-# `build` check (ci.yml). Fix a finding by upgrading the dependency, never
-# by lowering the level here.
+# Dependency audit: the production dependencies against the advisory
+# database, high and above. Seen, not enforced. The job lives once, in
+# numengames/.github.
 name: audit
 
 on:
@@ -17,37 +11,16 @@ on:
     branches: [main]
   pull_request:
   schedule:
-    - cron: "11 6 * * 1"
+    - cron: "15 6 * * 1"
 
 permissions:
   contents: read
 
 jobs:
-  npm-audit:
-    name: npm audit, production, high+ (reports, does not block)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-        with:
-          persist-credentials: false
-
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
-        with:
-          node-version: 22
-
-      # Reads package-lock.json only; no install, no script runs.
-      - name: npm audit --omit=dev --audit-level=high
-        continue-on-error: true
-        run: |
-          set +e
-          out="$(npm audit --omit=dev --audit-level=high 2>&1)"; status=$?
-          set -e
-          echo "$out"
-          {
-            echo "### npm audit (production, high and above) — seen, not enforced (STD-015 draft, ENG-067)"
-            echo
-            echo '```'
-            echo "$out" | tail -n 60
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-          exit "$status"
+  audit:
+    uses: numengames/.github/.github/workflows/audit.yml@c87e85e17306324752a59426f899e48059d42609
+    permissions:
+      contents: read
+    with:
+      package-manager: npm
+      working-directory: .

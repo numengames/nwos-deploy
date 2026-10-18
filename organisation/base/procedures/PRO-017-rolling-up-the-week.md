@@ -4,9 +4,9 @@ uid: ""
 title: "Rolling up the week"
 type: procedure
 status: draft
-version: "3.3.5"
+version: "3.4.0"
 created: "2026-09-08T22:00:00Z"
-updated: "2026-10-03T21:30:00+02:00"
+updated: "2026-10-15T10:57:40Z"
 author: "ursa"
 owner: "oracle"
 section: "Knowledge and quality"
@@ -53,7 +53,7 @@ on the first Monday of a year over four quarterlies. Executor: any agent on
 1. **Open the report.** Copy `machine/templates/RPT-TEMPLATE-WEEK.md` to
    `reports/RPT-NNN-<yyyy>-w<ww>.md`. It is written for the board, under the
    nine headings of `STD-043`, not for the people who did the work.
-2. **List what closed.** `node machine/scripts/check-deletable.mjs
+2. **List what closed.** `node machine/tools/check-deletable.mjs
    --candidates`; `git log --since=<monday>` is the daily record (`DEF-001`).
 3. **Copy one line per record.** Take it from the record's own Closure:
    identifier, title, one sentence, the commit or PR that proves it. Do not
@@ -81,6 +81,10 @@ on the first Monday of a year over four quarterlies. Executor: any agent on
 
 Quarterly and annual: copy `RPT-TEMPLATE-QUARTER.md` or `RPT-TEMPLATE-YEAR.md`;
 the "records" are the reports of the level below.
+Quarterly, also: run `node machine/packages/sales-kit/pipeline.mjs opportunities`
+and read its *Ready to leave* list. Write its count, value and reasons
+under *business and customers*, beside the quarter before; put the
+identifiers in `absorbs:`; then `git rm` those lost records.
 Carry up only `rule`, `debt`, `address` lines; move `absorbs:` lists whole
 (`DEF-011`); repoint redirects (`URL-005`); delete the lower reports.
 
@@ -88,8 +92,8 @@ Carry up only `rule`, `debt`, `address` lines; move `absorbs:` lists whole
 
 | Check | Evidence |
 |---|---|
-| Nothing broke | `check-references` 0 new · `check-url-lifecycle` 0 dead |
-| Nothing left behind | `check-deletable --candidates` empty for the period |
+| Nothing broke | `std-012-corpus-does-not-grow` 0 new · `check-url-lifecycle` 0 dead |
+| Nothing left behind | `node machine/tools/check-deletable.mjs --candidates` empty for the period |
 | Nothing lost | `absorbs:` equals the set of deleted identifiers |
 | Nothing grew | `tokens.total` in `machine/telemetry/latest.json` lower than before; if not, the PR says why |
 
@@ -104,5 +108,5 @@ Oracle wants a body back: `git show <commit>:<path>`.
 |---|---|---|
 | `STD-012` | The corpus does not grow | `DEF-001..007`, the rule this executes |
 | `STD-043` | A report speaks to the board | the nine headings every roll-up carries |
-| `ADR-030` | Lifecycle and deletion | the four tests a deletion answers |
-| `RPT-018` | Alpha story | the open phase report step 6 points at |
+| `ADR-030` | The four tests before deletion | the four tests a deletion answers |
+| `RPT-018` | The Alpha story: what missions/ ships while it is the alpha board | the open phase report step 6 points at |

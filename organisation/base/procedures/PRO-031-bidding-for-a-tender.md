@@ -3,10 +3,10 @@ id: "PRO-031"
 uid: ""
 title: "Bidding for a tender"
 type: procedure
-status: draft
-version: "0.3.3"
+status: active
+version: "1.0.0"
 created: "2026-10-01T15:00:00+02:00"
-updated: "2026-10-03T21:30:00+02:00"
+updated: "2026-10-15T12:22:36Z"
 author: "ursa"
 owner: "oracle"
 guild: "Procurators"
@@ -29,9 +29,9 @@ SPDX-License-Identifier: CC0-1.0
 > screening, from the record opened to the offer filed and the award read:
 > resolve what is still to check, decide in a day, file the offer the
 > procedure asks for, and learn from the award.
-> **Epistemic:** What does the house do with a tender it has found, and when does it bid?
+> **Epistemic:** How does a screened tender become a filed offer, and its award read?
 > **Pragmatic:** No tender is weighed from memory: the criteria table is
-> written first, the chance follows from it, the Oracle decides.
+> written first and is a gate, not a grade; the Oracle decides.
 > **Audience:** Agents · Oracles
 
 **Binds:** whoever reads, decides on or files a tender in Numen Games'
@@ -93,15 +93,15 @@ It starts when the screening (`PRO-033`) has opened a tender's record.
 6. **Read the award.** Proposed as awardee: a `pos` line marked `awarded`;
    lodge the definitive guarantee and bring the documents the authority
    asks within its days. Contract formalised: a `won` line, the house's
-   price as the value, and the closing procedure takes it from its step 3
+   price as the value, and the closing procedure takes it from its step 6
    (`PRO-030`). Another bid scored higher: a `lost` line, `outbid`, with
    the scores; excluded or withdrawn: a `lost` line, `excluded`, with the
    reason.
 7. **Correct the card.** What the tender taught — a certificate missing, a
    solvency figure, a partner who answered — goes into the card the same
    week.
-8. **Run the pipeline tool.** The record conforms, and its chance agrees
-   with its criteria.
+8. **Run the pipeline tool.** The record conforms, no criterion says no,
+   and the tool gives its chance from the line and the house's wins.
 
 ---
 

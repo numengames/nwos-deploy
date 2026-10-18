@@ -13,8 +13,7 @@ version: "0.1.0"
 created: "YYYY-MM-DDTHH:MM:SSZ"
 updated: "YYYY-MM-DDTHH:MM:SSZ"
 author: "agent-id"
-owner: "oracle"
-guild: "Alchemists"
+owner: "person-responsible"
 section: "Knowledge and quality"
 tags: [report, rollup, quarter]
 license: "CC-BY-4.0"
@@ -32,7 +31,7 @@ related: ["STD-043", "PRO-017"]
 > **Summary:** One sentence: where the company stands at the close of the quarter.
 > **Epistemic:** The state of the whole organisation at the close of the period.
 > **Pragmatic:** What a board member needs before the next meeting.
-> **Audience:** Oracles · the board · the public
+> **Audience:** People responsible · the board · the public
 
 ## 1. The period in brief
 
@@ -46,12 +45,15 @@ its figures, so the trend reads at a glance.
 
 Opportunities opened, won and lost, with their value and the stage they
 reached; proposals sent; customers served. A table against the period
-before. Where the sales records are empty, say so in one line.
+before. The pipeline's *Ready to leave* list — lost records past 90 days —
+is counted here and then their files are deleted. Where the sales records
+are empty, say so in one line.
 
 | | quarter before | this quarter |
 |---|---|---|
 | Opportunities open | | |
 | Won · lost | | |
+| Lost, ready to leave (count · EUR · reasons) | | |
 | Value in play (EUR) | | |
 
 ## 3. Money
@@ -68,18 +70,19 @@ is not wired yet." Never an estimate presented as a figure.
 
 ## 4. Products and services
 
-What customers and visitors can use that they could not before: the four
-sites, the platform, the offers. One line per product, with its version
+What customers and visitors can use that they could not before: the sites,
+the products, the offers. One line per product, with its version
 at the close of the period.
 
 ## 5. The world and its creations
 
-The lore, the manual, adventures, art and assets: what was written,
+What the organisation created — content, documentation, designs and
+assets: what was written,
 translated, licensed or published.
 
 ## 6. People and agents
 
-Who works here — Oracles, agents, contributors — who joined or left, and
+Who works here — people responsible, agents, contributors — who joined or left, and
 what each was trusted with. Changes in how agents are operated.
 
 ## 7. Governance

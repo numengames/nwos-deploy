@@ -5,9 +5,9 @@ uid: ""
 type: standard
 subtype: register
 status: active
-version: "5.16.0"
+version: "5.17.1"
 created: "2026-08-24T16:00:00Z"
-updated: "2026-10-03T22:30:00+02:00"
+updated: "2026-10-10T11:53:10+02:00"
 author: "ursa"
 owner: "oracle"
 guild: "Alchemists"
@@ -50,11 +50,12 @@ SPDX-License-Identifier: CC0-1.0
 | `debt/` | what is known to be missing; deleted once nothing living cites it | `DBT-NNN` | `open` | 300 | `DBT-TEMPLATE.md` |
 | `operations/` | what sustains the business: strategy, sales, continuity | `OPS-NNN` | `open` | — | `OPS-TEMPLATE.md` |
 | `opportunities/` | each opportunity of any kind — a sale, a tender, a grant, a collaboration, a partner — one record each with its timeline, its proposals beside it; every document's header, then the fields the pipeline tool reads | `OPP-YYYY-NNN` · `PRP-YYYY-NNN` | `open` | — | `OPP-TEMPLATE.md` · `PRP-TEMPLATE.md` |
-| `legal/` | what the company has promised the public in law: privacy, terms, cookies; changes when the law or the service does | `LEG-NNN` | `governed` | — | — |
+| `legal/` | what the company has promised the public in law: privacy, terms, cookies; changes when the law or the service does | `LEG-NNN` | `governed` | — | `LEG-TEMPLATE.md` |
 | `system/` | how the machine is wired | `SYS-NNN` | `governed` | — | `SYS-TEMPLATE.md` |
 | `agents/` | who acts: `SOUL` · `OPERATOR` · `STATUS` · `MEMORY` per agent | — | `live` (memory) | — | `agents/_template/` |
 | `lore/` | the fiction and the game; a second fonds (`ADR-046`) | — | `open` | — | `lore/adventures/tabletop/TEMPLATE.md` |
 | `objects/` | the objects the archive registers that are not documents | — | `open` | — | — |
+| `stakeholders/` | who takes part in the system from outside the house — an organisation, a public body, an event — one card each; the house's own people and agents keep theirs in `agents/` | — | `open` | — | — |
 | `machine/checks/` | the checks, one file per standard, that run on every change | — | — | — | — |
 | `machine/tools/` | tooling run by hand or against the registers: checks, renames, exports | — | — | — | — |
 | `machine/scripts/` | the build and CI scripts: addresses, links, versions, the telemetry writer | — | — | — | — |
@@ -94,7 +95,7 @@ system, and it belongs to everyone.
 | `agent` | `agents/` | yes |
 | `opportunity` · `proposal` | `opportunities/` | yes |
 | `meta` | anywhere — apparatus accompanies its series | no |
-| `entity` | an entity card: `agents/<agent>/AGENT.md`, `objects/` | no |
+| `entity` | an entity card: `agents/<agent>/AGENT.md`, `objects/`, `stakeholders/` | no |
 
 Three kinds are withdrawn: an audit is now a report of the audit kind, a
 decision is a decision record, and a roster is apparatus. A standard was
@@ -113,8 +114,8 @@ listed there too.
 Older documents were numbered under the earlier prefixes listed below.
 Nothing is renumbered. A citation of an old number stays as written, a
 promise about the past, and the archive resolves it against its history.
-Across repositories, an identifier carries the repository's short name in
-front.
+How an identifier from another repository is cited is set by *One document,
+one identifier*.
 
 | Earlier prefix |
 |---|

@@ -1,0 +1,155 @@
+---
+title: "When a rule bites"
+id: "STD-005"
+uid: ""
+type: standard
+subtype: standard
+status: active
+version: "4.1.0"
+created: "2026-08-17T21:55:38+02:00"
+created_source: "git:e3123fc"
+created_confidence: exact
+updated: "2026-10-04T10:20:00+02:00"
+author: "pablofm"
+owner: "oracle"
+section: "Technology"
+tags: [standards, engineering, ci, checks]
+derived_from: "PRI-010"
+license: "CC0-1.0"
+absorbs: ["STD-011"]
+---
+
+<!--
+SPDX-FileCopyrightText: 2026 Numen Games S.L.
+SPDX-License-Identifier: CC0-1.0
+-->
+
+# When a rule bites
+
+> **Summary:** A rule is worth the machine that checks it. A check fails the
+> build only while its rule's standard is signed; a check over the thing built
+> always fails. Five repositories share one pipeline.
+> **Epistemic:** When does a rule bite, and how do the checks come to run?
+> **Pragmatic:** Write, wire or read a check, and tell a broken rule from a
+> broken artefact.
+> **Audience:** Agents · Oracles
+
+**Binds:** this repository and every workspace born from it; personal repositories SHOULD follow.
+
+## Rules
+
+These rules are edited here and nowhere else. A workspace receives them at
+birth and owns them from then on.
+
+### What a rule is worth
+
+**A rule that does not fail a build is prose.** The checks that run on every
+change are the authority; the documentation explains them. For an agent, a
+rule no check runs does not exist.
+
+**Every practice names its check.** Each practice in the register of
+engineering checks MUST say which machine checks it, or plainly that a
+person does. Checking by hand is debt, and what a machine can check MUST NOT
+be audited by hand.
+
+**A check that fails on unstated behaviour is the defect.** When a check
+fails on something no rule asks for, fix the check or write the rule, never
+bend the work to fit it.
+
+**A check bites by the state of its rule.** A finding fails the build only
+while the standard holding the rule it cites is active. While it is a draft,
+the check reports and lets the build pass.
+
+**Signing a standard switches its checks on.** The check reads the standard's
+state from its header on every run, never from its own settings. A finding
+that cites no rule has no state to read and MUST NOT fail a build.
+
+**A check over the artefact bites always.** A check that reads the thing
+built, not a rule, fails regardless: the build, fresh measurements, links
+inside the site, stray pages, cited addresses that still answer. It says so
+where it lists what it cannot see.
+
+### How checks come to run
+
+**A check runs from the change that merges it.** A check is a script in the
+guards folder, where the runner finds and runs it. No document or workflow
+line makes it exist. A script that must not run as a check lives elsewhere.
+
+**The list of checks is read, never remembered.** What runs is what the
+runner finds in the guards folder. The workflow calls the runner and names no
+check, because a hand-written list is stale the day it is written.
+
+The practices a repository keeps (its security score, changelog and incident
+reviews) are rows of the register of engineering checks, each with its check.
+
+This standard is over its word budget because the shared pipeline must be
+read whole to be copied.
+
+### The family pipeline
+
+Five repositories run the same checks. Four serve a site: this archive, the
+Numinia site, the Numen Games site and the workspace deployer. The fifth, the
+store of shared resources, serves none. A check is a step or script that
+says whether the change under review is wrong. Checks come in two kinds:
+
+| Kind | Steps, in this order | Fails the build? |
+|---|---|---|
+| Artefact | install → type-check → lint → test → build → share card (`web/scripts/share-card.mjs --check`) → version bump (`machine/scripts/check-version-bump.mjs`) | Yes. A page that does not build, a test that fails, a favicon that is missing or a version that did not move is a broken artefact whatever any standard says. |
+| Rule | presence of the files a new repository is born with (see the register of engineering checks) · REUSE lint · OpenSSF Scorecard · dependency audit | No, while the register of engineering checks is `draft`. The step runs on every pull request, prints every finding in the log and the job summary, and exits 0. Promoting that register to `active` is what turns them into failures. |
+
+- **One required check, and it is called build.** The main line's
+  protection, copied to every repository, can require a check only by name,
+  so the name means the same everywhere. Where work is split into jobs,
+  build passes only if every artefact job passed, and never waits on a job
+  that only reports. Renaming it leaves the required check pending for ever
+  and blocks every merge; requiring no check lets a red run merge.
+- **The store of resources has no site.** It builds nothing; its artefact
+  checks check that every file declares its licence, with tests proving a
+  missing declaration is refused; build passes only when all of them do.
+- **Some files are kept identical across the five, by hand until a shared
+  package carries them.** They are listed below. A diff of two copies shows
+  only their paths.
+- **Every workflow, every step,** as the register of engineering checks
+  asks: outside actions pinned to the full commit hash of one release,
+  never a movable tag; read-only permissions at the top of the file, write
+  granted only to the job that needs it; no secret read by a build, since
+  publishing is connected in the hosting provider's panel, never through a
+  workflow token; and above each step, an English comment saying what it
+  checks and how to fix a failure.
+
+| Kept identical in the five | What it does |
+|---|---|
+| `machine/scripts/check-version-bump.mjs` | refuses a change to a site that does not raise its version; only its two path settings differ |
+| `web/scripts/share-card.mjs` | draws the card shown when a link is shared |
+| `.github/dependabot.yml` | asks for dependency updates |
+| `.github/workflows/dependabot-auto-merge.yml` | merges those updates once the checks pass |
+| `.github/workflows/scorecard.yml` | runs the weekly security score |
+
+## Check
+
+Each rule, its code, its source and its check.
+
+| Rule ID | Rule | Source | Verified by |
+|---|---|---|---|
+| ENG-001 | A rule that does not fail a build is prose | — | `regime.test.mjs` proves a finding under an active rule fails the build; the register check (`machine/tools/check-register.mjs --list`) counts the automatic, gated and owed rows |
+| ENG-002 | Every practice names its check | — | the register check verifies each row's named check exists |
+| ENG-066 | A check that fails on unstated behaviour is the defect | — | `regime.test.mjs` reads every registered rule check and fails if one can report under a rule no document writes |
+| ENG-067 | A check bites by the state of its rule; signing a standard switches its checks on; a check over the artefact bites always | — | `machine/scripts/lib/regime.mjs` reads the holder's state; `regime.test.mjs` proves both directions; `blindness.test.mjs` checks every check is a build check or answers to the regime |
+| ENG-031 | A check runs from the change that merges it | — | `machine/scripts/run-checks.mjs` runs every registered check; `blindness.test.mjs` and the register check refuse a check script with no registry entry |
+| ENG-032 | The list of checks is read, never remembered | — | the workflow calls `npm run checks` and names no check; the register check verifies that step is present |
+
+## Why
+
+A practice with no check is a wish with a heading; writing the check beside
+it shows what is enforced and what is only promised. Checks are code, and
+code rots. A check that bites before its rule is signed turns a draft into a
+law nobody agreed to. With one pipeline in five repositories, a red build
+means the same thing everywhere.
+
+## References
+
+| ID | Title | Relation |
+|---|---|---|
+| `STD-015` | Engineering checks | the practices, their level and their check |
+| `PRO-016` | Applying the engineering standard | the procedure for a task |
+| `STD-009` | Which rule wins | where ENG-031..035 and ENG-066 came from; `PRE-006`, the principle ENG-067 executes |

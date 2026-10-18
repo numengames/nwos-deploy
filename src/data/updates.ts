@@ -27,6 +27,20 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.18.0",
+		date: "2026-10-18",
+		entries: [
+			{
+				type: "CHG",
+				text: "The Legal notice, Privacy, Cookies and Terms links in the footer and the workspace form now open the one address on numinia.org instead of a local copy: this site never kept its own text, and STD-037 SIT-005 says a legal text has a single address. A build check fails from now on if a local copy reappears here.",
+			},
+			{
+				type: "DEL",
+				text: "The local /legal/notice, /legal/privacy, /legal/cookies and /legal/terms pages are gone, with their copied text.",
+			},
+		],
+	},
+	{
 		version: "v0.17.0",
 		date: "2026-10-04",
 		entries: [

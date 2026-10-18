@@ -55,7 +55,7 @@ export function report(env: ReturnType<typeof getEnv>): HealthReport {
 		trial: Object.values(settings).every(Boolean) ? "open" : "paused",
 		settings,
 		warnings,
-		alwaysAvailable: ["the home page", "/how-it-works", "the example workspace", "the legal pages"],
+		alwaysAvailable: ["the home page", "/how-it-works", "the example workspace", "the legal links (numinia.org)"],
 	};
 }
 

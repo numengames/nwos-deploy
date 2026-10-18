@@ -11,7 +11,7 @@
     "dev": "astro dev",
     "prebuild": "node scripts/design-tokens.mjs && node scripts/share-card.mjs",
     "build": "astro build",
-    "postbuild": "node scripts/license-check.mjs && node scripts/legal-check.mjs",
+    "postbuild": "node scripts/license-check.mjs && node scripts/legal-check.mjs && node scripts/version-seal.mjs",
     "license-check": "node scripts/license-check.mjs",
     "type-check": "astro check",
     "lint": "prettier --check . && eslint .",

@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.18.0",
+		date: "2026-10-18",
+		entries: [
+			{
+				type: "FIX",
+				text: "`/version.json` now answers (it was 404): the build writes it with the live commit, the version and when it was built, the same contract as numinia.com, numen.games and numinia.org. `wait_live.py` and the deploy panel read it to tell which version is in production.",
+			},
+		],
+	},
+	{
 		version: "v0.17.0",
 		date: "2026-10-04",
 		entries: [

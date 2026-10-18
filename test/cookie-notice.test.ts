@@ -39,7 +39,7 @@ describe("cookie notice", () => {
 		expect(en.consentModal.acceptAllBtn).toBe("Accept all");
 		expect(en.consentModal.acceptNecessaryBtn).toBe("Reject all");
 		expect(en.consentModal.description).toContain("Both buttons leave the site the same");
-		expect(en.consentModal.description).toContain('href="/legal/cookies"');
+		expect(en.consentModal.description).toContain('href="https://numinia.org/legal/cookies"');
 	});
 
 	it("the footer button reopens the preferences", async () => {

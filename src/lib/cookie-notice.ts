@@ -26,8 +26,8 @@ export const CONSENT_COOKIE = "numen_consent";
 export const STORED_KEYS = ["numen_consent", "numinia-modo"] as const;
 
 const SITE = {
-	policyHref: "/legal/cookies",
-	noticeHref: "/legal/notice",
+	policyHref: "https://numinia.org/legal/cookies",
+	noticeHref: "https://numinia.org/legal/notice",
 	title: "This site keeps very little in your browser",
 	description: "Only day or night, if you choose it, and this answer. The workspace form sends what you type only when you submit it, and keeps none of it here. Nothing follows you. Both buttons leave the site the same.",
 };
@@ -53,7 +53,7 @@ export function startCookieNotice(): void {
 						acceptAllBtn: "Accept all",
 						acceptNecessaryBtn: "Reject all",
 						showPreferencesBtn: "Preferences",
-						footer: `<a href="${SITE.noticeHref}">Legal notice</a><a href="/legal/privacy">Privacy</a>`,
+						footer: `<a href="${SITE.noticeHref}" target="_blank" rel="noopener noreferrer">Legal notice</a><a href="https://numinia.org/legal/privacy" target="_blank" rel="noopener noreferrer">Privacy</a>`,
 					},
 					preferencesModal: {
 						title: "What this site keeps",

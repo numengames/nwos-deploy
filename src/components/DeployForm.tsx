@@ -171,9 +171,9 @@ export default function DeployForm({ onSale = trialOnSale() }: { onSale?: boolea
 			<label className="flex items-start gap-3 cursor-pointer">
 				<input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)} disabled={busy} className="mt-0.5 h-4 w-4 border-border bg-card accent-accent disabled:opacity-50" />
 				<span className="text-sm text-muted-foreground leading-relaxed">
-					I accept the <a href="/legal/terms" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
+					I accept the <a href="https://numinia.org/legal/terms" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
 						Terms and Conditions
-					</a> for deploying the NWOS workspace, and I have read the <a href="/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
+					</a> for deploying the NWOS workspace, and I have read the <a href="https://numinia.org/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-4 hover:text-accent">
 						Privacy Policy
 					</a>. The workspace documents are drafted by an AI model.
 				</span>

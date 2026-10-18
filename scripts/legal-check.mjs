@@ -1,61 +1,67 @@
 // SPDX-FileCopyrightText: 2026 Numen Games S.L.
 // SPDX-License-Identifier: AGPL-3.0-only
 //
-// legal-check — the four legal pages exist in the built site and show the
-// visitor only the text, never the archive's review record.
-//
-// The copies in src/content/legal/ carry the masters' frontmatter
-// (review_flags, restoration notes): it must never be rendered. This runs
-// after `astro build` (npm postbuild) over dist/client/legal/<slug>/ and
-// fails the build if a page is missing, if any forbidden string reaches
-// it, or if it shows an email other than legal@numengames.com.
-// Usage: node scripts/legal-check.mjs. Pure functions are exported for
+// legal-check — SIT-005 (STD-037): the legal texts have one address,
+// numinia.org, and this site links it instead of keeping a copy. This
+// scans the repository (never node_modules/dist/.git) for the tell-tale
+// signs of a local legal-text copy reappearing and fails the build if it
+// finds one: a `content/legal` or `pages/legal` style path, or a Markdown
+// file whose frontmatter carries an archive legal-document id (`LEG-0NN`)
+// together with `type: legal`. Pure functions are exported for
 // test/legal.test.ts.
+// Usage: node scripts/legal-check.mjs
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-/** The four slugs every Numen Games site publishes. */
-export const LEGAL_SLUGS = ["notice", "privacy", "cookies", "terms"];
+/** Directories never walked: build output, deps, tool caches. */
+const SKIP_DIRS = new Set(["node_modules", ".git", "dist", ".coverage", ".astro", ".wrangler"]);
 
-/** Strings that belong to the archive's record, never to a published page. */
-export const FORBIDDEN = ["FLAG-", "frontmatter", "Audience: Oracle", "DRAFT", "[PENDING", "scope is under review", "cuota de socio", "startupvalencia", "gm@numengames.com"];
+/** A path containing one of these segments is itself a local copy of the legal texts. */
+export const FORBIDDEN_PATH_SEGMENTS = ["content/legal", "pages/legal"];
 
-/** The only address a legal text may show. */
-export const LEGAL_EMAIL = "legal@numengames.com";
+/** Both must match a Markdown file's frontmatter for it to be a copied legal-text master. */
+export const FORBIDDEN_CONTENT = [/id:\s*"LEG-0\d\d"/, /type:\s*legal\b/];
 
-/** The Markdown body of a copied master: everything after the frontmatter. */
-export function bodyOf(markdown) {
-	const m = /^---\r?\n[\s\S]*?\r?\n---\r?\n/.exec(markdown);
-	return m ? markdown.slice(m[0].length) : markdown;
+function walk(dir) {
+	let files = [];
+	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+		if (entry.isDirectory() && SKIP_DIRS.has(entry.name)) continue;
+		const full = path.join(dir, entry.name);
+		if (entry.isDirectory()) files = files.concat(walk(full));
+		else files.push(full);
+	}
+	return files;
 }
 
-/** Problems in one published text (Markdown body or built HTML). */
-export function legalProblems(text) {
-	const problems = FORBIDDEN.filter((s) => text.includes(s)).map((s) => `forbidden string "${s}"`);
-	const emails = new Set(text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g) ?? []);
-	for (const e of emails) if (e !== LEGAL_EMAIL) problems.push(`email other than ${LEGAL_EMAIL}: ${e}`);
+/** Problems found in the repository tree rooted at `base`. Empty = clean. */
+export function findLocalCopies(base) {
+	const problems = [];
+	for (const file of walk(base)) {
+		const rel = path.relative(base, file).split(path.sep).join("/");
+		if (FORBIDDEN_PATH_SEGMENTS.some((s) => rel.includes(s))) {
+			problems.push(`${rel}: path looks like a local copy of the legal texts (SIT-005 — link numinia.org instead)`);
+			continue;
+		}
+		if (!/\.(md|mdx)$/.test(file)) continue;
+		const text = fs.readFileSync(file, "utf8");
+		if (FORBIDDEN_CONTENT.every((re) => re.test(text))) {
+			problems.push(`${rel}: looks like a copied legal-text master (SIT-005 — link numinia.org instead)`);
+		}
+	}
 	return problems;
 }
 
 function main() {
-	const dir = path.join(root, "dist", "client", "legal");
-	const failures = [];
-	for (const slug of LEGAL_SLUGS) {
-		const file = path.join(dir, slug, "index.html");
-		if (!fs.existsSync(file)) {
-			failures.push(`/legal/${slug}: not built (${path.relative(root, file)} missing)`);
-			continue;
-		}
-		for (const p of legalProblems(fs.readFileSync(file, "utf8"))) failures.push(`/legal/${slug}: ${p}`);
-	}
-	if (failures.length > 0) {
-		for (const f of failures) console.error(`legal-check: ${f}`);
+	const problems = findLocalCopies(root);
+	if (problems.length > 0) {
+		for (const p of problems) console.error(`legal-check: ${p}`);
+		console.error("legal-check: SIT-005 — the legal texts have one address (numinia.org). Link them, never copy them.");
 		process.exit(1);
 	}
-	console.log(`legal-check: ${LEGAL_SLUGS.length} legal pages built, none shows the archive's record.`);
+	console.log("legal-check: no local copy of the legal texts found; this site links numinia.org (SIT-005).");
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

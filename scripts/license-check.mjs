@@ -27,9 +27,10 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const distDir = path.join(root, "dist");
 
-// Canon C-005 «Consume ... freely». OFL-1.1 se admite solo si su texto
+// Canon C-005 «Consume ... freely» (UNLICENSE: dedicación al dominio público,
+// más permisiva que MIT; STD-010 2.4.6). OFL-1.1 se admite solo si su texto
 // acompaña a las fuentes en el artefacto (se comprueba aparte).
-const ALLOWED = new Set(["MIT", "ISC", "BSD-2-CLAUSE", "BSD-3-CLAUSE", "BSD", "APACHE-2.0", "0BSD", "CC0-1.0", "CC-BY-4.0", "OFL-1.1"]);
+const ALLOWED = new Set(["MIT", "ISC", "BSD-2-CLAUSE", "BSD-3-CLAUSE", "BSD", "APACHE-2.0", "0BSD", "CC0-1.0", "UNLICENSE", "CC-BY-4.0", "OFL-1.1"]);
 const ISOLATION_ONLY = /^(MPL-2\.0|EPL-2\.0|LGPL-3\.0(-only|-or-later)?)$/i;
 const COPYLEFT_SEPARATE_REPO = /^(A?GPL)-[0-9.]+(-only|-or-later)?$/i;
 const NEVER = /BUSL|SSPL|ELASTIC|COMMONS.?CLAUSE|-NC(-|$)|-ND(-|$)|UNLICENSED|PROPRIETARY/i;

@@ -5,11 +5,11 @@ title: "The header"
 type: standard
 subtype: standard
 status: active
-version: "4.16.1"
+version: "4.19.2"
 created: "2026-08-28T15:10:00Z"
 created_source: "git:4c0a02e"
 created_confidence: exact
-updated: "2026-10-03T22:30:00+02:00"
+updated: "2026-10-10T11:53:10+02:00"
 approved_by: "ADR-043"
 absorbs: ["STD-016"]
 author: "ursa"
@@ -66,8 +66,8 @@ author MUST NOT stand in for a value. Where history cannot testify, mark
 the date as declared, so a reader can tell evidence from claim.
 
 **A deferred value has an owner.** A value left to be announced MUST sit in
-a field that a mission owns, and the check names that mission. Whether the
-mission still lives is judged by hand.
+a field that a mission owns, and the check names that mission. A mission
+that is gone or finished owns nothing.
 
 **Deprecated fields leave in waves.** A deprecated field MUST be reported
 wherever it still appears until its migration lands. The rule that names it
@@ -107,7 +107,8 @@ always named with the internet's standard language tags.
 **Dates are written the internet's way.** Every date MUST follow the
 internet's timestamp format: year, month, day, the hour and its offset from
 universal time, in that order. Dates then sort as text and read one way;
-no updated date comes before its created date.
+no updated date comes before its created date. Where a date's source gives
+no hour, the house's hours card (`OPS-022`) gives it.
 
 This standard runs over its word budget because each rule names the outside
 standard it follows.
@@ -125,29 +126,29 @@ then the extensions, with its value, code, series and outside meaning.
 | HDR-042 | Adding a field costs a row and a decision | — | by hand, at review: the register row and the decision |
 | HDR-009 | Empty is absent | — | `machine/checks/rules/std-004-the-header.mjs` |
 | HDR-044 | Absent is never guessed | — ([EDTF](https://www.loc.gov/standards/datetime/) is the candidate for uncertain dates) | `machine/checks/rules/std-004-the-header.mjs`, placeholder values |
-| HDR-032 | A deferred value has an owner | — | `machine/checks/rules/std-004-the-header.mjs`; whether the mission lives, by hand |
+| HDR-032 | A deferred value has an owner | — | `machine/checks/rules/std-004-the-header.mjs`: a deferral with no owner, or whose mission is gone or finished |
 | HDR-031 | Deprecated fields leave in waves | — | `machine/checks/rules/std-004-the-header.mjs` |
 | HDR-020 | The universal identifier stays empty | — | `machine/checks/rules/std-004-the-header.mjs` |
 | HDR-043 | The licence is a name from the shared list — declared | [REUSE 3.3](https://reuse.software/spec-3.3/); [SPDX 2.3 Annex E](https://spdx.github.io/spdx-spec/v2.3/using-SPDX-short-identifiers-in-source-files/) | `machine/checks/rules/std-004-the-header.mjs` — `license` present |
 | HDR-008 | The licence is a name from the shared list — spelt right | [SPDX License List](https://spdx.org/licenses/) | `machine/checks/rules/std-004-the-header.mjs` — value against the manifest |
 | HDR-005 | A version counts what changed | [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html); bump rules in `STD-019` | `machine/checks/rules/std-004-the-header.mjs` — shape; the bump, by hand |
 | HDR-004 | Replaced is a relation, not a state | differs on purpose from [MADR](https://adr.github.io/madr/) and [Nygard](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) `superseded`; the heir is [`dcterms:isReplacedBy`](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/isReplacedBy/) | `machine/checks/rules/std-004-the-header.mjs` — status in its lifecycle |
-| HDR-016 | Relations live in the header and resolve | [DCMI Metadata Terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/): `replaces`, `isReplacedBy`, `relation`, `isPartOf`; [PROV-O](https://www.w3.org/TR/prov-o/) `wasDerivedFrom`; the field map is the outside meaning below | by hand, presence only: no check resolves header relations; `machine/checks/rules/std-020-git-is-the-archive.mjs` reads the body |
-| HDR-002 | Titles are English | [BCP 47](https://www.rfc-editor.org/info/bcp47) — the tag `en` | `machine/checks/rules/std-004-the-header.mjs`, presence; language by hand |
-| HDR-045 | Dates are written the internet's way | [RFC 3339, section 5.6](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), a free, exact profile of [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) — ours adds: time required, `updated` ≥ `created` | `machine/checks/rules/std-004-the-header.mjs` for `created` and `updated` (HDR-006, HDR-007); other dates by hand |
+| HDR-016 | Relations live in the header and resolve | [DCMI Metadata Terms](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/): `replaces`, `isReplacedBy`, `relation`, `isPartOf`; [PROV-O](https://www.w3.org/TR/prov-o/) `wasDerivedFrom`; the field map is the outside meaning below | `machine/checks/rules/std-004-the-header.mjs` resolves every relation field against the tree and its history, with the resolver the body's citations use (`DEF-009`) |
+| HDR-002 | Titles are English | [BCP 47](https://www.rfc-editor.org/info/bcp47) — the tag `en` | `machine/checks/rules/std-004-the-header.mjs`: presence, and a title carrying words or marks only Spanish uses is reported |
+| HDR-045 | Dates are written the internet's way | [RFC 3339, section 5.6](https://www.rfc-editor.org/rfc/rfc3339#section-5.6), a free, exact profile of [ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html) — ours adds: time required, `updated` ≥ `created`; the hour a source leaves out comes from `OPS-022` | `machine/checks/rules/std-004-the-header.mjs`: `created` and `updated` under HDR-006 and HDR-007; every other header field holding a date must carry its hour and offset, and midnight passes only where a call's notice wrote it |
 | HDR-001, 003, 006, 007, 012..014, 017..019, 033..038 | each field's own rule, in the tables below | — | `machine/checks/rules/std-004-the-header.mjs`, one rule ID per finding |
 | HDR-010, 011, 015 | author, owner, commissioned by | — | by hand, presence only |
 
 A governed folder is one `machine/scripts/lib/rules.json` lists under
-`governed.dirs`. HDR-045 was EXT-006 and HDR-046 was EXT-001 in the external
-standards; those rule IDs are deprecated there.
+`governed.dirs`. HDR-045 was EXT-006 in the external standards; that rule ID is deprecated
+there.
 
 ### Core fields 1 — identity, every document
 
 | Field | Rule | Rule ID |
 |---|---|---|
 | `id` | present; matches its series prefix, or `registration: exempt` with a reason | HDR-001 |
-| `title` | present, non-empty, English — BCP 47 `en` (language `[MANUAL]`) | HDR-002 |
+| `title` | present, non-empty, English — BCP 47 `en` | HDR-002 |
 | `type` | present; in the vocabulary below | HDR-003 |
 | `status` | present; in the lifecycle of its type | HDR-004 |
 | `version` | present; Semantic Versioning 2.0.0, no `v` prefix | HDR-005 |
@@ -220,7 +221,7 @@ where the industry's name is the better one.
 | `procedures/` | `applies_to` `mandatory` |
 | `system/` | `category` `stage` `confidence` (a card of the semantic census, an entry of `SYS-011`) · `category` (a supplier card, an entry of `SYS-012`) |
 | `standards/` `principles/` `procedures/` | `supersedes_version` `approved_by` |
-| `opportunities/` | the record: `kind` `organisation` `sector` `source` `value` `currency` `pays` `contact_role` `contact_channel` `opened` · written when due: `offer` `advance` `proposal` `agreement` `decider_role` `disclosure` `follows` `gives_back` · a tender or a grant: `call` `closes` `read_from` · a tender: `procedure` `file_ref` `object` `turnover_asked` `works_asked` `starts` · a grant: `instrument` `opens` `estimated` · the proposal: `opportunity` `date` `valid_until` `level` `price` `tax_rate` — their values are judged by the pipeline tool (`STD-039`, `STD-040`); the stage, the next step and the chance are computed from the record's timeline, never written in the header |
+| `opportunities/` | the record: `kind` `organisation` `sector` `source` `operation` `line` `value` `currency` `pays` `contact_role` `contact_channel` `opened` · written when due: `offer` `advance` `proposal` `agreement` `decider_role` `disclosure` `follows` `gives_back` `web` `contact_email` `door` `closes` · a tender or a grant: `call` `read_from` · a tender: `procedure` `file_ref` `object` `turnover_asked` `works_asked` `starts` · a grant: `instrument` `opens` `estimated` · the proposal: `opportunity` `date` `valid_until` `level` `price` `tax_rate` — their values are judged by the pipeline tool (`STD-039`, `STD-040`); the stage, the next step and the chance are computed from the record's timeline, never written in the header |
 | all | `tags` `visibility` `guild` `section` · `registration` `registration_reason` `registration_exemption` · `evidence_script` `evidence_head` · `related` · `uid` (reserved empty, HDR-020) |
 
 Deprecated fields are reported wherever they remain: `area` and `territory`
@@ -234,7 +235,7 @@ key never used) and the other field names from the Spanish era (`ADR-067`).
 
 | Field | Values | Rule ID |
 |---|---|---|
-| `type` | the closed list in `STD-001`, plus `agent` for `agents/`; a document of `standards/` is `type: standard`, one of `principles/` is `type: principle` (`seminal` until 2026-10-03), one of `designs/` is `type: design` (`blueprint` until 2026-10-03) | HDR-003 |
+| `type` | the closed list in `STD-001`; a document of `standards/` is `type: standard`, one of `principles/` is `type: principle` (`seminal` until 2026-10-03), one of `designs/` is `type: design` (`blueprint` until 2026-10-03) | HDR-003 |
 | `type` → series | strict for registered genres, `standard` among them; warn-only for the two general ones | HDR-017 |
 | `subtype` | reports: `audit` `analysis` `proposal` `rollup` (`daily` deprecated, `STD-012`) · standard: `standard` `register` · documentation: `register` `guide` `reference` | HDR-018 |
 | `guild` | `Sentinels` · `Alchemists` · `Exegetes` · `Procurators` | HDR-033 |

@@ -5,15 +5,15 @@ title: "One account"
 type: standard
 subtype: standard
 status: draft
-version: "0.3.5"
+version: "0.3.7"
 created: "2026-09-26T13:00:00+02:00"
-updated: "2026-10-03T22:00:00+02:00"
+updated: "2026-10-12T13:59:03+02:00"
 author: "ursa"
 owner: "oracle"
 section: "Finance"
 license: "CC0-1.0"
 tags: [standards, economy, ledger, accounting, transparency, audit]
-related: ["PRI-011", "PRI-010", "STD-033", "STD-035", "SYS-008", "PRO-021", "DES-017"]
+related: ["PRI-011", "STD-033", "STD-035", "SYS-008", "PRO-021", "DES-017"]
 derived_from: "PRI-011"
 ---
 
@@ -41,9 +41,7 @@ every view published from it.
 
 **One ledger.** Every cost and income MUST be one line: date, supplier,
 concept, account in the Spanish general accounting plan, base, tax, total,
-period covered and project. The plan is likely the small-company version;
-the gestoría, our accountants, confirms it. Every view is computed from these
-lines.
+period covered and project. Every view is computed from these lines.
 
 **Same figures, four views.** The public view, the technology view, the
 finance view and our accountants' view MUST agree on every figure they
@@ -103,7 +101,7 @@ Each rule, its code, its source and its check.
 
 | Rule ID | Rule | Source | Verified by |
 |---|---|---|---|
-| LED-001 | One ledger | law: [PGC PYMES, RD 1515/2007](https://www.boe.es/buscar/act.php?id=BOE-A-2007-19966) likely, rather than the full [PGC, RD 1514/2007](https://www.boe.es/buscar/act.php?id=BOE-A-2007-19884) — the gestoría confirms; group 62 services, 64 staff | by hand at each month's close; `web/src/lib/books.ts` reads the lines; `/system/open-books` computes every view from them |
+| LED-001 | One ledger | law: the Spanish general accounting plan, [PGC, RD 1514/2007](https://www.boe.es/buscar/act.php?id=BOE-A-2007-19884), or its small-company version, [PGC PYMES, RD 1515/2007](https://www.boe.es/buscar/act.php?id=BOE-A-2007-19966) — which one is open (`DBT-022`); group 62 services, 64 staff | by hand at each month's close; `web/src/lib/books.ts` reads the lines; `/system/open-books` computes every view from them |
 | LED-002 | Same figures, four views | — | `web/src/lib/books.ts` and `/system/open-books` render every view from one set of lines; every download, for any period, is cut from the same lines by `web/src/lib/exports.ts` (`machine/scripts/test/open-books-exports.test.mjs`: twelve months add up to their year, the whole span to every line) |
 | LED-003 | Billed and consumed | [FinOps FOCUS 1.2](https://focus.finops.org/docs/specification/v1-2/) BilledCost, EffectiveCost, ChargePeriodStart/End; accrual principle, PGC part one | by hand at each month's close |
 | LED-004 | Closed from documents | law: [Código de Comercio](https://www.boe.es/buscar/act.php?id=BOE-A-1885-6627) arts. 25 and 29 | by hand at each month's close |
@@ -126,8 +124,7 @@ can check the books against something they know.
 
 | ID | Name | Why cited |
 |---|---|---|
-| `PRI-011` | What has value also makes a bond | the reason for every rule here |
-| `PRI-010` | Leave things better than you found them | why no person's pay is published |
+| `PRI-011` | What has value also makes a bond | the reason for every rule here, and why no person's pay is published |
 | `STD-033` | Every charge delivers something | what may be charged, each charge a line here |
 | `STD-035` | Personal data | what the ledger may say about a person |
 | `SYS-008` | The account: how money moves and is recorded, as wired today | where the ledger lives and who holds each key |

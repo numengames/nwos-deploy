@@ -4,16 +4,16 @@ uid: ""
 title: "Changing what a site stores or loads"
 type: procedure
 status: draft
-version: "0.2.3"
+version: "0.3.1"
 created: "2026-09-27T19:50:00+02:00"
-updated: "2026-10-03T21:30:00+02:00"
+updated: "2026-10-10T11:53:13+02:00"
 author: "ursa"
 owner: "oracle"
 section: "Legal and compliance"
 tags: [procedure, personal-data, cookies, sites]
 license: "CC0-1.0"
 applies_to: [all-agents]
-related: ["STD-035", "STD-037", "LEG-003", "LEG-001"]
+related: ["STD-035", "STD-037", "LEG-003", "LEG-001", "LEG-002", "LEG-004", "ADR-068"]
 derived_from: "PRI-012"
 ---
 
@@ -33,7 +33,8 @@ SPDX-License-Identifier: CC0-1.0
 > **Audience:** Agents · Oracles
 
 **Binds:** whoever changes a site so that it stores, loads or sends
-something it did not before, or stops doing so.
+something it did not before, or stops doing so, and whoever changes the
+version of a legal text.
 
 ---
 
@@ -47,7 +48,9 @@ without changing the list turns the policy into a lie.
 It starts when a change to one of the four sites would add, change or
 remove any of: a cookie; a value in local or session storage; a script,
 font, image or frame loaded from another company's server; anything that
-measures the visitor and sends it anywhere. An **agent** prepares the
+measures the visitor and sends it anywhere. It also starts when the
+version of a legal text (`LEG-001` to `LEG-004`) changes, since what a
+visitor accepted is that version. An **agent** prepares the
 change; the **Oracle** approves the policy text, which is reserved.
 
 ---
@@ -82,9 +85,10 @@ change; the **Oracle** approves the policy text, which is reserved.
    reserved legal text; the agent drafts, the Oracle approves.
 6. **Raise the consent version** if the new thing needs consent, so the
    notice asks every visitor again. Refusing stays as easy as accepting.
-7. **Change the site and the policy in the same release.** The pull
-   request carries both, and the site's `/updates` entry says what now
-   stores or loads.
+7. **Change the site and the policy in the same release.** Two linked
+   pull requests, one in the site's repository and one changing `LEG-003`
+   here, each citing the other, merged the same day; the site's `/updates`
+   entry says what now stores or loads.
 8. **Check the built site as a new visitor.** Open it with an empty
    browser, refuse consent, and confirm nothing beyond the necessary is
    stored or loaded; then accept and confirm the new thing appears.
@@ -93,6 +97,11 @@ change; the **Oracle** approves the policy text, which is reserved.
    accept), and keep that browser. Open the built site in it. Confirm the
    choice is still read, the notice does not come back, and nothing the old
    version stored is left behind unnamed in the policy.
+10. **When a legal text's version changes, change only the original.**
+    The text changes here, in `legal/`, and numinia.org publishes it.
+    numinia.com reads the published version and asks its users to accept
+    again. numen.games and nwos.numen.games change nothing, because they
+    link to the numinia.org pages and keep no copy (`STD-037`).
 
 ---
 
@@ -103,9 +112,10 @@ change; the **Oracle** approves the policy text, which is reserved.
 | 1 | The search and its result, in the pull request |
 | 4 | For each replaced item: its name kept with its format, or the old one removed or expired |
 | 5 | The Oracle's approval of the policy text |
-| 7 | One pull request changing both the site and `LEG-003` |
+| 7 | The site's pull request and the archive's pull request changing `LEG-003`, each citing the other, merged the same day |
 | 8 | What an empty browser held after refusing and after accepting |
 | 9 | What a browser carrying the previous version's choice held, on two pages of the built site |
+| 10 | The pull request changing the legal text touches only this archive; numinia.com asks a signed-in user to accept again after it is published |
 
 ---
 

@@ -13,8 +13,7 @@ version: "0.1.0"
 created: "YYYY-MM-DDTHH:MM:SSZ"
 updated: "YYYY-MM-DDTHH:MM:SSZ"
 author: "agent-id"
-owner: "oracle"
-guild: "Exegetes"
+owner: "person-responsible"
 section: "Knowledge and quality"
 tags: [principle]
 license: "CC0-1.0"
@@ -32,7 +31,7 @@ license: "CC0-1.0"
 > **Summary:** TODO — one sentence stating what is true, not what the document is about.
 > **Epistemic:** TODO — what a reader understands after this that they could not before.
 > **Pragmatic:** TODO — what they can now do, decide or recognise.
-> **Audience:** Everyone · Agents · Oracles — pick, do not list all three by default.
+> **Audience:** Everyone · Agents · People responsible — pick, do not list all three by default.
 
 **Binds:** TODO — who is held to this. One line.
 
@@ -44,8 +43,9 @@ TODO — the body.
 <!--
 NOTES ON USING THIS TEMPLATE — delete this block.
 
-THE RULES ARE A STANDARD, NOT THIS COMMENT. What a principle must do and must
-never contain is `STD-031` (A principle states), twelve plated rules STA-001..012.
+THE RULES ARE A STANDARD, NOT THIS COMMENT. What a principle must never contain
+is `STD-031` (A principle states), checked by a machine; what it must do is read
+by its reviewers (the reading list in the pull request template).
 Read it before writing a line; this comment only tells you how to hold the
 pen. Until 2026-09-24 the rules lived here and in three decision records,
 where — by the archive's own rule — they obliged nobody.
@@ -62,7 +62,7 @@ THE THREE ADMISSION QUESTIONS. Answer before writing:
   Three noes and you are holding a principle. One yes and you are holding another
   series with a principle's confidence.
 
-THERE IS NO PRESCRIBED SECTIONING (STA-004). Write it as one continuous text,
+THERE IS NO PRESCRIBED SECTIONING. Write it as one continuous text,
 or with headings you choose, or with none. Headings belong to your argument,
 not to a form: "The city you walked into" is a heading; "1. The definition"
 is a filing label, and a reader can tell which one was written for them.
@@ -72,7 +72,7 @@ and what an agent reads before deciding to open the file. The TODOs above are
 deliberately loud: a principle shipped with one unfilled told the whole internet
 "what you learn by reading this document", for months.
 
-THE TITLE IS A CLAIM (STA-005), and short enough to say aloud in one breath —
+THE TITLE IS A CLAIM (the reviewers read for it), and short enough to say aloud in one breath —
 the index shows nine of them in a column. "Opening is an act", not
 "Licensing".
 
@@ -82,7 +82,7 @@ is the only thing between a principle and a ramble. A principle that cannot say 
 one thing in 1 500 words is probably two principles, or one principle and a standard.
 No changelog inside the document; git is the history.
 
-READ IT ALOUD before proposing it. The Oracle reads drafts by text-to-speech;
+READ IT ALOUD before proposing it. Drafts are often read by text-to-speech;
 a body that names `PRI-004` mid-sentence (STA-011) reads like a directory,
 and a condensed sentence that kept the punchline and lost the because reads
 like a riddle.

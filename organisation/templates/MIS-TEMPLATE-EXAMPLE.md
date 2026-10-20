@@ -5,13 +5,12 @@ title: "Example — a real small mission written with this template"
 type: mission
 status: done
 version: "1.2.0"
-created: "2026-08-25"
+created: "2026-08-25T09:00:00+02:00"
 created_source: "git:c2ee691"
 created_confidence: exact
-updated: "2026-09-28"
+updated: "2026-09-28T09:00:00+02:00"
 author: "ursa"
-owner: "oracle"
-guild: "Alchemists"
+owner: "person-responsible"
 section: "Knowledge and quality"
 tags: [web, archive, example]
 license: "CC0-1.0"
@@ -20,9 +19,9 @@ priority: medium
 effort: S
 executor: agent
 assigned_to: "ursa"
-completed: "2026-08-25"
+completed: "2026-08-25T09:00:00+02:00"
 
-context: "2026-08-25"
+context: "2026-08-25T09:00:00+02:00"
 paths: [web/dist/print/, web/package.json, web/astro.config.mjs]
 ---
 # MIS-EXAMPLE — Retire the /print/ intermediates from the served site
@@ -32,7 +31,7 @@ paths: [web/dist/print/, web/package.json, web/astro.config.mjs]
 > **Epistemic:** what a filled-in mission looks like, including a `Closure` that
 > contradicts its own plan without editing it.
 > **Pragmatic:** copy this shape, not this content.
-> **Audience:** Agents · Oracles
+> **Audience:** Agents · People responsible
 
 ---
 
@@ -58,7 +57,7 @@ about them being reachable.
 ### Out of scope
 
 Fixing `build:pdf`. Whether the PDFs should exist at all is the decision in
-`D-035`, and it is the Oracle's — this mission holds regardless of which of the
+`D-035`, and it is the person responsible's — this mission holds regardless of which of the
 three options is chosen there.
 
 ---

@@ -2,7 +2,7 @@
 # Copy this file beside its opportunity record, as opportunities/PRP-YYYY-NNN.md;
 # point the record's `proposal:` at it once sent. The rules are STD-040. A
 # revised proposal is a new file; never edit a sent one. Whoever sends it has
-# read it: the record's transition to `proposed`, with a name in By, is the
+# read it: the record's timeline line marked `proposed` is the
 # evidence — no field here says so twice. Signatures live in the agreement.
 # The header is every document's (STD-004), then the proposal's own fields.
 id: "PRP-YYYY-NNN"
@@ -14,18 +14,18 @@ type: proposal
 status: draft
 version: "0.1.0"
 created: "YYYY-MM-DDTHH:MM:SSZ"
-updated: "2026-09-29T12:00:00+02:00"
+updated: "2026-10-05T10:40:00+02:00"
 author: "agent-id"
-owner: "oracle"
-guild: "Procurators"
+owner: "person-responsible"
 section: "Knowledge and quality"
 tags: [opportunities, sales, proposal]
 license: "CC0-1.0"
 
 # THE PROPOSAL — read by the pipeline tool with --proposals.
 opportunity: "OPP-YYYY-NNN"
-date: "YYYY-MM-DD"
-valid_until: "YYYY-MM-DD"
+# date: the moment it was sent; valid_until: 23:59 Madrid time of its last day (OPS-022)
+date: "YYYY-MM-DDTHH:MM:SS+02:00"
+valid_until: "YYYY-MM-DDT23:59:00+02:00"
 # level: reaction | learning | behaviour | results — the level agreed with the client
 level: "learning"
 # price: without tax
@@ -47,7 +47,7 @@ SPDX-License-Identifier: CC0-1.0
 > **Epistemic:** What exactly is offered to this client, and on what terms?
 > **Pragmatic:** Read it before sending it; check a delivery or an invoice
 > against it.
-> **Audience:** Sales · Oracles · the client
+> **Audience:** Sales · People responsible · the client
 <!-- The card is the archive's. The copy sent to the client may leave it
      out; the six sections below are what the client reads. -->
 
@@ -88,7 +88,7 @@ SPDX-License-Identifier: CC0-1.0
 | Invoiced | … |
 | Delivered | … |
 | Licence of what is delivered | … |
-| Governed by | Numen Games' terms and conditions |
+| Governed by | the organisation's terms and conditions |
 
 ## Before you agree
 
@@ -104,6 +104,6 @@ SPDX-License-Identifier: CC0-1.0
 
 ## In the open
 
-Numen Games works in the open: we publish our proposals — what we offer,
+We work in the open: we publish our proposals — what we offer,
 how, and at what price. If you would rather your organisation were not
 named, tell us and it will appear by its sector only.

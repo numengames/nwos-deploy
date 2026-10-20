@@ -1,6 +1,6 @@
 {
 	"source": "https://github.com/numengames/numinia-archive",
-	"commit": "37598f7a461120e6b3ee6c714108f25d502419c2",
+	"commit": "c1aab46ec627b73e61cbfa69477070641cfa6daf",
 	"copied": [
 		{
 			"from": "machine/templates/ADR-TEMPLATE.md",
@@ -75,6 +75,11 @@
 		{
 			"from": "machine/templates/RPT-TEMPLATE.md",
 			"to": "templates/RPT-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/STD-TEMPLATE-RESPONSIBLES.md",
+			"to": "templates/STD-TEMPLATE-RESPONSIBLES.md",
 			"layer": "templates"
 		},
 		{
@@ -288,6 +293,46 @@
 			"layer": "base"
 		},
 		{
+			"from": "standards/STD-048-reaching-someone-who-did-not-ask.md",
+			"to": "base/standards/STD-048-reaching-someone-who-did-not-ask.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-049-the-doors-by-country.md",
+			"to": "base/standards/STD-049-the-doors-by-country.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-050-what-an-agent-in-a-world-reads.md",
+			"to": "base/standards/STD-050-what-an-agent-in-a-world-reads.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-051-organisation-roles.md",
+			"to": "base/standards/STD-051-organisation-roles.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-052-organisation-permissions.md",
+			"to": "base/standards/STD-052-organisation-permissions.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-053-presence.md",
+			"to": "base/standards/STD-053-presence.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-054-a-client-is-named-by-consent.md",
+			"to": "base/standards/STD-054-a-client-is-named-by-consent.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-055-only-a-call-that-passes-is-recorded.md",
+			"to": "base/standards/STD-055-only-a-call-that-passes-is-recorded.md",
+			"layer": "base"
+		},
+		{
 			"from": "procedures/PRO-001-agent-session.md",
 			"to": "base/procedures/PRO-001-agent-session.md",
 			"layer": "base"
@@ -420,6 +465,26 @@
 		{
 			"from": "procedures/PRO-036-handling-a-security-weakness.md",
 			"to": "base/procedures/PRO-036-handling-a-security-weakness.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-037-placing-an-agent-in-a-3d-world.md",
+			"to": "base/procedures/PRO-037-placing-an-agent-in-a-3d-world.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-038-raising-the-brain-that-agents-in-worlds-think-with.md",
+			"to": "base/procedures/PRO-038-raising-the-brain-that-agents-in-worlds-think-with.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-039-opening-the-brain-to-the-worlds.md",
+			"to": "base/procedures/PRO-039-opening-the-brain-to-the-worlds.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-040-configuring-an-agent-from-the-platform.md",
+			"to": "base/procedures/PRO-040-configuring-an-agent-from-the-platform.md",
 			"layer": "base"
 		}
 	],

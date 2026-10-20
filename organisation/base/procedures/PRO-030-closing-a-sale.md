@@ -3,10 +3,10 @@ id: "PRO-030"
 uid: ""
 title: "Closing a sale"
 type: procedure
-status: draft
-version: "0.4.3"
+status: active
+version: "1.0.0"
 created: "2026-09-28T16:00:00+02:00"
-updated: "2026-10-03T21:30:00+02:00"
+updated: "2026-10-15T12:22:36Z"
 author: "ursa"
 owner: "oracle"
 guild: "Procurators"
@@ -49,8 +49,8 @@ three.
 It starts when a sale reaches `proposed`. **Whoever sells** follows up and
 negotiates; **the legal specialist** reads any clause the client changes;
 **the Oracle** signs; **whoever builds** and **whoever keeps the ledger**
-receive the handover. A tender, once its contract is formalised, enters
-at step 3 (`PRO-031`).
+receive the handover. A tender, once its contract is formalised and its
+`won` line written, enters at step 6 (`PRO-031`).
 
 ---
 
@@ -66,11 +66,10 @@ at step 3 (`PRO-031`).
 
 ## 3. Procedure
 
-1. **Follow up on the register's cadence.** At the `next` date, one
-   contact; if silence, a second a fortnight later. Each contact is an
-   `out` line in the timeline, and a new `next` line replaces the old one.
-   After the second silence: a `lost` line, `silence`, and a last courteous
-   line to the client.
+1. **Follow up once, and ask for the no.** The day after the proposal's
+   `valid_until` (`STD-040`), one contact, as for the sheet (`STD-047`):
+   the expiry e-mail, an `out` line, and a `next` line a week on. Silence
+   after it: a `lost` line, `silence`. No second chase, no discount.
 2. **Take the answer.** A yes in writing is a `pos` line marked `agreed`;
    the decider's role goes in the header; the name stays as the disclosure
    says. A client who asks now not to be named is written back to its
@@ -88,16 +87,16 @@ at step 3 (`PRO-031`).
    anyone signs. The price is the proposal's; a change is the Oracle's,
    written in the record.
 5. **Sign.** The Oracle signs. The record gets a `won` line, the
-   agreement's path and the value confirmed; its `next` line goes. For a
-   tender, the agreement is the contract the authority formalises.
+   agreement's path and the value confirmed; its `next` line goes.
 6. **Hand over.** To whoever builds: the record's Need, the map, the scope
    and the calendar — the procedure for building starts there. To whoever
    keeps the ledger: the value, the invoicing dates and the agreement, so
    the month closes on it (`PRO-021`).
 7. **Learn.** Won or lost, in the record's body: what the client asked that
    the offer record did not answer, what they wanted that the house did not
-   offer, and why they chose as they did. What changes the offer goes to
-   the offer record, the client unnamed. A won case is written as a case
+   offer, why they chose as they did, and which collateral helped
+   (`STD-047`). What changes the offer goes to the offer record, the client
+   unnamed. A won case is written as a case
    the next proposal may show. A client who comes back, or sends another,
    opens a new record whose `follows` names this one.
 8. **Run the pipeline tool.** The record conforms, and the report shows the

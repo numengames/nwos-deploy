@@ -4,17 +4,17 @@ uid: ""
 title: "The stages of an opportunity"
 type: standard
 subtype: register
-status: draft
-version: "0.9.4"
+status: active
+version: "1.0.0"
 created: "2026-09-28T13:00:00+02:00"
-updated: "2026-10-03T21:30:00+02:00"
+updated: "2026-10-15T12:02:04Z"
 author: "ursa"
 owner: "oracle"
 guild: "Procurators"
 section: "Sales and partners"
 tags: [standards, register, sales, pipeline, opportunity, stages, timeline, funnel, tenders, grants, public-procurement, chance]
 license: "CC0-1.0"
-related: ["STD-039", "STD-040", "OPS-018", "PRO-035", "PRI-009", "PRI-011"]
+related: ["STD-039", "STD-040", "OPS-018", "PRO-035", "PRI-009", "PRI-011", "STD-048", "STD-049"]
 derived_from: "PRI-009"
 ---
 
@@ -32,8 +32,8 @@ SPDX-License-Identifier: CC0-1.0
 > the five steps of the funnel they mark, the closed list of reasons an
 > opportunity is lost, how the money arrives, what a funder gives, where an
 > opportunity came from, and — for a call from a public body — the
-> procedure it buys by, where it was read, what it really buys and the
-> house's chance. The record standard cites these values; the pipeline tool
+> procedure it buys by, where it was read and what it really buys; and the
+> house's chance of any open opportunity. The record standard cites these values; the pipeline tool
 > reads them here and nowhere else. A register records: nothing in it binds
 > by itself.
 > **Epistemic:** Which stages does an opportunity pass through, and what moves it?
@@ -135,7 +135,7 @@ Metrics for Pirates", 2007). A later step counts the earlier ones too.
 | `price` | they wanted it and would not pay what it costs |
 | `timing` | they wanted it, later; or the day came before the dossier could |
 | `chose-another` | they bought it elsewhere |
-| `silence` | two follow-ups unanswered |
+| `silence` | no answer after the one expiry e-mail |
 | `we-declined` | the house chose not to pursue it |
 | `outbid` | another bid or application scored higher |
 | `excluded` | the bid or the application was excluded, or the call withdrawn |
@@ -180,6 +180,23 @@ thirty-first (LCSP art. 198.4).
 | `event` | met at an event |
 | `platform` | a procurement platform or an official gazette |
 
+## The doors
+
+How the house first reached the other side (`STD-048`); which doors are
+open in each country is `STD-049`. An e-mail goes only through `published`,
+`asked`, `inbound` or `former-client`.
+
+| Door | Means |
+|---|---|
+| `published` | the organisation published a channel to receive exactly this: a call, a tender, a request for suppliers, partners, sponsors or speakers |
+| `call` | a person phoned the organisation's published number |
+| `letter` | a letter by post to the organisation |
+| `in-person` | met in person, at an event or a visit |
+| `introduction` | someone both sides know introduced the house |
+| `asked` | they asked to hear from the house, and the yes is kept |
+| `inbound` | they came to the house first |
+| `former-client` | a client of the house, about services like the ones they bought |
+
 ## When the buyer publishes a notice
 
 A public body buys by a procedure the law names, and the procedure decides
@@ -197,8 +214,8 @@ these values; the thresholds are the 2026 ones.
 
 A summary is not the call. Aggregators and alert e-mails paraphrase a title
 and can invent the object; only the buyer's or the funder's own documents
-say what it buys or funds. A call known only from a summary is not
-recorded.
+say what it buys or funds. What a record must say of where its call was
+read is the record standard's rule (`STD-039`).
 
 | Read from | Means |
 |---|---|
@@ -207,10 +224,10 @@ recorded.
 
 ## What the buyer really buys
 
-Read from the technical terms, never from the title or the code. A tender
-for another maker's product, a licence or hardware passed on, or for what
-the house does not make, is not recorded; the card's list of what the house
-does not make keeps it out of the next sweep.
+Read from the technical terms, never from the title or the code. Which
+tenders are not recorded is the record standard's rule (`STD-039`); the
+card's list of what the house does not make keeps them out of the next
+sweep.
 
 | Object | Means |
 |---|---|
@@ -219,29 +236,32 @@ does not make keeps it out of the next sweep.
 
 ## The house's chance
 
-How likely the house is to get the money, read from the call's criteria
-against the house's card. The tool computes it from the criteria table of
-a tender or a grant; it is written nowhere. A call that fails a requirement
-has no chance and no record.
+How likely an open opportunity is to end won, from two questions answered
+yes or no: is it in one of the lines the house sells (the house's card), and
+has the house already won something in that line — another record with a
+`won` line? The tool computes it from the record's `line` and the other
+records; it is written nowhere. A closed record has none; a call's criteria
+do not enter it (`STD-039`).
 
 | Chance | Means |
 |---|---|
-| `high` | every requirement is met: each row of the criteria says yes |
-| `medium` | one or more requirements are still to check, none failed |
+| `high` | both: in a line the house sells, and the house has won in that line before |
+| `medium` | one of the two |
+| `low` | neither: outside the house's lines, with no win behind it |
 
 ## A watch's verdict
 
 What a watch says of a call before anyone has decided on it, read from its
 terms against the house's card (`PRO-035`). It is written in the watch's
 feed, never in a record: a record's chance is the tool's, computed from its
-criteria. The last column is the feed's filter: in doubt the watch keeps a
-call, and what could fall is the Oracle's to drop.
+line and the house's wins. The last column is the feed's filter: only what the house can take, alone
+and with what it holds today, goes out.
 
 | Verdict | Means | Goes to the feed |
 |---|---|---|
 | `high` | read from the terms, every requirement met | yes |
 | `medium` | some requirement still to check, none failed | yes |
-| `low` | a requirement fails today, and one named thing — a partner, a registration, a published game — would unlock it before the close | yes, with the unlock |
+| `low` | a requirement fails today, and only a partner doing the core of the work, or something the house cannot get before the close, would unlock it | no: it stays in the watch's own memory |
 | `none` | outside what the house makes, or a requirement no one can meet before the close | no: it stays in the watch's own memory |
 
 ## Weighing a tender
@@ -261,23 +281,6 @@ last column is declined unless the Oracle says otherwise.
 
 ## Naming the organisation
 
-The house works in the open, and says so in every proposal. The record
-names the organisation when the organisation knows it may be named.
-
-| When | The organisation is written as |
-|---|---|
-| before a proposal is sent, or when the client was never told | its sector and size: *a large retailer*, *a provincial police force* |
-| from the proposal sent, told in it, and the client did not ask otherwise | its name |
-| the client asked not to be named, at any stage | its sector and size |
-| `lost`, always | its sector and size — the reason is public, the name is not |
-| a tender's authority, a grant's funder | its name, at any stage: a public body that publishes its own call |
-
-Records are public and hold nobody's name at any stage; they are kept as
-they stand, since the statistics are made from them. A public buyer met
-outside a call is named in a sale only once told, like any other client; a
-tender's authority and a grant's funder publish the call themselves, so the
-record names them and links the call. What a contracting authority
-publishes about a minor contract — object, duration, amount, awardee — is
-public in any case once awarded. The house's own price in a tender is not
-written until the authority publishes the award, since a bidder's offer is
-confidential until then (LCSP art. 133).
+When a record may name the organisation, what it keeps once lost, and when
+the house's own price in a tender may be written are the record standard's
+rules (`STD-039`).

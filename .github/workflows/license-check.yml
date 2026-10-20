@@ -39,8 +39,9 @@ jobs:
         env:
           AUTHOR: ${{ github.event.pull_request.user.login }}
         run: |
-          if grep -qiE "^\|\s*${AUTHOR}\s*\|" CLA-SIGNATORIES.md; then
-            echo "CLA on file for ${AUTHOR}."
+                # Literal first-column match: bot logins contain "[bot]", which a
+          # regex would read as a character class and never match.
+          if awk -F'|' -v a="${AUTHOR}" '{ gsub(/^ +| +$/, "", $2); if (tolower($2) == tolower(a)) f=1 } END { exit !f }' CLA-SIGNATORIES.md; then
           else
             echo "::error::${AUTHOR} has not signed the CLA. Read CLA.md and add yourself to CLA-SIGNATORIES.md in this PR (see CONTRIBUTING.md)."
             exit 1

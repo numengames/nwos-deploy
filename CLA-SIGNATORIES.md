@@ -17,3 +17,4 @@ already belong to Numen, that work needs a signature from whoever holds them.
 | ------------ | -------- | ------------------ | ----------- | ---------------------------------------------- |
 | PabloFMM     | Pablo FM | fmmpablo@gmail.com | 2026-08-17  | signatory                                      |
 | ursa-numinia | Ursa     | ursa@numen.games   | 2026-09-01  | agent — operated by Numen; principal: PabloFMM |
+| ursa-da-numinia[bot] | Ursa (GitHub App) | ursa@numen.games | 2026-10-20 | agent — operated by Numen; principal: PabloFMM |

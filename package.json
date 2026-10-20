@@ -22,7 +22,7 @@
     "design-tokens": "node scripts/design-tokens.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.86.0",
+    "@anthropic-ai/sdk": "^0.133.0",
     "@astrojs/cloudflare": "^14.3.4",
     "@astrojs/react": "^7.0.1",
     "@astrojs/sitemap": "^3.7.4",
@@ -43,7 +43,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.3.0",
-    "@vitest/coverage-v8": "^5.0.3",
+    "@vitest/coverage-v8": "^5.0.4",
     "eslint": "^10.12.0",
     "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-react-hooks": "^7.1.1",

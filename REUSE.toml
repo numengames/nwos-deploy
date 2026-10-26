@@ -39,6 +39,14 @@ path = [
 SPDX-FileCopyrightText = "2026 Numen Games S.L."
 SPDX-License-Identifier = "CC-BY-4.0"
 
+# --- The organisation package → CC0-1.0 ------------------------------------
+# organisation/ is copied from numinia-archive by scripts/sync-organisation.mjs,
+# which lets only CC0-1.0 files travel; the README and the manifest share it.
+[[annotations]]
+path = ["organisation/**"]
+SPDX-FileCopyrightText = "2026 Numen Games S.L."
+SPDX-License-Identifier = "CC0-1.0"
+
 # --- Brand marks → reserved (C-005 §7: the mark is the hard border) ------
 [[annotations]]
 path = ["public/favicon.svg", "public/favicon.ico", "src/brand/**"]

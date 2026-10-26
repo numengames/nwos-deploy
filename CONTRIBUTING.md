@@ -26,3 +26,5 @@ this code:
    only documented-exception path.
 6. Assets (images, fonts, audio, data) need an explicit CC0 declaration in
    the PR and must not contain people, voices or personal data.
+7. **Commit messages and pull request titles are in English.** Product
+   copy (the text users read on the site) may be in other languages.

@@ -1,0 +1,127 @@
+---
+id: "PRO-027"
+uid: ""
+title: "Changing what a site stores or loads"
+type: procedure
+status: draft
+version: "0.3.1"
+created: "2026-09-27T19:50:00+02:00"
+updated: "2026-10-10T11:53:13+02:00"
+author: "ursa"
+owner: "oracle"
+section: "Legal and compliance"
+tags: [procedure, personal-data, cookies, sites]
+license: "CC0-1.0"
+applies_to: [all-agents]
+related: ["STD-035", "STD-037", "LEG-003", "LEG-001", "LEG-002", "LEG-004", "ADR-068"]
+derived_from: "PRI-012"
+---
+
+<!--
+SPDX-FileCopyrightText: 2026 Numen Games S.L.
+SPDX-License-Identifier: CC0-1.0
+-->
+
+# PRO-027 — Changing what a site stores or loads
+
+> **Summary:** What to do before a site of ours starts to store something
+> new in a visitor's browser, load something from another company, or
+> measure the visitor — and when it stops.
+> **Epistemic:** What must happen before a site keeps or sends something new?
+> **Pragmatic:** Add or remove a cookie, a stored value or an outside
+> service without the cookie policy going out of date.
+> **Audience:** Agents · Oracles
+
+**Binds:** whoever changes a site so that it stores, loads or sends
+something it did not before, or stops doing so, and whoever changes the
+version of a legal text.
+
+---
+
+## 1. Purpose and trigger
+
+The cookie policy (`LEG-003`) is the list every site is held to: nothing is
+stored, loaded from anyone else or measured unless it names it
+(`STD-035`, a site says what it stores). A change that adds a cookie
+without changing the list turns the policy into a lie.
+
+It starts when a change to one of the four sites would add, change or
+remove any of: a cookie; a value in local or session storage; a script,
+font, image or frame loaded from another company's server; anything that
+measures the visitor and sends it anywhere. It also starts when the
+version of a legal text (`LEG-001` to `LEG-004`) changes, since what a
+visitor accepted is that version. An **agent** prepares the
+change; the **Oracle** approves the policy text, which is reserved.
+
+---
+
+## 2. Preconditions
+
+- The current cookie policy, `LEG-003`, and the site's code.
+- The reason for the new thing, in one sentence: what the visitor asked for
+  that needs it.
+
+---
+
+## 3. Procedure
+
+1. **Measure what the site stores and loads today.** Search the site's
+   code for `document.cookie`, `localStorage`, `sessionStorage` and
+   `src="https://`. Compare with `LEG-003`. Any difference found here is
+   fixed first, in its own change.
+2. **Ask whether it is needed.** If the visitor did not ask for the thing
+   it serves, prefer not to add it. A preference the visitor set, like the
+   mode, needs no consent; anything else that is not strictly necessary
+   does.
+3. **Write its line for the policy.** Name, kind (cookie, storage, outside
+   service), purpose in plain words, what sets it, how long it lasts, and
+   whether it needs consent.
+4. **Keep or retire what it replaces.** When the new thing takes the place
+   of something the site stored before, keep the old name and format, or
+   give it a new name and remove or expire the old one in the same release.
+   Never reuse a name with a different format, scope or meaning: a returning
+   visitor still holds the old value, and the site will misread it.
+5. **Ask the Oracle to approve the policy change.** The policy is a
+   reserved legal text; the agent drafts, the Oracle approves.
+6. **Raise the consent version** if the new thing needs consent, so the
+   notice asks every visitor again. Refusing stays as easy as accepting.
+7. **Change the site and the policy in the same release.** Two linked
+   pull requests, one in the site's repository and one changing `LEG-003`
+   here, each citing the other, merged the same day; the site's `/updates`
+   entry says what now stores or loads.
+8. **Check the built site as a new visitor.** Open it with an empty
+   browser, refuse consent, and confirm nothing beyond the necessary is
+   stored or loaded; then accept and confirm the new thing appears.
+9. **Check it again as a returning visitor.** Open the current production
+   site, choose as a visitor would (refuse, then in a second browser
+   accept), and keep that browser. Open the built site in it. Confirm the
+   choice is still read, the notice does not come back, and nothing the old
+   version stored is left behind unnamed in the policy.
+10. **When a legal text's version changes, change only the original.**
+    The text changes here, in `legal/`, and numinia.org publishes it.
+    numinia.com reads the published version and asks its users to accept
+    again. numen.games and nwos.numen.games change nothing, because they
+    link to the numinia.org pages and keep no copy (`STD-037`).
+
+---
+
+## 4. Verification
+
+| Step | Evidence it completed |
+|---|---|
+| 1 | The search and its result, in the pull request |
+| 4 | For each replaced item: its name kept with its format, or the old one removed or expired |
+| 5 | The Oracle's approval of the policy text |
+| 7 | The site's pull request and the archive's pull request changing `LEG-003`, each citing the other, merged the same day |
+| 8 | What an empty browser held after refusing and after accepting |
+| 9 | What a browser carrying the previous version's choice held, on two pages of the built site |
+| 10 | The pull request changing the legal text touches only this archive; numinia.com asks a signed-in user to accept again after it is published |
+
+---
+
+## 5. Escalation
+
+An outside service that sends visitor data to another company outside the
+European Union, or that processes personal data for us, needs the Oracle's
+decision and a written contract with that company (`STD-035`, anyone
+handling data for us signs first) before step 7.

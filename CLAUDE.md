@@ -23,6 +23,13 @@ used; Tailwind 4; Geist and Geist Mono self-hosted. Path alias `@/*` →
   paid trial, SSR), `/workspace/[slug]` (workspace reader, SSR), `/updates`,
   `/telemetry`, `/404`, and the API under `src/pages/api/`. SSR routes carry
   `export const prerender = false`.
+- **The organisation package** `organisation/` is what a client organisation
+  receives: the templates and the shared base (standards, procedures) of
+  numinia.org, the first organisation on NWOS. Never edit it by hand: run
+  `node scripts/sync-organisation.mjs ../numinia-archive`, which copies only
+  CC0-1.0 files and writes `organisation/MANIFEST.json`. What stays
+  Numinia's own is the `OWN` list in that script. Alpha: the generator does
+  not read it yet.
 - **The public example** `faro-austral` is NOT a repository: its files live
   in `src/content/demo/**` and are bundled at build (`src/lib/demo.ts`), so
   the free example works with no secret and no network. The organisation in

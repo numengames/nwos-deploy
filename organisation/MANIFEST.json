@@ -1,0 +1,529 @@
+{
+	"source": "https://github.com/numengames/numinia-archive",
+	"commit": "c1aab46ec627b73e61cbfa69477070641cfa6daf",
+	"copied": [
+		{
+			"from": "machine/templates/ADR-TEMPLATE.md",
+			"to": "templates/ADR-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/DBT-TEMPLATE.md",
+			"to": "templates/DBT-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/DES-TEMPLATE.md",
+			"to": "templates/DES-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/MIS-TEMPLATE-EXAMPLE.md",
+			"to": "templates/MIS-TEMPLATE-EXAMPLE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/MIS-TEMPLATE.md",
+			"to": "templates/MIS-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/OPP-TEMPLATE.md",
+			"to": "templates/OPP-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/OPS-TEMPLATE.md",
+			"to": "templates/OPS-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/PRI-TEMPLATE.md",
+			"to": "templates/PRI-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/PRO-TEMPLATE.md",
+			"to": "templates/PRO-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/PRP-TEMPLATE.md",
+			"to": "templates/PRP-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/README.md",
+			"to": "templates/README.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/RPT-TEMPLATE-QUARTER.md",
+			"to": "templates/RPT-TEMPLATE-QUARTER.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/RPT-TEMPLATE-WEEK.md",
+			"to": "templates/RPT-TEMPLATE-WEEK.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/RPT-TEMPLATE-YEAR.md",
+			"to": "templates/RPT-TEMPLATE-YEAR.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/RPT-TEMPLATE.md",
+			"to": "templates/RPT-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/STD-TEMPLATE-RESPONSIBLES.md",
+			"to": "templates/STD-TEMPLATE-RESPONSIBLES.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/STD-TEMPLATE.md",
+			"to": "templates/STD-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "machine/templates/SYS-TEMPLATE.md",
+			"to": "templates/SYS-TEMPLATE.md",
+			"layer": "templates"
+		},
+		{
+			"from": "agents/_template/AGENT.yaml",
+			"to": "templates/agent/AGENT.yaml",
+			"layer": "templates"
+		},
+		{
+			"from": "agents/_template/OPERATOR.md",
+			"to": "templates/agent/OPERATOR.md",
+			"layer": "templates"
+		},
+		{
+			"from": "agents/_template/SOUL.md",
+			"to": "templates/agent/SOUL.md",
+			"layer": "templates"
+		},
+		{
+			"from": "agents/_template/SOURCES.md",
+			"to": "templates/agent/SOURCES.md",
+			"layer": "templates"
+		},
+		{
+			"from": "agents/_template/adapters/hermes/config.yaml",
+			"to": "templates/agent/adapters/hermes/config.yaml",
+			"layer": "templates"
+		},
+		{
+			"from": "agents/_template/adapters/hermes/profile.yaml",
+			"to": "templates/agent/adapters/hermes/profile.yaml",
+			"layer": "templates"
+		},
+		{
+			"from": "standards/STD-001-the-series.md",
+			"to": "base/standards/STD-001-the-series.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-004-the-header.md",
+			"to": "base/standards/STD-004-the-header.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-005-when-a-rule-bites.md",
+			"to": "base/standards/STD-005-when-a-rule-bites.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-006-plain-text-is-sovereign.md",
+			"to": "base/standards/STD-006-plain-text-is-sovereign.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-007-one-page-per-document.md",
+			"to": "base/standards/STD-007-one-page-per-document.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-009-which-rule-wins.md",
+			"to": "base/standards/STD-009-which-rule-wins.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-010-licensing.md",
+			"to": "base/standards/STD-010-licensing.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-012-corpus-does-not-grow.md",
+			"to": "base/standards/STD-012-corpus-does-not-grow.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-014-publishing-gates.md",
+			"to": "base/standards/STD-014-publishing-gates.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-015-engineering-checks.md",
+			"to": "base/standards/STD-015-engineering-checks.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-017-who-may-change-what.md",
+			"to": "base/standards/STD-017-who-may-change-what.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-018-one-document-one-identifier.md",
+			"to": "base/standards/STD-018-one-document-one-identifier.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-019-versions.md",
+			"to": "base/standards/STD-019-versions.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-020-git-is-the-archive.md",
+			"to": "base/standards/STD-020-git-is-the-archive.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-021-evidence-and-citation.md",
+			"to": "base/standards/STD-021-evidence-and-citation.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-022-secrets.md",
+			"to": "base/standards/STD-022-secrets.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-024-a-series-is-a-function.md",
+			"to": "base/standards/STD-024-a-series-is-a-function.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-025-a-mission-is-a-card.md",
+			"to": "base/standards/STD-025-a-mission-is-a-card.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-026-operative-vocabulary.md",
+			"to": "base/standards/STD-026-operative-vocabulary.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-027-the-classification-scheme.md",
+			"to": "base/standards/STD-027-the-classification-scheme.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-028-one-document-one-address.md",
+			"to": "base/standards/STD-028-one-document-one-address.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-029-community-conduct.md",
+			"to": "base/standards/STD-029-community-conduct.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-031-a-principle-states.md",
+			"to": "base/standards/STD-031-a-principle-states.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-033-every-charge-delivers-something.md",
+			"to": "base/standards/STD-033-every-charge-delivers-something.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-034-accessibility.md",
+			"to": "base/standards/STD-034-accessibility.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-035-personal-data.md",
+			"to": "base/standards/STD-035-personal-data.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-036-one-account.md",
+			"to": "base/standards/STD-036-one-account.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-038-the-stages-of-an-opportunity.md",
+			"to": "base/standards/STD-038-the-stages-of-an-opportunity.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-039-an-opportunity-has-a-record.md",
+			"to": "base/standards/STD-039-an-opportunity-has-a-record.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-040-a-proposal-says-four-things.md",
+			"to": "base/standards/STD-040-a-proposal-says-four-things.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-041-the-levels-of-automation.md",
+			"to": "base/standards/STD-041-the-levels-of-automation.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-042-what-an-agent-may-do-without-asking.md",
+			"to": "base/standards/STD-042-what-an-agent-may-do-without-asking.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-043-a-report-speaks-to-the-board.md",
+			"to": "base/standards/STD-043-a-report-speaks-to-the-board.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-044-every-purchase-ends-in-thanks.md",
+			"to": "base/standards/STD-044-every-purchase-ends-in-thanks.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-048-reaching-someone-who-did-not-ask.md",
+			"to": "base/standards/STD-048-reaching-someone-who-did-not-ask.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-049-the-doors-by-country.md",
+			"to": "base/standards/STD-049-the-doors-by-country.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-050-what-an-agent-in-a-world-reads.md",
+			"to": "base/standards/STD-050-what-an-agent-in-a-world-reads.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-051-organisation-roles.md",
+			"to": "base/standards/STD-051-organisation-roles.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-052-organisation-permissions.md",
+			"to": "base/standards/STD-052-organisation-permissions.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-053-presence.md",
+			"to": "base/standards/STD-053-presence.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-054-a-client-is-named-by-consent.md",
+			"to": "base/standards/STD-054-a-client-is-named-by-consent.md",
+			"layer": "base"
+		},
+		{
+			"from": "standards/STD-055-only-a-call-that-passes-is-recorded.md",
+			"to": "base/standards/STD-055-only-a-call-that-passes-is-recorded.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-001-agent-session.md",
+			"to": "base/procedures/PRO-001-agent-session.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-003-mission-cycle.md",
+			"to": "base/procedures/PRO-003-mission-cycle.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-005-escalation.md",
+			"to": "base/procedures/PRO-005-escalation.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-008-decision.md",
+			"to": "base/procedures/PRO-008-decision.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-011-security-audit.md",
+			"to": "base/procedures/PRO-011-security-audit.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-013-handing-a-guard-to-ci.md",
+			"to": "base/procedures/PRO-013-handing-a-guard-to-ci.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-015-joining.md",
+			"to": "base/procedures/PRO-015-joining.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-016-applying-the-engineering-standard.md",
+			"to": "base/procedures/PRO-016-applying-the-engineering-standard.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-017-rolling-up-the-week.md",
+			"to": "base/procedures/PRO-017-rolling-up-the-week.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-018-publishing-a-repository.md",
+			"to": "base/procedures/PRO-018-publishing-a-repository.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-019-holding-a-ritual.md",
+			"to": "base/procedures/PRO-019-holding-a-ritual.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-020-putting-something-on-sale.md",
+			"to": "base/procedures/PRO-020-putting-something-on-sale.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-021-closing-the-month.md",
+			"to": "base/procedures/PRO-021-closing-the-month.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-023-bringing-a-rule-into-force.md",
+			"to": "base/procedures/PRO-023-bringing-a-rule-into-force.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-024-leaving.md",
+			"to": "base/procedures/PRO-024-leaving.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-025-handling-a-personal-data-breach.md",
+			"to": "base/procedures/PRO-025-handling-a-personal-data-breach.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-026-answering-a-request-about-personal-data.md",
+			"to": "base/procedures/PRO-026-answering-a-request-about-personal-data.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-027-changing-what-a-site-stores.md",
+			"to": "base/procedures/PRO-027-changing-what-a-site-stores.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-028-qualifying-an-opportunity.md",
+			"to": "base/procedures/PRO-028-qualifying-an-opportunity.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-029-making-a-proposal.md",
+			"to": "base/procedures/PRO-029-making-a-proposal.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-030-closing-a-sale.md",
+			"to": "base/procedures/PRO-030-closing-a-sale.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-031-bidding-for-a-tender.md",
+			"to": "base/procedures/PRO-031-bidding-for-a-tender.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-032-applying-for-a-grant.md",
+			"to": "base/procedures/PRO-032-applying-for-a-grant.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-033-screening-a-tender.md",
+			"to": "base/procedures/PRO-033-screening-a-tender.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-034-auditing-a-sites-code.md",
+			"to": "base/procedures/PRO-034-auditing-a-sites-code.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-035-watching-for-opportunities.md",
+			"to": "base/procedures/PRO-035-watching-for-opportunities.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-036-handling-a-security-weakness.md",
+			"to": "base/procedures/PRO-036-handling-a-security-weakness.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-037-placing-an-agent-in-a-3d-world.md",
+			"to": "base/procedures/PRO-037-placing-an-agent-in-a-3d-world.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-038-raising-the-brain-that-agents-in-worlds-think-with.md",
+			"to": "base/procedures/PRO-038-raising-the-brain-that-agents-in-worlds-think-with.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-039-opening-the-brain-to-the-worlds.md",
+			"to": "base/procedures/PRO-039-opening-the-brain-to-the-worlds.md",
+			"layer": "base"
+		},
+		{
+			"from": "procedures/PRO-040-configuring-an-agent-from-the-platform.md",
+			"to": "base/procedures/PRO-040-configuring-an-agent-from-the-platform.md",
+			"layer": "base"
+		}
+	],
+	"left": [
+		{
+			"from": "machine/templates/LEG-TEMPLATE.md",
+			"reason": "licence LicenseRef-Numen-AllRightsReserved: only CC0-1.0 travels"
+		},
+		{
+			"from": "standards/STD-003-platform-ranks.md",
+			"reason": "Numinia's platform ranks"
+		},
+		{
+			"from": "standards/STD-008-design-tokens.md",
+			"reason": "Numinia's design system"
+		},
+		{
+			"from": "standards/STD-023-design-values.md",
+			"reason": "Numinia's brand"
+		},
+		{
+			"from": "standards/STD-030-the-worlds-vocabulary.md",
+			"reason": "Numinia's world (the narrative layer)"
+		},
+		{
+			"from": "standards/STD-037-what-every-site-carries.md",
+			"reason": "Numen Games' websites"
+		},
+		{
+			"from": "standards/STD-047-the-sales-collateral.md",
+			"reason": "Numen Games' sales material"
+		},
+		{
+			"from": "procedures/PRO-014-producing-a-design-piece.md",
+			"reason": "Numinia's design system"
+		},
+		{
+			"from": "procedures/PRO-022-building-the-living-pieces.md",
+			"reason": "Numinia's website pieces"
+		}
+	]
+}

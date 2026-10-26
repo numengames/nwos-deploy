@@ -27,6 +27,16 @@ export interface PendingItem {
 
 export const UPDATES: readonly UpdateVersion[] = [
 	{
+		version: "v0.18.0",
+		date: "2026-10-18",
+		entries: [
+			{
+				type: "ADD",
+				text: "The build's identity stamp, /version.json: `curl -s https://nwos.numen.games/version.json | jq -r .commit` answers which commit the site is serving, so a stale deploy no longer goes unnoticed. Same contract as numen.games and numinia.com.",
+			},
+		],
+	},
+	{
 		version: "v0.17.0",
 		date: "2026-10-04",
 		entries: [

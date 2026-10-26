@@ -1,0 +1,112 @@
+---
+id: "PRO-017"
+uid: ""
+title: "Rolling up the week"
+type: procedure
+status: draft
+version: "3.4.0"
+created: "2026-09-08T22:00:00Z"
+updated: "2026-10-15T10:57:40Z"
+author: "ursa"
+owner: "oracle"
+section: "Knowledge and quality"
+tags: [procedure, rollup, deflation, weekly, reports]
+license: "CC0-1.0"
+applies_to: [all-agents]
+mandatory: true
+approved_by: "ADR-042"
+related: ["STD-012", "STD-043", "ADR-030", "RPT-018"]
+derived_from: "PRI-009"
+---
+
+<!--
+SPDX-FileCopyrightText: 2026 Numen Games S.L.
+SPDX-License-Identifier: CC0-1.0
+-->
+
+# PRO-017 — Rolling up the week
+
+> **Summary:** Once a week one agent turns every record that closed into
+> one line in the weekly report and deletes the record. Quarterly and
+> annual roll-ups are the same procedure applied to the level below.
+> **Epistemic:** How does the week's closed work become one report and leave the corpus smaller?
+> **Pragmatic:** Fifteen minutes on Monday; the corpus does not grow.
+> **Audience:** Agents
+
+**Binds:** any agent executing a weekly, quarterly or annual roll-up.
+
+## 1. Purpose and trigger
+
+Every Monday before the Dark Council, for the week that ended Sunday.
+Quarterly on the first Monday of a quarter over thirteen weeklies; annual
+on the first Monday of a year over four quarterlies. Executor: any agent on
+`PRO-001` session; the Oracle reviews the pull request.
+
+## 2. Preconditions
+
+- A clone of `main` with its full history: the roll-up reads `git log`.
+- The phase report open, so the week's report has a parent to cite.
+- The week closed: it ended on Sunday.
+
+## 3. Procedure
+
+1. **Open the report.** Copy `machine/templates/RPT-TEMPLATE-WEEK.md` to
+   `reports/RPT-NNN-<yyyy>-w<ww>.md`. It is written for the board, under the
+   nine headings of `STD-043`, not for the people who did the work.
+2. **List what closed.** `node machine/tools/check-deletable.mjs
+   --candidates`; `git log --since=<monday>` is the daily record (`DEF-001`).
+3. **Copy one line per record.** Take it from the record's own Closure:
+   identifier, title, one sentence, the commit or PR that proves it. Do not
+   write it. A Closure the tree does not show is carried as *claimed, not
+   delivered*.
+4. **Classify every line.** Mark it with one of `DEF-003`'s three marks —
+   `rule`, `debt`, `address` — or `none`. A line you cannot classify is
+   marked `oracle` and stays until the Oracle rules.
+5. **Absorb before deleting.** Put the identifier in the report's
+   `absorbs:` (both `MIS-NNN` and `MIS-NNNN` forms) and redirect its public
+   URL in `web/astro.config.mjs`, both locales.
+6. **Delete the records.** `git rm` every one — including a record you
+   think should stay: mark its line `oracle`; git holds the body. Add one
+   line to the open phase report citing this week's report, not its lines
+   (`DEF-006`).
+7. **Fold the week on the archive's site.** On numinia.org only, move the
+   week's versions out of the updates page into one line that links the
+   report; git keeps the entries. The summaries live in the archive alone:
+   the other sites keep their own updates pages as they are. Build and
+   commit, checks first.
+8. **Regenerate telemetry last.** Regenerate the dataset after the final
+   content commit; `--check` passes before push. Commit.
+9. **Open the PR.** Title `rollup: <period>`: the lines, the token delta,
+   the four `ADR-030` tests answered.
+
+Quarterly and annual: copy `RPT-TEMPLATE-QUARTER.md` or `RPT-TEMPLATE-YEAR.md`;
+the "records" are the reports of the level below.
+Quarterly, also: run `node machine/packages/sales-kit/pipeline.mjs opportunities`
+and read its *Ready to leave* list. Write its count, value and reasons
+under *business and customers*, beside the quarter before; put the
+identifiers in `absorbs:`; then `git rm` those lost records.
+Carry up only `rule`, `debt`, `address` lines; move `absorbs:` lists whole
+(`DEF-011`); repoint redirects (`URL-005`); delete the lower reports.
+
+## 4. Verification
+
+| Check | Evidence |
+|---|---|
+| Nothing broke | `std-012-corpus-does-not-grow` 0 new · `check-url-lifecycle` 0 dead |
+| Nothing left behind | `node machine/tools/check-deletable.mjs --candidates` empty for the period |
+| Nothing lost | `absorbs:` equals the set of deleted identifiers |
+| Nothing grew | `tokens.total` in `machine/telemetry/latest.json` lower than before; if not, the PR says why |
+
+## 5. Escalation
+
+A Closure the executor believes was deliberately false: `PRO-005`. The
+Oracle wants a body back: `git show <commit>:<path>`.
+
+## References
+
+| Document | Title | Why it obliges here |
+|---|---|---|
+| `STD-012` | The corpus does not grow | `DEF-001..007`, the rule this executes |
+| `STD-043` | A report speaks to the board | the nine headings every roll-up carries |
+| `ADR-030` | The four tests before deletion | the four tests a deletion answers |
+| `RPT-018` | The Alpha story: what missions/ ships while it is the alpha board | the open phase report step 6 points at |

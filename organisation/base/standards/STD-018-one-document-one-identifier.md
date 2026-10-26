@@ -1,0 +1,111 @@
+---
+id: "STD-018"
+uid: ""
+title: "One document, one identifier"
+type: standard
+subtype: standard
+status: active
+version: "1.3.0"
+created: "2026-09-03T22:10:00Z"
+updated: "2026-10-10T11:53:10+02:00"
+author: "ursa"
+owner: "oracle"
+section: "Knowledge and quality"
+license: "CC0-1.0"
+tags: [standards, identifiers, naming, Dublin-Core, Cool-URIs, CURIE]
+derived_from: "PRI-009"
+
+---
+
+<!--
+SPDX-FileCopyrightText: 2026 Numen Games S.L.
+SPDX-License-Identifier: CC0-1.0
+-->
+
+# One document, one identifier
+
+> **Summary:** Every document carries its series identifier for life. A
+> used number is never used again. The file name says neither state nor
+> version. When two agents claim one number, the first to commit keeps it.
+> **Epistemic:** What is an identifier?
+> **Pragmatic:** Name a new document, or settle a clash of numbers, without
+> asking anyone.
+> **Audience:** Agents · Oracles
+
+**Binds:** every registered document of the archive.
+
+## Rules
+
+These rules come from the practice of libraries and the web. They keep a
+citation made today leading to the same document in twenty years.
+
+### An identifier is for life
+
+**The identifier is permanent.** Every document MUST carry the identifier
+of its series for life, as Dublin Core defines an identifier and the web's
+guidance on lasting addresses asks. Every citation of it then stays true.
+
+**Numbers are never reused.** An identifier once used MUST NOT be used
+again, even after its document is deleted. The systems behind scholarly
+identifiers forbid reassignment for the same reason: an old citation may
+lead nowhere, but never to the wrong document.
+
+### The name says nothing else
+
+**No state in the file name.** A file name MUST NOT say what state its
+document is in. The web's guidance on lasting addresses keeps status out of
+names, because the state changes and the name must not.
+
+**No version in the file name.** A file name MUST NOT carry a version. The
+header holds the version, and a name that moved with each version would
+break every link into the document.
+
+### Choosing and citing a number
+
+**The first commit keeps the number.** When two agents claim one
+identifier, whoever committed first MUST keep it, and the other renumbers.
+
+**The next number is read from the trunk.** The next free identifier MUST
+be counted over what is committed on the trunk, after taking in its latest
+changes, never over your own uncommitted work.
+
+**Across repositories, name the repository.** An identifier cited from
+another repository MUST carry that repository's short name and a colon in
+front, the web's compact-identifier form. Any reader or tool then expands
+it to exactly one place. Within its own repository, the bare identifier is
+correct. A web address SHOULD be written only to send the reader to the
+web, never as the proper form of a citation.
+
+This standard runs over its word budget because each rule names the outside
+practice it follows.
+
+## Check
+
+Each rule, its code, its source and its check.
+
+| Rule ID | Rule | Source | Verified by |
+|---|---|---|---|
+| IDN-011 | The identifier is permanent | [`dcterms:identifier`](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/identifier/); [W3C, Cool URIs don't change](https://www.w3.org/Provider/Style/URI) — ours adds: the grammar `<PREFIX>-<NNN>` per series | `machine/checks/rules/std-018-one-identifier.mjs`: the identifier a file name carries, against its series' scheme |
+| IDN-014 | Numbers are never reused | [DOI Handbook, numbering](https://www.doi.org/the-identifier/resources/handbook/2_numbering) — a DOI is never reassigned | `machine/checks/rules/std-018-one-identifier.mjs`: one identifier held by two documents |
+| IDN-012 | No state in the file name | [W3C, Cool URIs don't change](https://www.w3.org/Provider/Style/URI) — leave status out | `machine/checks/rules/std-018-one-identifier.mjs` |
+| IDN-013 | No version in the file name | [W3C, Cool URIs don't change](https://www.w3.org/Provider/Style/URI) — ours applies it to file names as well as addresses | `machine/checks/rules/std-018-one-identifier.mjs` |
+| IDN-015 | The first commit keeps the number | — | by hand, by commit order at the moment of the clash |
+| IDN-016 | The next number is read from the trunk | — | by hand: counted after `git pull`, never over the working tree |
+| IDN-017 | Across repositories, name the repository | [W3C CURIE Syntax 1.0](https://www.w3.org/TR/curie/) — ours adds: the prefix is the repository's short name, and a web address is never the form of a citation; holds deprecated URL-006 | by hand: written `nwos:ADR-006`, `web:ADR-006` |
+
+## Why
+
+An identifier is an address. Citations, redirects and a file's history all
+depend on it staying put. A file name that carried state or version would
+change whenever the document did, and every address into it would break. A
+gap left by a deprecated rule costs less than a renumbering that silently
+points every citation at the wrong rule.
+
+## References
+
+| ID | Title | Relation |
+|---|---|---|
+| `STD-001` | The series | the series prefixes |
+| `STD-004` | The header | where state and version live |
+| `STD-006` | Plain text is sovereign | the readable part of a file name |
+| `STD-028` | One document, one address | what happens to the address when the document retires |

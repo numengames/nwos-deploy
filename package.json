@@ -13,6 +13,7 @@
     "build": "astro build",
     "postbuild": "node scripts/license-check.mjs && node scripts/legal-check.mjs",
     "license-check": "node scripts/license-check.mjs",
+    "legal-check": "node scripts/legal-check.mjs",
     "type-check": "astro check",
     "lint": "prettier --check . && eslint .",
     "format": "prettier --write .",

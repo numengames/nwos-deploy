@@ -96,7 +96,7 @@ const heading = "mb-1 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-d
 				<nav aria-label="Legal" class="flex flex-col gap-2">
 					<span class={heading}>Legal</span>
 					{LEGAL_PAGES.map((p) => (
-						<a href={legalHref(p.slug)} class={link}>
+						<a href={legalHref(p.slug)} target="_blank" rel="noopener noreferrer" class={link}>
 							{p.label}
 						</a>
 					))}

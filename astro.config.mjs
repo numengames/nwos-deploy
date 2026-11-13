@@ -20,6 +20,13 @@ export default defineConfig({
 	// de Cloudflare, así que los bindings se comportan como en producción sin
 	// tener que pedirlo.
 	adapter: cloudflare(),
+	// The legal texts live once, on numinia.org (STD-037 SIT-005). The old
+	// local routes keep answering with a permanent redirect so earlier links
+	// (emails, the v0.18 changelog, indexed pages) do not 404.
+	redirects: Object.fromEntries(
+		// Astro emits both the bare and the trailing-slash route for each key.
+		["privacy", "terms", "cookies", "notice"].map((slug) => [`/legal/${slug}`, { status: 301, destination: `https://numinia.org/legal/${slug}/` }]),
+	),
 	integrations: [react(), sitemap()],
 	vite: {
 		// Tailwind 4 se registra como plugin de Vite: @astrojs/tailwind fue
